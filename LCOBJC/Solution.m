@@ -988,8 +988,8 @@ BOOL isAalphaNumber(unichar ch)
 
     //base case
     map[0] = @(YES);
-    for(NSInteger i = 1; i <= count; i++) {
-        for(NSInteger j = 1; j <= i; j++) {
+    for(NSInteger i = 1; i <= count; i++) { //
+        for(NSInteger j = 1; j <= i; j++) { // 拆分成sub problem
             NSString *subStr = [str substringWithRange:NSMakeRange(i-j ,j)];
             if(map[i-j] && [set containsObject:subStr]) {
                 map[i] = @(YES);
@@ -1002,15 +1002,16 @@ BOOL isAalphaNumber(unichar ch)
 
 //DFS
 
-- (NSArray<NSString *> *)wordBreak:(NSString *)str set:(NSSet*)set
+- (NSArray<NSString *> *)wordBreak_2:(NSString *)str set:(NSSet*)set
 {
-    if(str.length == 0) {
+    if(str.length == 0 || set == nil) {
         return nil;
     }
 
     return [self doWordBreak:str idx:0 set:set];
 }
 
+//Time complexity 有些复杂，概率性的 和set 有关
 - (NSArray<NSString *> *)doWordBreak:(NSString *)str idx:(NSInteger)idx set:(NSSet*)set
 {
     //base case
@@ -1019,9 +1020,9 @@ BOOL isAalphaNumber(unichar ch)
     }
 
     NSMutableArray *result = [NSMutableArray array];
-    for(NSInteger i = idx + 1; i <= str.length; idx++) {
+    for(NSInteger i = idx + 1; i <= str.length; i++) {
         NSString *leftStr = [str substringWithRange:NSMakeRange(idx, i - idx)];
-        if([set containsObject:leftStr]) {
+        if([set containsObject:leftStr]) { //如果set包含进行递归调用
             NSArray *temp = [self doWordBreak:str idx:i set:set];
 
             for(NSString *e in temp) {
@@ -1201,9 +1202,10 @@ BOOL isAalphaNumber(unichar ch)
     }
     return @[@(l + 1), @(h + 1)];
 }
+
 // - (NSInteger)4sum
 // {
-
+//
 // }
 
 // k the max number 题型。
@@ -1680,7 +1682,5 @@ BOOL isAalphaNumber(unichar ch)
     } 
     return maxRes;
 }
-
-
 
 @end

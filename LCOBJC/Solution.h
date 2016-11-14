@@ -323,7 +323,7 @@
 
 // A solution is ["cats and dog", "cat sand dog"].
 
-- (NSArray<NSString *> *)wordBreak:(NSString *)str set:(NSSet*)set;
+- (NSArray<NSString *> *)wordBreak_2:(NSString *)str set:(NSSet*)set;
 
 @end
 
