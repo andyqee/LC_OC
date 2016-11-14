@@ -77,7 +77,8 @@ void testString()
 //    
 //    NSString *str = [s countAndSay_recursive:5];
 //    NSString *str_ite = [s countAndSay_iterative:5];
-    NSString *f = [s groupAnagrams:@[@"eat", @"tea", @"tan", @"ate", @"nat", @"bat"]];
+//    NSString *f = [s groupAnagrams:@[@"eat", @"tea", @"tan", @"ate", @"nat", @"bat"]];
+    BOOL re = [s wordBreak:@"leetcccode" set:[NSSet setWithArray:@[@"leet", @"code", @"cc"]]];
 }
 
 void testArray()

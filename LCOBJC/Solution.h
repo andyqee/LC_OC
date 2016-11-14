@@ -280,11 +280,8 @@
 - (NSString *)countAndSay_recursive:(NSInteger)n;
 - (NSString *)countAndSay_iterative:(NSInteger)n;
 
-// 49. Group Anagrams   QuestionEditorial Solution  My Submissions
-// Total Accepted: 101796
-// Total Submissions: 328517
+// 49. Group Anagrams 
 // Difficulty: Medium
-// Contributors: Admin
 // Given an array of strings, group anagrams together.
 
 // For example, given: ["eat", "tea", "tan", "ate", "nat", "bat"], 
@@ -298,6 +295,35 @@
 // Note: All inputs will be in lower-case.
 
 - (NSArray<NSString *> *)groupAnagrams:(NSArray<NSString *> *)strs;
+
+// 139. Word Break 
+// Difficulty: Medium
+
+// Given a string s and a dictionary of words dict, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
+
+// For example, given
+// s = "leetcode",
+// dict = ["leet", "code"].
+
+// Return true because "leetcode" can be segmented as "leet code".
+
+- (BOOL)wordBreak:(NSString *)str set:(NSSet*)set;
+
+// 140. Word Break II   QuestionEditorial Solution  My Submissions
+
+// Difficulty: Hard
+// Contributors: Admin
+// Given a string s and a dictionary of words dict, add spaces in s to construct a sentence where each word is a valid dictionary word.
+
+// Return all such possible sentences.
+
+// For example, given
+// s = "catsanddog",
+// dict = ["cat", "cats", "and", "sand", "dog"].
+
+// A solution is ["cats and dog", "cat sand dog"].
+
+- (NSArray<NSString *> *)wordBreak:(NSString *)str set:(NSSet*)set;
 
 @end
 
@@ -537,29 +563,7 @@
 
 - (NSInteger)maxProduct_OptimizeSpace:(NSArray<NSNumber *>*)nums;
 
-// 79. Word Search   
-// Difficulty: Medium
-// Contributors: Admin
-// Given a 2D board and a word, find if the word exists in the grid.
 
-// The word can be constructed from letters of sequentially adjacent cell, 
-// where "adjacent" cells are those horizontally or vertically neighboring. 
-// The same letter cell may not be used more than once.
-
-// For example,
-// Given board =
-
-// [
-//   ['A','B','C','E'],
-//   ['S','F','C','S'],
-//   ['A','D','E','E']
-// ]
-
-// word = "ABCCED", -> returns true,
-// word = "SEE", -> returns true,
-// word = "ABCB", -> returns false.
-
-- (BOOL)existWithBoard:(NSArray<NSArray<NSString *> *> *)board word:(NSString *)word;
 
 @end
 
