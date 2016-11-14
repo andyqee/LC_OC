@@ -1034,7 +1034,6 @@ BOOL isAalphaNumber(unichar ch)
             }
         }
     }
-     
     return result;
 }
 
@@ -1105,9 +1104,9 @@ BOOL isAalphaNumber(unichar ch)
     return result;
 }
 
-- (NSInteger)threeSumCloset:(NSArray *)nums target:(NSInteger)target; // 3sum
+- (NSInteger)threeSumCloset:(NSArray<NSNumber *> *)nums target:(NSInteger)target; // 3sum
 {
-//sort array
+    //sort array
     NSAssert([nums count] >= 3 , @"");
     
     NSArray<NSNumber *> *sortedNums = [nums sortedArrayUsingComparator:^NSComparisonResult(NSNumber*  _Nonnull obj1, NSNumber*  _Nonnull obj2) {
@@ -1120,7 +1119,7 @@ BOOL isAalphaNumber(unichar ch)
         }
     }];
 
-    NSInteger result;
+    NSInteger result = NSIntegerMax;
     for(NSUInteger i = 0; i < [nums count] - 2; i++) {
         if(i > 0 && sortedNums[i] == sortedNums[i-1]) {
             continue;
@@ -1129,14 +1128,16 @@ BOOL isAalphaNumber(unichar ch)
         NSUInteger right = [nums count] - 1;
         NSInteger sum = target - sortedNums[i].integerValue;
         while(left < right) {
-            NSInteger diff = (target - sortedNums[left].integerValue - sortedNums[right].integerValue - sortedNums[i].integerValue);
-            if(result == 0) {
-                return 0;
-            } else if(result < 0) {
-                result = MIN(abs(diff), result);
+            NSInteger diff = (sum - sortedNums[left].integerValue - sortedNums[right].integerValue);
+//            if(diff == 0) {
+//                return 0;
+//            } else
+                
+            if(diff < 0) {
+                result = MIN(labs(diff), result);
                 left++;
             } else {
-                result = MIN(abs(diff), result);
+                result = MIN(labs(diff), result);
                 right--;
             }
             while(left < right && sortedNums[left] == sortedNums[left + 1]) {
@@ -1334,10 +1335,37 @@ BOOL isAalphaNumber(unichar ch)
 //         }
 //     }
 
-//- (double)findMedianSortedArrays:(NSArray *)arr1 anotherArray:(NSArray *)arr2
-//{
-//
-//}
+// 如果数组很大怎么办
+// assum array not emtpy
+// 難題目
+
+// - (float)findMedianInSortedArrays:(NSArray<NSNumber *> *)arr1 anotherArray:(NSArray<NSNumber *> *)arr2
+// {
+//     //two special case
+//     //step 1 odd
+//     NSInteger m = [arr1 count];
+//     NSInteger n = [arr2 count];
+//     NSInteger mid = (m + n) / 2;
+//     if((m + n0) % 2) {
+//         return (float)[self findKthNumInArray:arr1 idx:0 otherArray:arr2 idx:0 kth:mid + 1];
+//     } else {
+//         NSInteger first = [self findKthNumInArray:arr1 idx:0 otherArray:arr2 idx:0 kth:mid];
+//         NSInteger second = [self findKthNumInArray:arr1 idx:0 otherArray:arr2 idx:0 kth:mid];
+//         return double (first + second) * 0.5;
+//     }
+// }
+
+// - (NSInteger)findKthNumInArray:(NSArray<NSNumber *> *)arr1 idx:(NSInteger)i otherArray:(NSArray<NSNumber *> *)arr2 idx:(NSInteger)j kth:(NSInteger)k
+// {
+//     if(i >= [arr1 count]) {
+//         return arr2[j + k - 1];
+//     }
+//     if(j >= [arr2 count]) {
+
+//     }
+
+
+// }
 
 //- (NSArray<interval *> *)mergeIntervals:(NSArray<interval *> *)intervals
 //{

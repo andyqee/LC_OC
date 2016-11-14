@@ -240,17 +240,12 @@
 
 - (BOOL)isPalindrome:(NSString *)str;
 
-// 68. Text Justification   
-// Total Accepted: 42740
-// Total Submissions: 244374
-// Difficulty: Hard
-// Contributors: Admin
+// 68. Text Justification   // Difficulty: Hard
 // Given an array of words and a length L, format the text such that each line has exactly L characters and is fully (left and right) justified.
-
-// You should pack your words in a greedy approach; that is, pack as many words as you can in each line. Pad extra spaces ' ' when necessary so that each line has exactly L characters.
-
-// Extra spaces between words should be distributed as evenly as possible. If the number of spaces on a line do not divide evenly between words, the empty slots on the left will be assigned more spaces than the slots on the right.
-
+// You should pack your words in a greedy approach; that is, pack as many words as you can in each line. Pad extra spaces ' ' 
+// when necessary so that each line has exactly L characters.
+// Extra spaces between words should be distributed as evenly as possible. 
+// If the number of spaces on a line do not divide evenly between words, the empty slots on the left will be assigned more spaces than the slots on the right.
 // For the last line of text, it should be left justified and no extra space is inserted between words.
 
 // For example,
@@ -265,7 +260,7 @@
 // ]
 // Note: Each word is guaranteed not to exceed L in length.
 
-- (NSArray<NSString *> *)fullJustify:(NSString *)str;
+- (NSArray<NSString *> *)fullJustify:(NSArray<NSString *> *)str;
 
 // The count-and-say sequence is the sequence of integers beginning as follows:
 // 1, 11, 21, 1211, 111221, ...
@@ -350,7 +345,7 @@
 //
 //The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
 
-- (NSArray<NSArray *> *)threeSumCloset:(NSArray *)nums target:(NSInteger)target; // 3sum
+- (NSInteger)threeSumCloset:(NSArray *)nums target:(NSInteger)target; // 3sum
 
 //- (NSInteger)3sumSmaller;
 
@@ -444,8 +439,6 @@
 - (BOOL)searchInRotatedArrayDuplicate:(NSArray *)nums target:(NSInteger)target;
 
 // 4. Median of Two Sorted Arrays   
-// Total Accepted: 127041
-// Total Submissions: 622737
 // Difficulty: Hard
 // Contributors: Admin
 // There are two sorted arrays nums1 and nums2 of size m and n respectively.
@@ -463,7 +456,7 @@
 
 // The median is (2 + 3)/2 = 2.5
 
-- (double)findMedianSortedArrays:(NSArray *)arr1 anotherArray:(NSArray *)arr2;
+- (double)findMedianInSortedArrays:(NSArray *)arr1 anotherArray:(NSArray *)arr2;
 
 // 56. Merge Intervals   
 

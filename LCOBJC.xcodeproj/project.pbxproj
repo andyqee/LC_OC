@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1BFBF651DD9F40E0022C1DC /* List.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BFBF641DD9F40E0022C1DC /* List.m */; };
 		A1F2B7DD1DC5ED090023278E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F2B7DC1DC5ED090023278E /* main.m */; };
 		A1F2B7E51DC5ED4F0023278E /* Solution.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F2B7E41DC5ED4F0023278E /* Solution.m */; };
 		A1F2B7E81DC5EEE70023278E /* TreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F2B7E71DC5EEE70023278E /* TreeNode.m */; };
@@ -26,6 +27,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A1BFBF631DD9F40E0022C1DC /* List.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = List.h; sourceTree = "<group>"; };
+		A1BFBF641DD9F40E0022C1DC /* List.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = List.m; sourceTree = "<group>"; };
 		A1F2B7D91DC5ED090023278E /* LCOBJC */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LCOBJC; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1F2B7DC1DC5ED090023278E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A1F2B7E31DC5ED4F0023278E /* Solution.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Solution.h; sourceTree = "<group>"; };
@@ -73,6 +76,8 @@
 				A1F2B7E71DC5EEE70023278E /* TreeNode.m */,
 				D757AACF1DD95F6900F5ED1A /* BackTracking.h */,
 				D757AAD01DD95F6900F5ED1A /* BackTracking.m */,
+				A1BFBF631DD9F40E0022C1DC /* List.h */,
+				A1BFBF641DD9F40E0022C1DC /* List.m */,
 			);
 			path = LCOBJC;
 			sourceTree = "<group>";
@@ -134,6 +139,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1BFBF651DD9F40E0022C1DC /* List.m in Sources */,
 				A1F2B7E51DC5ED4F0023278E /* Solution.m in Sources */,
 				D757AAD11DD95F6900F5ED1A /* BackTracking.m in Sources */,
 				A1F2B7DD1DC5ED090023278E /* main.m in Sources */,
