@@ -1129,9 +1129,9 @@ BOOL isAalphaNumber(unichar ch)
         NSInteger sum = target - sortedNums[i].integerValue;
         while(left < right) {
             NSInteger diff = (sum - sortedNums[left].integerValue - sortedNums[right].integerValue);
-//            if(diff == 0) {
-//                return 0;
-//            } else
+            if(diff == 0) {
+                return 0;
+            } else
                 
             if(diff < 0) {
                 result = MIN(labs(diff), result);

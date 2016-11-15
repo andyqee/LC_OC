@@ -54,15 +54,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LCOBJC/Solution.m"
-            timestampString = "500831321.057801"
+            timestampString = "500831725.644723"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1122"
-            endingLineNumber = "1122"
+            startingLineNumber = "1124"
+            endingLineNumber = "1124"
             landmarkName = "-threeSumCloset:target:"
             landmarkType = "7">
          </BreakpointContent>
