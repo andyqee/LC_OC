@@ -1037,6 +1037,30 @@ BOOL isAalphaNumber(unichar ch)
     return result;
 }
 
+// method 1. 用product of all elements dived by each element 
+// method 2  
+// first scan form right to left calculate the product of all elements in the left side of a[i] excluding a[i]
+// scan form left to right
+
+// assum integer can hold
+
+- (NSArray<NSNumber *> *)productExceptSelf:(NSArray<NSNumber *> *)nums
+{
+    NSMutableArray<NSNumber *> *product = [NSMutableArray array];
+    long long preProduct = 1;
+    for(NSInteger i = 0; i < [nums count]; i++) {
+        [product addObject: @(preProduct)];
+        preProduct *= nums[i].longLongValue;
+    }
+
+    preProduct = 1;
+    for(NSInteger i = [nums count] - 1; i >= 0; i--){
+        product[i] = @(product[i].longLongValue * preProduct);
+        preProduct *= nums[i].longLongValue;
+    } 
+    return product;
+}
+
 @end
 
 @implementation NSString (FBSort) 
