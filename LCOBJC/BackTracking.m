@@ -58,13 +58,11 @@
 }
 
 //先来个递归版本，再来个迭代
-
 - (NSArray<NSString *> *)letterCombinations:(NSString *)digits
 {
     if(digits.length == 0) {
         return nil;
     }
-    
     NSDictionary<NSString*, NSString*> *map = @{ @"1" : @"",
                                                  @"2" : @"abc",
                                                  @"3" : @"def",
@@ -98,6 +96,39 @@
         }
     }
     return result;
+}
+
+- (NSArray<NSString *> *)letterCombinations_recursive:(NSString *)digits
+{
+    if(digits.length == 0) {
+        return nil;
+    }
+    NSDictionary<NSString*, NSString*> *map = @{ @"1" : @"",
+                                                 @"2" : @"abc",
+                                                 @"3" : @"def",
+                                                 @"4" : @"ghi",
+                                                 @"5" : @"jkl",
+                                                 @"6" : @"mno",
+                                                 @"7" : @"pqrs",
+                                                 @"8" : @"tuv",
+                                                 @"9" : @"wxyz",
+                                                 @"0" : @"" };
+   
+
+}
+
+- ()doLetterCombinations:(NSString *)digits start:(NSInteger)start prefix:(NSMutableArray<NSMutableString *> *)prefix
+{
+    if(start == digits.length - 1) {
+        return;
+    }
+    // NSString *ch = [digits substringWithRange:NSMakeRange(start, 1)];
+    // NSString *alphaValue = map[ch];
+    // for(NSInteger i = 0; i < alphaValue.length; i++){
+    //     NSString *ch = [alphaValue substringWithRange:NSMakeRange(i, 1)];
+    //     [prefix appendString:ch];
+    //     [self doLetterCombinations:digits start:start + 1 prefix:prefix];
+    // }
 }
 
 @end
