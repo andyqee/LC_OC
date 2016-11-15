@@ -117,18 +117,18 @@
 
 }
 
-- ()doLetterCombinations:(NSString *)digits start:(NSInteger)start prefix:(NSMutableArray<NSMutableString *> *)prefix
+- ()doLetterCombinations:(NSString *)digits start:(NSInteger)start prefix:(NSMutableString *)prefix
 {
     if(start == digits.length - 1) {
         return;
     }
-    // NSString *ch = [digits substringWithRange:NSMakeRange(start, 1)];
-    // NSString *alphaValue = map[ch];
-    // for(NSInteger i = 0; i < alphaValue.length; i++){
-    //     NSString *ch = [alphaValue substringWithRange:NSMakeRange(i, 1)];
-    //     [prefix appendString:ch];
-    //     [self doLetterCombinations:digits start:start + 1 prefix:prefix];
-    // }
+    NSString *ch = [digits substringWithRange:NSMakeRange(start, 1)];
+    NSString *alphaValue = map[ch];
+    for(NSInteger i = 0; i < alphaValue.length; i++){
+        NSString *ch = [alphaValue substringWithRange:NSMakeRange(i, 1)];
+        [prefix appendString:ch];
+        [self doLetterCombinations:digits start:start + 1 prefix:prefix];
+    }
 }
 
 @end
