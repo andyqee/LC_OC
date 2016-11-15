@@ -98,4 +98,6 @@ void testArray()
     NSInteger po = [s maxProduct_OptimizeSpace:@[@(2),@(3),@(-2),@(0),@(6)]];
     NSInteger min = [s minimumSizeSubArraySum:6 nums:@[@(2),@(3),@(2),@(0),@(6)]];
     NSInteger r = [s threeSumCloset:@[@(-2),@(4),@(-2),@(0),@(1)] target:3];
+    
+    NSArray *re = [s productExceptSelf:@[@(2), @(3), @(9), @(1)]];
 }
