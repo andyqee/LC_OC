@@ -1065,16 +1065,17 @@ BOOL isAalphaNumber(unichar ch)
 // 2. priority queue . oc 没有原生的
 // 3. quick select 
 // https://discuss.leetcode.com/topic/15256/4-c-solutions-using-partition-max-heap-priority_queue-and-multiset-respectively/2
+// https://discuss.leetcode.com/topic/14597/solution-explained/2
 
 - (NSNumber *)findKthLargest:(NSInteger)k inArray:(NSArray<NSNumber *> *)nums
 {
-    NSInteger pivot = [nums firstObject].integerValue;
     NSInteger left = 0;
     NSInteger right = [nums count]-1;
-    NSInteger p;
-
+    
+    NSInteger p = 0;
+    NSMutableArray *mutableNums = [NSMutableArray arrayWithArray:nums];
     while(left < right) {
-        p = [self partition:nums left:left right:right];
+        p = [self partition:mutableNums left:left right:right];
         if(p == k - 1) {
             break;
         } else if( p < k - 1) {
@@ -1083,10 +1084,10 @@ BOOL isAalphaNumber(unichar ch)
             right = p - 1;
         }
     }
-    return nums[p];
+    return mutableNums[p];
 }
 
-- (NSInteger)partition:(NSArray<NSNumber *> *)nums left:(NSInteger)left right:(NSInteger)right
+- (NSInteger)partition:(NSMutableArray<NSNumber *> *)nums left:(NSInteger)left right:(NSInteger)right
 {
     NSInteger pivot = nums[left].integerValue;
     NSInteger i = left + 1;
@@ -1097,7 +1098,7 @@ BOOL isAalphaNumber(unichar ch)
             i++;
             j--;
         }
-        if(nums[j].integerValue =< pivot){
+        if(nums[j].integerValue <= pivot){
             j--;
         }
         if(nums[i].integerValue >= pivot){

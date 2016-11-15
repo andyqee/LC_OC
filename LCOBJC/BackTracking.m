@@ -57,4 +57,47 @@
     return isFound;
 }
 
+//先来个递归版本，再来个迭代
+
+- (NSArray<NSString *> *)letterCombinations:(NSString *)digits
+{
+    if(digits.length == 0) {
+        return nil;
+    }
+    
+    NSDictionary<NSString*, NSString*> *map = @{ @"1" : @"",
+                                                 @"2" : @"abc",
+                                                 @"3" : @"def",
+                                                 @"4" : @"ghi",
+                                                 @"5" : @"jkl",
+                                                 @"6" : @"mno",
+                                                 @"7" : @"pqrs",
+                                                 @"8" : @"tuv",
+                                                 @"9" : @"wxyz",
+                                                 @"0" : @"" };
+    
+    NSMutableArray<NSString *> *result = [NSMutableArray array];
+    [result addObject:[@"" mutableCopy]];
+
+    for(NSInteger i = 0; i < digits.length; i++) {
+        NSString *key = [digits substringWithRange:NSMakeRange(i, 1)];
+        NSString *mStr = map[key];
+        if(mStr.length) { //这里要添加空字符串的判断
+            NSInteger count = [result count];
+            NSMutableArray *temp = [NSMutableArray array];
+            
+            for(NSInteger j = 0; j < mStr.length; j++){
+                NSString *ch = [mStr substringWithRange:NSMakeRange(j, 1)];
+                for(NSInteger k = 0; k < count; k++) {
+                    NSMutableString *str = [NSMutableString stringWithString:result[k]];
+                    [str appendString:ch];
+                    [temp addObject:str];
+                }
+            }
+            result = temp;
+        }
+    }
+    return result;
+}
+
 @end

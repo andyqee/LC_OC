@@ -9,17 +9,19 @@
 #import <Foundation/Foundation.h>
 #import "Solution.h"
 #import "TreeNode.h"
+#import "BackTracking.h"
 
 void testTree();
 void testString();
 void testArray();
+void testBackTracking();
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         testTree();
         testString();
         testArray();
-        
+        testBackTracking();
         
     }
     return 0;
@@ -94,10 +96,18 @@ void testArray()
 //    NSArray *va2 = [s intersectionOfTwoArrayUnique:@[@(1), @(2),@(2),@(1)] andArray2:@[@(2),@(2)]];
     
 
-    NSInteger pro = [s maxProduct:@[@(2),@(3),@(-2),@(0),@(121212121.2)]];
-    NSInteger po = [s maxProduct_OptimizeSpace:@[@(2),@(3),@(-2),@(0),@(6)]];
-    NSInteger min = [s minimumSizeSubArraySum:6 nums:@[@(2),@(3),@(2),@(0),@(6)]];
-    NSInteger r = [s threeSumCloset:@[@(-2),@(4),@(-2),@(0),@(1)] target:3];
+//    NSInteger pro = [s maxProduct:@[@(2),@(3),@(-2),@(0),@(121212121.2)]];
+//    NSInteger po = [s maxProduct_OptimizeSpace:@[@(2),@(3),@(-2),@(0),@(6)]];
+//    NSInteger min = [s minimumSizeSubArraySum:6 nums:@[@(2),@(3),@(2),@(0),@(6)]];
+//    NSInteger r = [s threeSumCloset:@[@(-2),@(4),@(-2),@(0),@(1)] target:3];
+//    
+//    NSArray *re = [s productExceptSelf:@[@(2), @(3), @(9), @(1)]];
+//    NSNumber *kth = [s findKthLargest:2 inArray:@[@(2),@(3),@(5),@(0),@(6)]];
+}
+
+void testBackTracking()
+{
+    BackTracking *b = [BackTracking new];
+    NSArray *re = [b letterCombinations:@"12345"];
     
-    NSArray *re = [s productExceptSelf:@[@(2), @(3), @(9), @(1)]];
 }
