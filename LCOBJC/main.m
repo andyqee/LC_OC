@@ -9,18 +9,24 @@
 #import <Foundation/Foundation.h>
 #import "Solution.h"
 #import "TreeNode.h"
+#import "BackTracking.h"
 
 void testTree();
 void testString();
 void testArray();
+void testBackTracking();
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         testTree();
         testString();
         testArray();
+        testBackTracking();
         
-        
+        NSMutableArray *a = [NSMutableArray arrayWithArray:@[@(0), @(1)]];
+        NSMutableSet *set = [NSMutableSet set];
+        [set addObject:a];
+        [a removeObjectAtIndex:1];
     }
     return 0;
 }
@@ -78,9 +84,9 @@ void testString()
 //    NSString *str = [s countAndSay_recursive:5];
 //    NSString *str_ite = [s countAndSay_iterative:5];
 //    NSString *f = [s groupAnagrams:@[@"eat", @"tea", @"tan", @"ate", @"nat", @"bat"]];
-    BOOL re = [s wordBreak:@"leetcccode" set:[NSSet setWithArray:@[@"leet", @"code", @"cc"]]];
-    NSArray *res = [s wordBreak_2:@"catsanddog" set:[NSSet setWithArray:@[@"cat", @"cats", @"and", @"sand", @"dog"]]];
-    NSArray *ress = [s wordBreak_2:@"aaaa" set:[NSSet setWithArray:@[@"a", @"aa", @"aaa", @"aaaa"]]];
+//    BOOL re = [s wordBreak:@"leetcccode" set:[NSSet setWithArray:@[@"leet", @"code", @"cc"]]];
+//    NSArray *res = [s wordBreak_2:@"catsanddog" set:[NSSet setWithArray:@[@"cat", @"cats", @"and", @"sand", @"dog"]]];
+//    NSArray *ress = [s wordBreak_2:@"aaaa" set:[NSSet setWithArray:@[@"a", @"aa", @"aaa", @"aaaa"]]];
     
 }
 
@@ -94,8 +100,20 @@ void testArray()
 //    NSArray *va2 = [s intersectionOfTwoArrayUnique:@[@(1), @(2),@(2),@(1)] andArray2:@[@(2),@(2)]];
     
 
-    NSInteger pro = [s maxProduct:@[@(2),@(3),@(-2),@(0),@(121212121.2)]];
-    NSInteger po = [s maxProduct_OptimizeSpace:@[@(2),@(3),@(-2),@(0),@(6)]];
-    NSInteger min = [s minimumSizeSubArraySum:6 nums:@[@(2),@(3),@(2),@(0),@(6)]];
-    NSInteger r = [s threeSumCloset:@[@(-2),@(4),@(-2),@(0),@(1)] target:3];
+//    NSInteger pro = [s maxProduct:@[@(2),@(3),@(-2),@(0),@(121212121.2)]];
+//    NSInteger po = [s maxProduct_OptimizeSpace:@[@(2),@(3),@(-2),@(0),@(6)]];
+//    NSInteger min = [s minimumSizeSubArraySum:6 nums:@[@(2),@(3),@(2),@(0),@(6)]];
+//    NSInteger r = [s threeSumCloset:@[@(-2),@(4),@(-2),@(0),@(1)] target:3];
+//    
+//    NSArray *re = [s productExceptSelf:@[@(2), @(3), @(9), @(1)]];
+//    NSNumber *kth = [s findKthLargest:2 inArray:@[@(2),@(3),@(5),@(0),@(6)]];
+}
+
+void testBackTracking()
+{
+    BackTracking *b = [BackTracking new];
+//    NSArray *re = [b letterCombinations:@"12345"];
+//    NSArray *re_r = [b letterCombinations_recursive:@"12345"];
+    NSArray *r = [b combinationSum:@[@2,@3,@6,@7,@4] target:7];
+    
 }

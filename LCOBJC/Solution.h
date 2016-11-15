@@ -320,6 +320,29 @@
 
 - (NSArray<NSString *> *)wordBreak_2:(NSString *)str set:(NSSet*)set;
 
+// Product of Array Except Self
+//Given an array of n integers where n > 1, nums, return an array output such that output[i] is equal to the product of all the elements of nums except nums[i].
+//
+//Solve it without division and in O(n).
+//
+//For example, given [1,2,3,4], return [24,12,8,6].
+//
+//Follow up:
+//Could you solve it with constant space complexity? (Note: The output array does not count as extra space for the purpose of space complexity analysis.)
+
+// 这里复杂的关键在于处理如何 元素为0 的情况
+
+- (NSArray<NSNumber *> *)productExceptSelf:(NSArray<NSNumber *> *)nums;
+
+//Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
+//
+//For example,
+//Given [3,2,1,5,6,4] and k = 2, return 5.
+//
+//Note:
+//You may assume k is always valid, 1 ≤ k ≤ array's length.
+- (NSNumber *)findKthLargest:(NSInteger)k inArray:(NSArray<NSNumber *> *)nums;
+
 @end
 
 @interface Solution (Array)
@@ -555,8 +578,6 @@
 - (NSInteger)maxProduct:(NSArray<NSNumber *>*)nums;
 
 - (NSInteger)maxProduct_OptimizeSpace:(NSArray<NSNumber *>*)nums;
-
-
 
 @end
 

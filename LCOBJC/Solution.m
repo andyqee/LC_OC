@@ -1037,6 +1037,78 @@ BOOL isAalphaNumber(unichar ch)
     return result;
 }
 
+// method 1. 用product of all elements dived by each element 
+// method 2  
+// first scan form right to left calculate the product of all elements in the left side of a[i] excluding a[i]
+// scan form left to right
+
+// assum integer can hold
+
+- (NSArray<NSNumber *> *)productExceptSelf:(NSArray<NSNumber *> *)nums
+{
+    NSMutableArray<NSNumber *> *product = [NSMutableArray array];
+    NSInteger preProduct = 1;
+    for(NSInteger i = 0; i < [nums count]; i++) {
+        [product addObject: @(preProduct)];
+        preProduct *= nums[i].integerValue;
+    }
+    
+    preProduct = 1;
+    for(NSInteger i = [nums count] - 1; i >= 0; i--){
+        product[i] = @(product[i].integerValue * preProduct);
+        preProduct *= nums[i].integerValue;
+    } 
+    return product;
+}
+
+// 1. sort return [n-k]
+// 2. priority queue . oc 没有原生的
+// 3. quick select 
+// https://discuss.leetcode.com/topic/15256/4-c-solutions-using-partition-max-heap-priority_queue-and-multiset-respectively/2
+// https://discuss.leetcode.com/topic/14597/solution-explained/2
+
+- (NSNumber *)findKthLargest:(NSInteger)k inArray:(NSArray<NSNumber *> *)nums
+{
+    NSInteger left = 0;
+    NSInteger right = [nums count]-1;
+    
+    NSInteger p = 0;
+    NSMutableArray *mutableNums = [NSMutableArray arrayWithArray:nums];
+    while(left < right) {
+        p = [self partition:mutableNums left:left right:right];
+        if(p == k - 1) {
+            break;
+        } else if( p < k - 1) {
+            left = p + 1;
+        } else {
+            right = p - 1;
+        }
+    }
+    return mutableNums[p];
+}
+
+- (NSInteger)partition:(NSMutableArray<NSNumber *> *)nums left:(NSInteger)left right:(NSInteger)right
+{
+    NSInteger pivot = nums[left].integerValue;
+    NSInteger i = left + 1;
+    NSInteger j = right;
+    while(i <= j) {
+        if(nums[j].integerValue > pivot && nums[i].integerValue < pivot) {
+            [nums exchangeObjectAtIndex:i withObjectAtIndex:j];
+            i++;
+            j--;
+        }
+        if(nums[j].integerValue <= pivot){
+            j--;
+        }
+        if(nums[i].integerValue >= pivot){
+            i++;
+        }
+    }   //最后j会退到比pivot大的元素上。所以需要exchage一下
+    [nums exchangeObjectAtIndex:left withObjectAtIndex:j];
+    return j;
+}
+
 @end
 
 @implementation NSString (FBSort) 
@@ -1048,7 +1120,6 @@ BOOL isAalphaNumber(unichar ch)
         NSString *charStr = [self substringWithRange:NSMakeRange(i, 1)];
         [charArray addObject:charStr];
     }
-
     return [[charArray sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] componentsJoinedByString:@""];
 }
 
@@ -1057,7 +1128,6 @@ BOOL isAalphaNumber(unichar ch)
 //#prama mark - Array
 
 @implementation Solution (Array)
-
 // MIT open class has video
 
 - (NSArray<NSArray *> *)threeSum:(NSArray *)nums // 3sum
@@ -1065,15 +1135,7 @@ BOOL isAalphaNumber(unichar ch)
     //sort array
     NSAssert([nums count] >= 3 , @"");
     
-    NSArray<NSNumber *> *sortedNums = [nums sortedArrayUsingComparator:^NSComparisonResult(NSNumber*  _Nonnull obj1, NSNumber*  _Nonnull obj2) {
-        if( obj1.integerValue < obj2.integerValue ) {
-            return NSOrderedAscending;
-        } else if(obj2.integerValue == obj1.integerValue) {
-            return NSOrderedSame;
-        } else {
-            return NSOrderedDescending;
-        }
-    }];
+    NSArray<NSNumber *> *sortedNums = [nums sortedArrayUsingSelector:@selector(compare:)];
     
     NSMutableArray *result = [NSMutableArray array];
     for (NSUInteger i = 0; i < [nums count] - 2 ; i++) {
@@ -1108,16 +1170,7 @@ BOOL isAalphaNumber(unichar ch)
 {
     //sort array
     NSAssert([nums count] >= 3 , @"");
-    
-    NSArray<NSNumber *> *sortedNums = [nums sortedArrayUsingComparator:^NSComparisonResult(NSNumber*  _Nonnull obj1, NSNumber*  _Nonnull obj2) {
-        if( obj1.integerValue < obj2.integerValue ) {
-            return NSOrderedAscending;
-        } else if(obj2.integerValue == obj1.integerValue) {
-            return NSOrderedSame;
-        } else {
-            return NSOrderedDescending;
-        }
-    }];
+    NSArray<NSNumber *> *sortedNums = [nums sortedArrayUsingSelector:@selector(compare:)];
 
     NSInteger result = NSIntegerMax;
     for(NSUInteger i = 0; i < [nums count] - 2; i++) {
