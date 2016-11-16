@@ -66,7 +66,33 @@
 
 - (NSArray<NSArray *> *)combinationSum:(NSArray *)array target:(NSInteger)target;
 
-// Combination Sum I
+// Combination Sum 2
 - (NSArray<NSArray *> *)combinationSum_2:(NSArray *)array target:(NSInteger)target;
+
+// Combination Sum 3, 4没有做呢
+
+// 10. Regular Expression Matching 重点
+// Difficulty: Hard
+// Contributors: Admin
+// Implement regular expression matching with support for '.' and '*'.
+
+// '.' Matches any single character.
+// '*' Matches zero or more of the preceding element.
+
+// The matching should cover the entire input string (not partial).
+
+// The function prototype should be:
+// bool isMatch(const char *s, const char *p)
+
+// Some examples:
+// isMatch("aa","a") → false
+// isMatch("aa","aa") → true
+// isMatch("aaa","aa") → false
+// isMatch("aa", "a*") → true
+// isMatch("aa", ".*") → true
+// isMatch("ab", ".*") → true
+// isMatch("aab", "c*a*b") → true
+
+- (BOOL)isMatch:(NSString *)str withPatten:(NSString *)p;
 
 @end

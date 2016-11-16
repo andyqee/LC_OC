@@ -257,5 +257,38 @@
         }
     }
 }
+// handle empty string 
+
+- (BOOL)isMatch:(NSString *)str withPatten:(NSString *)p 
+{
+    //handle emtpy case
+    return [self doIsMatch_re:str i:0 withPatten:p j:0];
+}
+
+- (BOOL)doIsMatch_re:(NSString *)str i:(NSInteger)i withPatten:(NSString *)p j:(NSInteger)j
+{
+    if(i > str.length || j > str.length){
+        return NO;
+    }
+
+    if(i == str.length && j == str.length){
+        return YES;
+    }
+    NSInteger *strCh = [str substringWithRange:NSMakeRange(i, 1)];
+    NSInteger *pCh = [str substringWithRange:NSMakeRange(i, 1)];
+
+    if([pCh isEqualToString:@"."] || [pCh isEqualToString:strCh]){
+        return [self doIsMatch_re:str i:i+1 withPatten:p j:j+1];
+    } else if([pCh isEqualToString:@"*"]){
+        return [self doIsMatch_re:str i:i+1 withPatten:p j:j] || [self doIsMatch_re:str i:i+1 withPatten:p j:j+1];
+    } else {
+        return NO;
+    }
+}
+
+- (BOOL)isMatch:(NSString *)str withPatten:(NSString *)p 
+{
+    
+}
 
 @end
