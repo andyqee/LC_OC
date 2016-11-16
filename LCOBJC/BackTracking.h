@@ -66,4 +66,7 @@
 
 - (NSArray<NSArray *> *)combinationSum:(NSArray *)array target:(NSInteger)target;
 
+// Combination Sum I
+- (NSArray<NSArray *> *)combinationSum_2:(NSArray *)array target:(NSInteger)target;
+
 @end
