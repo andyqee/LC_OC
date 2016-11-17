@@ -220,7 +220,7 @@
         NSInteger nextTarget = target - array[i].integerValue;
         if(nextTarget >= 0) {
             [curr addObject:array[i]]; //如果需要确保结果集合是没有重复的，但是元素是可以重复使用的,直接将start递归下
-            [self doCombinationSum_optimize:array target:nextTarget start:start result:result currResult:curr];
+            [self doCombinationSum_optimize:array start:start target:nextTarget result:result currResult:curr];
             [curr removeObjectAtIndex:[curr count] - 1]; //递归完恢复状态,用这种方式，如果加入到result 中curr 不copy一份的话，返回的是空array，相比较上面的方法，减少了一些中间对象的创建
         }
     }
@@ -252,11 +252,12 @@
         NSInteger nextTarget = target - array[i].integerValue;
         if(nextTarget >= 0) {
             [curr addObject:array[i]]; //如果需要确保结果集合是没有重复的，但是元素是可以重复使用的,直接将start递归下
-            [self doCombinationSum_optimize_2:array target:nextTarget start:start+1 result:result currResult:curr];
+            [self doCombinationSum_optimize_2:array start:start+1 target:nextTarget result:result currResult:curr];
             [curr removeObjectAtIndex:[curr count] - 1]; //递归完恢复状态,用这种方式，如果加入到result 中curr 不copy一份的话，返回的是空array，相比较上面的方法，减少了一些中间对象的创建
         }
     }
 }
+
 // handle empty string 
 
 - (BOOL)isMatch:(NSString *)str withPatten:(NSString *)p 
@@ -274,8 +275,8 @@
     if(i == str.length && j == str.length){
         return YES;
     }
-    NSInteger *strCh = [str substringWithRange:NSMakeRange(i, 1)];
-    NSInteger *pCh = [str substringWithRange:NSMakeRange(i, 1)];
+    NSString *strCh = [str substringWithRange:NSMakeRange(i, 1)];
+    NSString *pCh = [str substringWithRange:NSMakeRange(j, 1)];
 
     if([pCh isEqualToString:@"."] || [pCh isEqualToString:strCh]){
         return [self doIsMatch_re:str i:i+1 withPatten:p j:j+1];
@@ -286,9 +287,31 @@
     }
 }
 
-- (BOOL)isMatch:(NSString *)str withPatten:(NSString *)p 
+// 如果是两个string，每个字符串相互关联,就用二维数组
+// 各种case 应该考虑全面
+- (BOOL)isMatch_dp:(NSString *)str withPatten:(NSString *)p
 {
-    
+    NSInteger m = str.length;
+    NSInteger n = p.length;
+
+    NSMutableArray<NSMutableArray<NSNumber *> *> *map = [NSMutableArray array];
+    for(NSInteger i = 0; i <= m; i++){
+        NSMutableArray<NSNumber *> *sub = [NSMutableArray array];
+        for(NSInteger j = 0; j <= n; j++){
+            [sub addObject:@(NO)];
+        }
+        [map addObject:sub];
+    }
+
+    map[0][0] = @(YES);
+    for(NSInteger i = 0; i <= m; i++){
+        for(NSInteger j = 1; j <= n; j++) {
+            NSString *p = [str substringWithRange:NSMakeRange(j - 1, 1)];
+            NSString *ch = [str substringWithRange:NSMakeRange(i - 1, 1)];
+
+        }
+    }
+    return map[m][n].boolValue;
 }
 
 @end

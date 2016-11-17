@@ -583,6 +583,28 @@
     return node;
 }
 
+// 注意这里不是BST
+// worst case O(n)
+
+- (TreeNode *)lowestCommonAncestor:(TreeNode *)root left:(TreeNode *)p right:(TreeNode *)q
+{
+    if(!root){
+        return nil;
+    }
+    if(p == root || q == root){
+        return root;
+    }
+    TreeNode *leftNode = [self lowestCommonAncestor:root.left left:left right:q];
+    TreeNode *rightNode = [self lowestCommonAncestor:root.right left:left right:q];
+    if(leftNode && rightNode) return root;
+    return leftNode ? leftNode : rightNode;
+}
+
+- (TreeNode *)doLowestCommonAncestor:(TreeNode *)root left:(TreeNode *)p right:(TreeNode *)q
+{
+
+}
+
 @end
 
 @interface NSString (FBSort)
