@@ -19,8 +19,6 @@
 - (NSArray<NSArray<NSNumber *> *> *)zigzagLevelOrder:(TreeNode *)treeNode;
 
 //114. Flatten Binary Tree to Linked List   
-//Total Accepted: 102256
-//Total Submissions: 309986
 //Difficulty: Medium
 //Contributors: Admin
 //Given a binary tree, flatten it to a linked list in-place.
@@ -134,10 +132,29 @@
 
 - (TreeNode *)lowestCommonAncestor:(TreeNode *)root left:(TreeNode *)p right:(TreeNode *)q;
 
+// 111. Minimum Depth of Binary Tree   QuestionEditorial Solution  My Submissions
+// Difficulty: Easy
+// Contributors: Admin
+// Given a binary tree, find its minimum depth.
+
+// The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node
+- (NSInteger)minDepth:(TreeNode *)root;
+
 @end
 
 
 @interface Solution (String)
+
+// 151. Reverse Words in a String   QuestionEditorial Solution  My Submissions
+// Difficulty: Medium  
+// Contributors: Admin
+// Given an input string, reverse the string word by word.
+// For example,
+// Given s = "the sky is blue",
+// return "blue is sky the".
+// 准确率很低
+
+- (void)reverseWords:(NSMutableString *)str;
 
 //394. Decode String   QuestionEditorial Solution
 //Difficulty: Medium
@@ -320,7 +337,7 @@
 
 - (BOOL)wordBreak:(NSString *)str set:(NSSet*)set;
 
-// 140. Word Break II   QuestionEditorial Solution  My Submissions
+// 140. Word Break II   
 
 // Difficulty: Hard
 // Contributors: Admin
@@ -358,6 +375,34 @@
 //Note:
 //You may assume k is always valid, 1 ≤ k ≤ array's length.
 - (NSNumber *)findKthLargest:(NSInteger)k inArray:(NSArray<NSNumber *> *)nums;
+
+// 367. Valid Perfect Square   
+// Total Accepted: 22955
+// Total Submissions: 62096
+// Difficulty: Medium
+// Contributors: Admin
+// Given a positive integer num, write a function which returns True if num is a perfect square else False.
+
+// Note: Do not use any built-in library function such as sqrt.
+
+// Example 1:
+
+// Input: 16
+// Returns: True
+// Example 2:
+
+// Input: 14
+// Returns: False
+
+// 128. Longest Consecutive Sequence
+// 最长连续序列
+// Given an unsorted array of integers, find the length of the longest consecutive elements sequence.
+// For example,
+// Given [100, 4, 200, 1, 3, 2],
+// The longest consecutive elements sequence is [1, 2, 3, 4]. Return its length: 4.
+// Your algorithm should run in O(n) complexity.
+
+- (NSInteger)longestConsecutive:(NSArray<NSNumber *> *)nums;
 
 @end
 
@@ -594,6 +639,26 @@
 - (NSInteger)maxProduct:(NSArray<NSNumber *>*)nums;
 
 - (NSInteger)maxProduct_OptimizeSpace:(NSArray<NSNumber *>*)nums;
+
+// Meeting Rooms
+// Given an array of meeting time intervals consisting of start and end times [[s1,e1],[s2,e2],...] (si < ei), determine if a person could attend all meetings.
+// For example,
+// Given [[0, 30],[5, 10],[15, 20]],
+// return false.
+// Understand the problem:
+// The problem looks very similar to the merge interval and insert intervals. 
+// So the idea is still the same: first sort the intervals according to the start times, then check if there is any overlap. 
+
+- (BOOL)canAttendMeetings:(NSArray<Interval *> *)intervals;
+
+// Leetcode: Meeting Rooms II
+// Given an array of meeting time intervals consisting of start and end times [[s1,e1],[s2,e2],...] (si < ei),
+// find the minimum number of conference rooms required.
+// For example,
+// Given [[0, 30],[5, 10],[15, 20]],
+// return 2.
+
+- (NSInteger)minMeetingRooms:(NSArray<Interval *> *)intervals;
 
 @end
 

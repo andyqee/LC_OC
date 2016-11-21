@@ -10,11 +10,14 @@
 #import "Solution.h"
 #import "TreeNode.h"
 #import "BackTracking.h"
+#import "List.h"
 
 void testTree();
 void testString();
 void testArray();
 void testBackTracking();
+
+void testList();
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
@@ -22,13 +25,46 @@ int main(int argc, const char * argv[]) {
         testString();
         testArray();
         testBackTracking();
+        testList();
         
-        NSMutableArray *a = [NSMutableArray arrayWithArray:@[@(0), @(1)]];
-        NSMutableSet *set = [NSMutableSet set];
-        [set addObject:a];
-        [a removeObjectAtIndex:1];
     }
     return 0;
+}
+
+void testList()
+{
+    List *list = [List new];
+    ListNode *f0 = [ListNode new];
+    ListNode *f1 = [ListNode new];
+    ListNode *f2 = [ListNode new];
+    ListNode *f3 = [ListNode new];
+    ListNode *f4 = [ListNode new];
+    
+    f0.val = 1;
+    f0.next = f1;
+    
+    f1.val = 2;
+    f1.next = f2;
+    
+    f2.val = 2;
+    f2.next = f3;
+    
+    f3.val = 5;
+    f3.next = f4;
+    
+    f4.val = 5;
+    
+    ListNode *new = [list deleteDuplicates:f0];
+    new;
+//    NSMutableArray *listArray = [NSMutableArray array];
+//    [listArray addObject:f0];
+//    [listArray addObject:f2];
+    
+//    ListNode *hea = [list mergeKList:listArray];
+////    [list reorderList:f0];
+//    
+//    ListNode *head = [list mergeList:f0 withList:f2];
+    
 }
 
 void testTree() {
@@ -114,6 +150,22 @@ void testBackTracking()
     BackTracking *b = [BackTracking new];
 //    NSArray *re = [b letterCombinations:@"12345"];
 //    NSArray *re_r = [b letterCombinations_recursive:@"12345"];
-    NSArray *r = [b combinationSum:@[@2,@3,@6,@7,@4] target:7];
+//    NSArray *r = [b combinationSum:@[@2,@3,@6,@7,@4] target:7];
     
+    WordDictionary *dic = [WordDictionary new];
+    [dic addWord:@"bad"];
+    [dic addWord:@"dad"];
+    [dic addWord:@"mad"];
+    [dic search:@"pad"];
+    [dic search:@"..d"];
+//    BOOL a = [dic search:@"b.."];
+    
+//    NSArray *res = [b removeInvalidParentheses:@"()())()"];
+//    
+//    NSArray *subset = [b subSets:@[@(1), @(2), @(3), @(4), @(5)]];
+//    NSArray *subSet_r = [b subSet_r:@[@(1), @(2), @(3), @(4), @(5)]];
+//    
+//    NSArray *subset_i = [b subSets_iterate:@[@(1), @(2), @(3), @(4), @(5)]];
+//    NSArray *subsetD = [b subSetsWithDup:@[@(1), @(2), @(2)]];
+    NSArray *pa= [b generateParenthesis:3];
 }

@@ -7,6 +7,7 @@
 //
 
 #import "Solution.h"
+#import "TreeNode.h"
 
 @implementation Solution
 
@@ -583,26 +584,37 @@
     return node;
 }
 
-// 注意这里不是BST
+// 注意这里不是BST 。如果是BST 会简单很多
 // worst case O(n)
 
 - (TreeNode *)lowestCommonAncestor:(TreeNode *)root left:(TreeNode *)p right:(TreeNode *)q
 {
-    if(!root){
-        return nil;
-    }
-    if(p == root || q == root){
+    if(!root || p == root || q == root){
         return root;
     }
-    TreeNode *leftNode = [self lowestCommonAncestor:root.left left:left right:q];
-    TreeNode *rightNode = [self lowestCommonAncestor:root.right left:left right:q];
+
+    TreeNode *leftNode = [self lowestCommonAncestor:root.left left:p right:q];
+    TreeNode *rightNode = [self lowestCommonAncestor:root.right left:p right:q];
     if(leftNode && rightNode) return root;
-    return leftNode ? leftNode : rightNode;
+    if(leftNode){  //下面这几行代码被最后一行给替换了
+        return leftNode;
+    }
+    if(rightNode){
+        return rightNode;
+    }
+    return nil;
+//    return leftNode ? leftNode : rightNode;
 }
 
-- (TreeNode *)doLowestCommonAncestor:(TreeNode *)root left:(TreeNode *)p right:(TreeNode *)q
+- (NSInteger)minDepth:(TreeNode *)root
 {
+    if(root == nil){
+        return 0;
+    }
+    if(root.left == nil) return [self minDepth:root.right] + 1; //注意这里需要检查其中一个为nil 的情况，是到叶子的距离
+    if(root.right == nil) return [self minDepth:root.left] + 1;
 
+    return 1 + MIN([self minDepth:root.left], [self minDepth:root.right]);
 }
 
 @end
@@ -613,6 +625,11 @@
 @end
 
 @implementation Solution (String)
+
+- (void)reverseWords:(NSMutableString *)str
+{
+
+}
 
 //Furthermore, you may assume that the original data does not contain any digits and that digits are only for those repeat numbers, k. For example, there won't be input like 3a or 2[4].
 // 上面这句话是要问面试官的
@@ -846,7 +863,7 @@
     //which integer indicate not found index
     // m * n
     NSInteger idx = 0;
-    for (NSInteger i = 0; i < haystack.length; ++i)
+    for (NSInteger i = 0; i < haystack.length; i++)
     {
         NSInteger curr = i;
         for (NSUInteger j = 0; j < needle.length; ++j)
@@ -1057,6 +1074,39 @@ BOOL isAalphaNumber(unichar ch)
         }
     }
     return result;
+}
+
+//128
+//methon1: 排序后再遍历，但是比较慢
+//是否有重复的元素
+//methos2: 技巧性很强, 遇到数组，如果O（n）的算法复杂度要求，思考下hashtable的作用
+//Fellow up 如果数组很大，dic 放不下怎么办？
+
+// 九章的版本
+- (NSInteger)longestConsecutive:(NSArray<NSNumber *> *)nums
+{
+    NSInteger res = 0;
+    NSMutableSet *set = [NSMutableSet set];
+    for(NSInteger i = 0; i < nums.count; i++){
+        [set addObject:nums[i]];
+    }
+    for(NSInteger i = 0; i < nums.count; i++){
+        if([set count] == 0){ //判断set是否是空
+            break;
+        }
+        NSNumber *down = @(nums[i].integerValue - 1);
+        if([set containsObject:down]){
+            [set removeObject:down]; //避免重复
+            down = @(down.integerValue - 1);
+        }
+        NSNumber *up = @(nums[i].integerValue + 1);
+        if([set containsObject:up]){
+           [set removeObject:up]; //避免重复
+           up = @(up.integerValue + 1);
+        }
+        res = MAX(res, up.integerValue - down.integerValue - 1);
+    }
+    return res;
 }
 
 // method 1. 用product of all elements dived by each element 
@@ -1444,34 +1494,34 @@ BOOL isAalphaNumber(unichar ch)
 
 //- (NSArray<interval *> *)mergeIntervals:(NSArray<interval *> *)intervals
 //{
-//   //sort interval O(nlog(n))
-//   if([intervals count] < 2) {
-//       return intervals;
-//   }
-//   NSArray *sortedIntervals = [intervals sortedArrayUsingComparator:^NSComparisonResult(interval *first, interval *second ) {
-//       if(first.start < second.start) {
-//           return NSOrderedAscending;
-//       } else if(first.start == second.start) {
-//           return NSOrderedSame;
-//       } else {
-//           return NSOrderedDescending;
-//       }
-//   }];
-//   
-//   NSMutableArray *result;
-//   interval *cur = sortedIntervals[0];
-//   interval *next;
-//   for(NSInteger idx = 1; idx < [sortedIntervals count]; idx ++){
-//       *next = sortedIntervals[idx];
-//       if(cur.end >= next.start) {
-//           cur.end = MAX(cur.end, next.end); //注意这里需要和第二个的end进行比较
-//       } else {
-//           [result addObject:cur];
-//           cur = next;
-//       }
-//   }
-//   [result addObject:cur]; //添加last value
-//   return result;
+//  //sort interval O(nlog(n))
+//  if([intervals count] < 2) {
+//      return intervals;
+//  }
+//  NSArray *sortedIntervals = [intervals sortedArrayUsingComparator:^NSComparisonResult(interval *first, interval *second ) {
+//      if(first.start < second.start) {
+//          return NSOrderedAscending;
+//      } else if(first.start == second.start) {
+//          return NSOrderedSame;
+//      } else {
+//          return NSOrderedDescending;
+//      }
+//  }];
+//  
+//  NSMutableArray *result;
+//  interval *cur = sortedIntervals[0];
+//  interval *next;
+//  for(NSInteger idx = 1; idx < [sortedIntervals count]; idx ++){
+//      *next = sortedIntervals[idx];
+//      if(cur.end >= next.start) {
+//          cur.end = MAX(cur.end, next.end); //注意这里需要和第二个的end进行比较
+//      } else {
+//          [result addObject:cur];
+//          cur = next;
+//      }
+//  }
+//  [result addObject:cur]; //添加last value
+//  return result;
 //}
 
 // Solution A: scane it , build an dictionary
@@ -1785,5 +1835,87 @@ BOOL isAalphaNumber(unichar ch)
     } 
     return maxRes;
 }
+
+- (BOOL)canAttendMeetings:(NSArray<Interval *> *)intervals
+{
+ //sort the intervals 这里需要确认的是 如果后面interva 的end == 前面start 的时间，算不算重叠
+ if([intervals count] <= 1){
+     return YES;
+ }
+
+  NSArray<Interval *> *sortedIntervals = [intervals sortedArrayUsingComparator:^NSComparisonResult(Interval *first, Interval *second ) {
+      if(first.start < second.start) {
+          return NSOrderedAscending;
+      } else if(first.start == second.start) {
+          return NSOrderedSame;
+      } else {
+          return NSOrderedDescending;
+      }
+  }];
+
+  for(NSInteger idx = 1; idx < [sortedIntervals count]; idx++){
+      if(sortedIntervals[idx].start < sortedIntervals[idx - 1].end){
+          return NO;
+      }
+  }
+  return YES;
+}
+
+// Very similar with what we do in real life. Whenever you want to start a meeting, 
+// you go and check if any empty room available (available > 0) and
+// if so take one of them ( available -=1 ). Otherwise,
+// you need to find a new room someplace else ( numRooms += 1 ).  
+// After you finish the meeting, the room becomes available again ( available += 1 ).
+
+// [[0, 30],[5, 10],[15, 20]]
+
+//  start : 0, 5, 15
+//  end :   10, 20 , 30
+
+// i   j  numOfRoom freeRoom
+// 0   0      1       0         0 < 10
+// 1   0      2       0         5 < 10
+// 2   0      2       1         15 > 10
+
+// 3   1      2       0         15 < 20  // quit loop
+
+// https://discuss.leetcode.com/topic/20971/c-o-n-log-n-584-ms-3-solutions
+
+- (NSInteger)minMeetingRooms:(NSArray<Interval *> *)intervals
+{
+    NSMutableArray<NSNumber *> *starts = [NSMutableArray array];
+    NSMutableArray<NSNumber *> *ends = [NSMutableArray array];
+    for(Interval *it in intervals){
+        [starts addObject:@(it.start)];
+        [ends addObject:@(it.end)];
+    }
+    
+    [starts sortUsingSelector:@selector(compare:)]; // nlog(n)
+    [ends sortUsingSelector:@selector(compare:)];
+    
+    NSInteger numOfRooms = 0;
+    NSInteger numOfFreeRooms = 0;
+    
+    NSInteger i = 0;
+    NSInteger j = 0;
+    NSInteger len = [intervals count];
+    
+    while (i < len) { //为什么这里i < len 之后就不用判断了呢？
+        if(starts[i].integerValue < ends[j].integerValue) { //任意开始时间 小于结束时间，需要会议室
+            if(numOfFreeRooms > 0){  // 有空余的
+                numOfFreeRooms--;
+            } else {
+                numOfRooms++;
+            }
+            i++;  //找出所有必当前end 小的 start，统计出所有的会议室
+        } else {
+            numOfFreeRooms++; //当结束时间小于此时的开始时间，说明会议结束了。空闲的就加1
+            j++; //继续递增J
+        }
+    }
+    return numOfRooms;
+}
+
+//用queue 来实现
 
 @end

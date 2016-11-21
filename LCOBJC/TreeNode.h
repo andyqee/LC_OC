@@ -21,3 +21,10 @@
 @property (nonatomic, strong) ListNode *next;
 
 @end
+
+
+@interface Interval : NSObject
+@property (nonatomic, assign) NSInteger start;
+@property (nonatomic, assign) NSInteger end;
+
+@end
