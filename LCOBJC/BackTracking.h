@@ -207,12 +207,47 @@
 // Another example is ")()())", where the longest valid parentheses substring is "()()", which has length = 4.
 
 - (NSInteger)longestValidParentheses:(NSString *)str;
-{
 
-}
-
-// 161 One Edit Distance
+//DP 161 One Edit Distance
 - (BOOL)isOneEditDistance:(NSString *)str withStr:(NSString *)str2;
+
+// 121. Best Time to Buy and Sell Stock
+// Difficulty: Easy
+// Contributors: Admin
+// Say you have an array for which the ith element is the price of a given stock on day i.
+// If you were only permitted to complete at most one transaction (ie, buy one and sell one share of the stock), design an algorithm to find the maximum profit.
+
+// Example 1:
+// Input: [7, 1, 5, 3, 6, 4]
+// Output: 5
+
+// max. difference = 6-1 = 5 (not 7-1 = 6, as selling price needs to be larger than buying price)
+// Example 2:
+// Input: [7, 6, 4, 3, 1]
+// Output: 0
+
+- (NSInteger)maxProfit:(NSArray<NSNumber *> *)prices;
+
+// 122. Best Time to Buy and Sell Stock II   QuestionEditorial Solution  My Submissions
+// Difficulty: Medium
+// Contributors: Admin
+// Say you have an array for which the ith element is the price of a given stock on day i.
+
+// Design an algorithm to find the maximum profit. 
+// You may complete as many transactions as you like (ie, buy one and sell one share of the stock multiple times). 
+// However, you may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
+
+- (NSInteger)maxProfit_2:(NSArray<NSNumber *> *)prices;
+
+//198. House Robber
+// TAG: DP
+//Difficulty: Easy
+//Contributors: Admin
+//You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security system connected and it will automatically contact the police if two adjacent houses were broken into on the same night.
+//
+//Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight without alerting the police.
+
+- (NSInteger)rob:(NSArray<NSNumber *> *)nums;
 
 @end
 

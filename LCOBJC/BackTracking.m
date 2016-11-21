@@ -14,7 +14,6 @@
 {
     NSInteger m = [board count];
     NSInteger n = [[board firstObject] count];
-
     //initilize visited array
     NSMutableArray *visited = [NSMutableArray array];
     for(NSInteger i = 0; i < m; i++) {
@@ -27,7 +26,7 @@
 
     for(NSInteger i = 0; i < m; i++) {
         for(NSInteger j = 0; j < n; j++) {
-            if([self findBoard:board x:i y:j word:word index:0 visited:visited]) {
+            if([self _findBoard:board x:i y:j word:word index:0 visited:visited]) {
                 return YES;
             }
         }
@@ -38,7 +37,7 @@
 //helper method
 //http://www.jiuzhang.com/solutions/word-search/
 
-- (BOOL)findBoard:(NSArray<NSArray *> *)board x:(NSInteger)x y:(NSInteger)y word:(NSString *)word index:(NSInteger)idx visited:(NSMutableArray<NSMutableArray *> *)visited
+- (BOOL)_findBoard:(NSArray<NSArray *> *)board x:(NSInteger)x y:(NSInteger)y word:(NSString *)word index:(NSInteger)idx visited:(NSMutableArray<NSMutableArray *> *)visited
 {
     if(idx == [word length]) {
         return YES;
@@ -49,10 +48,10 @@
         return NO;
     }
     visited[x][y] = @(YES); 
-    BOOL isFound = [self findBoard:board x:x-1 y:y word:word index:idx+1 visited:visited] ||
-                   [self findBoard:board x:x y:y-1 word:word index:idx+1 visited:visited] ||
-                   [self findBoard:board x:x+1 y:y word:word index:idx+1 visited:visited] ||
-                   [self findBoard:board x:x y:y+1 word:word index:idx+1 visited:visited];
+    BOOL isFound = [self _findBoard:board x:x-1 y:y word:word index:idx+1 visited:visited] ||
+                   [self _findBoard:board x:x y:y-1 word:word index:idx+1 visited:visited] ||
+                   [self _findBoard:board x:x+1 y:y word:word index:idx+1 visited:visited] ||
+                   [self _findBoard:board x:x y:y+1 word:word index:idx+1 visited:visited];
     visited[x][y] = @(NO);
     return isFound;
 }
@@ -115,7 +114,6 @@
                                                  @"9" : @"wxyz",
                                                  @"0" : @"" };
   NSMutableArray *result = [NSMutableArray array];
-    
   [self doLetterCombinations:digits start:0 prefix:[@"" mutableCopy] result:result dic:map];
   return result;
 }
@@ -344,12 +342,11 @@
             }
         }
     }
-    
     NSMutableSet *set = [NSMutableSet set];
     [self dfs:str start:0 set:set result:[@"" mutableCopy] idxL:removeL idxR:removeR open:0];
-    
     return [set allObjects];
 }
+
 
 // 需要统计 （ ， ） 需要删除的数目
 - (void)dfs:(NSString *)str start:(NSInteger)start set:(NSMutableSet *)set result:(NSMutableString *)result idxL:(NSInteger)l idxR:(NSInteger)r open:(NSInteger)open
@@ -371,7 +368,7 @@
         [self dfs:str start:start + 1 set:set result:result  idxL:l idxR:r open:open + 1];
 
     } else if([ch isEqualToString:@")"]) {
-        [self dfs:str start:start + 1 set:set result:result idxL:l idxR:r-1 open:open];
+        [self dfs:str start:start + 1 set:set result:result idxL:l idxR:r-1 open:open]; //没有使用当前的括号
         [result appendString:ch];
         [self dfs:str start:start + 1 set:set result:result  idxL:l idxR:r open:open - 1];
     } else {
@@ -564,11 +561,11 @@
 - (NSArray<NSString *> *)generateParenthesis:(NSInteger)count
 {
     NSMutableArray *result = [NSMutableArray array];
-    [self generateParenthesis:count withLeft:0 right:0 sub:[@"" mutableCopy] result:result];
+    [self _generateParenthesis:count withLeft:0 right:0 sub:[@"" mutableCopy] result:result];
     return result;
 }
 
-- (void)generateParenthesis:(NSInteger)count withLeft:(NSInteger)l right:(NSInteger)r sub:(NSMutableString *)sub result:(NSMutableArray *)result
+- (void)_generateParenthesis:(NSInteger)count withLeft:(NSInteger)l right:(NSInteger)r sub:(NSMutableString *)sub result:(NSMutableArray *)result
 {
     // r = 0 的时候，已经insert 一个“）”，所以当r == 2 的时候已经满了。所以这里当r == 3 就退出。不能写成 r > count
     // 遇到计数的问题小心 count 是从0 开始，还是从1开始
@@ -579,20 +576,93 @@
     //insert "("
     if(l < count){
         [sub appendString:@"("];
-        [self generateParenthesis:count withLeft:l + 1 right:r sub:sub result:result];
+        [self _generateParenthesis:count withLeft:l + 1 right:r sub:sub result:result];
         [sub deleteCharactersInRange:NSMakeRange(sub.length - 1 , 1)];
     }
 
     if(l > r){
         [sub appendString:@")"];
-        [self generateParenthesis:count withLeft:l right:r+1 sub:sub result:result];
+        [self _generateParenthesis:count withLeft:l right:r+1 sub:sub result:result];
         [sub deleteCharactersInRange:NSMakeRange(sub.length - 1 , 1)];
     }
 }
 
+//method DP, //还有一种方法是用stack 来实现
+
 - (NSInteger)longestValidParentheses:(NSString *)str
 {
+    NSUInteger n = str.length + 1;
+    NSInteger max = 0; //DP[i]：以s[i-1]为结尾的longest valid parentheses substring的长度。
+    NSMutableArray<NSNumber *> *dp = [NSMutableArray arrayWithCapacity:n];
+    for(NSInteger i = 0; i < n; i++){
+        [dp addObject:@(0)];
+    }
+    //关键是找到（）序列直接的关系
+//    X()(())X
+//    j......i-1 
+
+    for(NSInteger i = 1; i <= str.length; i++){
+        NSInteger j = i - 2 - dp[i-1].integerValue; //
+        NSString *ch = [str substringWithRange:NSMakeRange(i-1, 1)];
+        NSString *p = [str substringWithRange:NSMakeRange(j, 1)];
+// 这个状态转移方程不太好整
+        if([ch isEqualToString:@"("] || j < 0 || [p isEqualToString:@")"]){
+            dp[i] = @(0);
+        } else {
+            dp[i] = @(dp[i-1].integerValue + 2 + dp[j].integerValue);
+            max = MAX(max, dp[i].integerValue);
+        }
+    }
+    return max;
+}
+
+//121. Best Time to Buy and Sell Stock
+
+- (NSInteger)maxProfit:(NSArray<NSNumber *> *)prices
+{
+    if([prices count] < 2){
+        return 0;
+    }
+    NSInteger maxProfit = 0;
+    NSInteger minPrice = 0;
+
+    for(NSInteger i = 1; i < [prices count]; i++){
+        if([prices[i] compare:prices[i-1]] == NSOrderedDescending){
+            maxProfit = MAX(maxProfit, prices[i].integerValue - minPrice);
+        } else {
+            minPrice = MIN(minPrice, prices[i].integerValue);
+        }
+    }
+    return maxProfit;
+}
+
+//122. Best Time to Buy and Sell Stock
+
+// 这里可以利用一个变量来替换array
+// Second, suppose the first sequence is "a <= b <= c <= d", the profit is "d - a = (b - a) + (c - b) + (d - c)" without a doubt. And suppose another one is "a <= b >= b' <= c <= d", the profit is not difficult to be figured out as "(b - a) + (d - b')". So you just target at monotone sequences.
+
+- (NSInteger)maxProfit_2:(NSArray<NSNumber *> *)prices
+{
+    if([prices count] < 2){
+        return 0;
+    }
+    NSInteger count = prices.count + 1;
+    NSMutableArray<NSNumber *> *dp = [NSMutableArray arrayWithCapacity:count];
+    [dp addObject:@(0)];
+    [dp addObject:@(0)];
     
+    for(NSInteger i = 2; i <= [prices count]; i++){
+        NSInteger temp = prices[i-1].integerValue - prices[i-2].integerValue;
+        [dp addObject: @(MAX(dp[i].integerValue + temp, dp[i].integerValue))];
+    }
+    return dp[count].integerValue;
+}
+
+//198. House Robber
+
+- (NSInteger)rob:(NSArray<NSNumber *> *)nums
+{
+    NSMutableArray *dp
 }
 
 @end

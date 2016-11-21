@@ -168,4 +168,5 @@ void testBackTracking()
 //    NSArray *subset_i = [b subSets_iterate:@[@(1), @(2), @(3), @(4), @(5)]];
 //    NSArray *subsetD = [b subSetsWithDup:@[@(1), @(2), @(2)]];
     NSArray *pa= [b generateParenthesis:3];
+    NSInteger bes = [b maxProfit:@[@(7), @(1), @(5), @(3), @(6), @(4)]];
 }
