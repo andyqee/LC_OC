@@ -132,7 +132,7 @@
 
 - (TreeNode *)lowestCommonAncestor:(TreeNode *)root left:(TreeNode *)p right:(TreeNode *)q;
 
-// 111. Minimum Depth of Binary Tree   QuestionEditorial Solution  My Submissions
+// 111. Minimum Depth of Binary Tree
 // Difficulty: Easy
 // Contributors: Admin
 // Given a binary tree, find its minimum depth.
@@ -145,9 +145,8 @@
 
 @interface Solution (String)
 
-// 151. Reverse Words in a String   QuestionEditorial Solution  My Submissions
+// 151. Reverse Words in a String
 // Difficulty: Medium  
-// Contributors: Admin
 // Given an input string, reverse the string word by word.
 // For example,
 // Given s = "the sky is blue",

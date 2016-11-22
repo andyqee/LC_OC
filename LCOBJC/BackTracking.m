@@ -616,6 +616,53 @@
     return max;
 }
 
+// 字符串问题，可以问下哪些接口可以用
+
+// 设计case: 正确的几种,错误的,边界的,极端的
+
+- (BOOL)isOneEditDistance:(NSString *)str withStr:(NSString *)str2
+{   //corner case
+    if(str.length == 0 && str2.length == 0){
+        return YES;
+    }
+    if(ABS((NSInteger)str.length - (NSInteger)str2.length) > 1) { //这里length 的属性NSUInteger，所以如果小的数减去大的数，会非常大
+        return NO;
+    } 
+    NSInteger count = 0;
+    NSInteger i = 0;
+    NSInteger j = 0;
+
+    while (i < str.length && j < str2.length) {
+        NSString *p = [str substringWithRange:NSMakeRange(i, 1)];
+        NSString *q = [str substringWithRange:NSMakeRange(j, 1)];
+        if(![p isEqualToString:q]){
+            if(count >= 1){
+                return NO;
+            }
+            count += 1;
+            if(str.length > str2.length){
+                i++; // 也可以判断直接调用substring 方法判断后面的sub string 是否相等
+                // 或者可以这么判断 [str substringFromIndex:i+1] isEqual:[str substringFromIndex:j];
+            } else if (str.length < str2.length){
+                j++;
+            } else {
+                i++;
+                j++;
+            }
+            //[str substringFromIndex:i] isEqual:[str substringFromIndex:j]
+        } else {
+            i++;
+            j++;
+        }
+
+    }
+    if(i < str.length || j < str2.length){
+        count++;
+    }
+    
+    return count <= 1;
+}
+
 //121. Best Time to Buy and Sell Stock
 
 - (NSInteger)maxProfit:(NSArray<NSNumber *> *)prices
@@ -659,11 +706,39 @@
 }
 
 //198. House Robber
-
+//这里也可以将空间O(n) 优化到O（1）
 - (NSInteger)rob:(NSArray<NSNumber *> *)nums
 {
-    NSMutableArray *dp
+    NSInteger n = nums.count + 1;
+    NSMutableArray<NSNumber *> *dp = [NSMutableArray arrayWithCapacity:n];
+    for(NSInteger i = 0; i < n; i++){
+        [dp addObject:@(0)];
+    }
+    dp[1] = nums[0];
+    
+    for(NSInteger i = 2; i <= n; i++){
+        //temp = MAX(prev + nums[i-1].integerValue, curr)
+        // prev = curr
+        // curr = temp
+        dp[i] = @(MAX(dp[i-2].integerValue + nums[i-1].integerValue, dp[i-1].integerValue));
+    }
+    return dp[n].integerValue;
 }
+
+- (NSInteger)rob:(NSArray<NSNumber *> *)nums l:(NSInteger)l r:(NSInteger)r
+{
+    return 0;
+}
+
+//methos 1 : 首先想到的是用两个数组
+//其实可以用第一问的方法来写
+- (NSInteger)rob_2:(NSArray<NSNumber *> *)nums
+{
+    NSInteger n = nums.count;
+    if(n < 2) return (n > 0 ? nums[0].integerValue : 0);
+    return MAX([self rob:nums l:0 r:n-2], [self rob:nums l:1 r:n-1]); //递归调用
+}
+
 
 @end
 

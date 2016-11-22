@@ -169,4 +169,12 @@ void testBackTracking()
 //    NSArray *subsetD = [b subSetsWithDup:@[@(1), @(2), @(2)]];
     NSArray *pa= [b generateParenthesis:3];
     NSInteger bes = [b maxProfit:@[@(7), @(1), @(5), @(3), @(6), @(4)]];
+    
+    BOOL a = [b isOneEditDistance:@"a" withStr:@""];
+    BOOL bb = [b isOneEditDistance:@"a" withStr:@"b"];
+    BOOL c = [b isOneEditDistance:@"a" withStr:@"ac"];
+    BOOL d = [b isOneEditDistance:@"abc" withStr:@"ac"];
+    BOOL dd = [b isOneEditDistance:@"abcc" withStr:@"ac"];
+
+
 }

@@ -13,6 +13,7 @@
 		A1F2B7E81DC5EEE70023278E /* TreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F2B7E71DC5EEE70023278E /* TreeNode.m */; };
 		D7165C1C1DE0B48A00F12A47 /* math.m in Sources */ = {isa = PBXBuildFile; fileRef = D7165C1B1DE0B48A00F12A47 /* math.m */; };
 		D757AAD11DD95F6900F5ED1A /* BackTracking.m in Sources */ = {isa = PBXBuildFile; fileRef = D757AAD01DD95F6900F5ED1A /* BackTracking.m */; };
+		D7DB081B1DE3EB3E001888B3 /* Tree.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DB081A1DE3EB3E001888B3 /* Tree.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -40,6 +41,8 @@
 		D7165C1B1DE0B48A00F12A47 /* math.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = math.m; sourceTree = "<group>"; };
 		D757AACF1DD95F6900F5ED1A /* BackTracking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackTracking.h; sourceTree = "<group>"; };
 		D757AAD01DD95F6900F5ED1A /* BackTracking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackTracking.m; sourceTree = "<group>"; };
+		D7DB08191DE3EB3E001888B3 /* Tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tree.h; sourceTree = "<group>"; };
+		D7DB081A1DE3EB3E001888B3 /* Tree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tree.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +86,8 @@
 				A1BFBF641DD9F40E0022C1DC /* List.m */,
 				D7165C1A1DE0B48A00F12A47 /* math.h */,
 				D7165C1B1DE0B48A00F12A47 /* math.m */,
+				D7DB08191DE3EB3E001888B3 /* Tree.h */,
+				D7DB081A1DE3EB3E001888B3 /* Tree.m */,
 			);
 			path = LCOBJC;
 			sourceTree = "<group>";
@@ -150,6 +155,7 @@
 				D7165C1C1DE0B48A00F12A47 /* math.m in Sources */,
 				A1F2B7DD1DC5ED090023278E /* main.m in Sources */,
 				A1F2B7E81DC5EEE70023278E /* TreeNode.m in Sources */,
+				D7DB081B1DE3EB3E001888B3 /* Tree.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

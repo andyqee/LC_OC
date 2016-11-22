@@ -625,6 +625,18 @@
 @end
 
 @implementation Solution (String)
+// 这种方法估计面试官不同意
+// split the array 
+// travese the array in reverse order
+// append to mutableString
+// 各种corner case
+
+// What constitutes a word?
+// A sequence of non-space characters constitutes a word.
+// Could the input string contain leading or trailing spaces?
+// Yes. However, your reversed string should not contain leading or trailing spaces.
+// How about multiple spaces between two words?
+// Reduce them to a single space in the reversed string.
 
 - (void)reverseWords:(NSMutableString *)str
 {
@@ -1200,8 +1212,7 @@ BOOL isAalphaNumber(unichar ch)
 //#prama mark - Array
 
 @implementation Solution (Array)
-// MIT open class has video
-
+// MIT open class has video. 这里面用的双指针法，可以解决 “一道把排好序的数组每个element平方，输出还是排好序的”。 head tail 进行比较
 - (NSArray<NSArray *> *)threeSum:(NSArray *)nums // 3sum
 {
     //sort array

@@ -228,7 +228,7 @@
 
 - (NSInteger)maxProfit:(NSArray<NSNumber *> *)prices;
 
-// 122. Best Time to Buy and Sell Stock II   QuestionEditorial Solution  My Submissions
+// 122. Best Time to Buy and Sell Stock II
 // Difficulty: Medium
 // Contributors: Admin
 // Say you have an array for which the ith element is the price of a given stock on day i.
@@ -248,6 +248,16 @@
 //Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight without alerting the police.
 
 - (NSInteger)rob:(NSArray<NSNumber *> *)nums;
+
+// 213. House Robber II   QuestionEditorial Solution  My Submissions
+// Difficulty: Medium
+// Contributors: Admin
+// Note: This is an extension of House Robber.
+
+// After robbing those houses on that street, the thief has found himself a new place for his thievery so that he will not get too much attention. This time, all houses at this place are arranged in a circle. That means the first house is the neighbor of the last one. Meanwhile, the security system for these houses remain the same as for those in the previous street.
+
+// Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight without alerting the police.
+- (NSInteger)rob_2:(NSArray<NSNumber *> *)nums;
 
 @end
 
