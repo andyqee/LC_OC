@@ -11,6 +11,7 @@
 #import "TreeNode.h"
 #import "BackTracking.h"
 #import "List.h"
+#import "Tree.h"
 
 void testTree();
 void testString();
@@ -69,28 +70,28 @@ void testList()
 
 void testTree() {
     
-//     1
+//     2
 //    / \
-//   2   3
+//   1   4
 //      / \
-//     5   4
+//     3   5
     
     TreeNode *left = [[TreeNode alloc] init];
-    left.val = 2;
+    left.val = 1;
 
     TreeNode *rightRight = [[TreeNode alloc] init];
-    rightRight.val = 4;
+    rightRight.val = 5;
     
     TreeNode *rightLeft = [[TreeNode alloc] init];
-    rightLeft.val = 5;
+    rightLeft.val = 3;
     
     TreeNode *right = [[TreeNode alloc] init];
-    right.val = 3;
+    right.val = 4;
     right.right = rightRight;
     right.left = rightLeft;
     
     TreeNode *node = [[TreeNode alloc] init];
-    node.val = 1;
+    node.val = 2;
     node.left = left;
     node.right = right;
     
@@ -109,6 +110,9 @@ void testTree() {
 //    
 //    NSString *seriaze_r = [s serialize_R:node];
 //    TreeNode *des_r = [s deserialize_I:seriaze_r];
+    BOOL r = [s isValidBST:node];
+    BOOL rr = [s isValidBST_r:node];
+
 }
 
 void testString()
@@ -148,6 +152,20 @@ void testArray()
 void testBackTracking()
 {
     BackTracking *b = [BackTracking new];
+    NSMutableArray *arry = [@[@(0), @(2)] mutableCopy];
+    [arry insertObject:@(1) atIndex:2];
+//    NSArray *tem =  [b combinationSum_3:16 count:3];
+//    NSArray *res = [b permut:@[@(1), @(2), @(3)]];
+//    NSArray *ress = [b permut_i:@[@(1), @(2), @(3)]];
+    
+//    NSArray *re2 = [b permut2:@[@(1), @(1), @(2)]];
+//
+//    NSArray *com = [b combineNumber:5 k:1];
+//    NSArray *com2 = [b combineNumberMethod2:5 k:1];
+//    NSArray *com3 = [b combineNumberMethod3:5 k:1];
+    
+    NSArray *tem = [b partition:@"aaab"];
+    
 //    NSArray *re = [b letterCombinations:@"12345"];
 //    NSArray *re_r = [b letterCombinations_recursive:@"12345"];
 //    NSArray *r = [b combinationSum:@[@2,@3,@6,@7,@4] target:7];
@@ -167,14 +185,14 @@ void testBackTracking()
 //    
 //    NSArray *subset_i = [b subSets_iterate:@[@(1), @(2), @(3), @(4), @(5)]];
 //    NSArray *subsetD = [b subSetsWithDup:@[@(1), @(2), @(2)]];
-    NSArray *pa= [b generateParenthesis:3];
-    NSInteger bes = [b maxProfit:@[@(7), @(1), @(5), @(3), @(6), @(4)]];
-    
-    BOOL a = [b isOneEditDistance:@"a" withStr:@""];
-    BOOL bb = [b isOneEditDistance:@"a" withStr:@"b"];
-    BOOL c = [b isOneEditDistance:@"a" withStr:@"ac"];
-    BOOL d = [b isOneEditDistance:@"abc" withStr:@"ac"];
-    BOOL dd = [b isOneEditDistance:@"abcc" withStr:@"ac"];
+//    NSArray *pa= [b generateParenthesis:3];
+//    NSInteger bes = [b maxProfit:@[@(7), @(1), @(5), @(3), @(6), @(4)]];
+//    
+//    BOOL a = [b isOneEditDistance:@"a" withStr:@""];
+//    BOOL bb = [b isOneEditDistance:@"a" withStr:@"b"];
+//    BOOL c = [b isOneEditDistance:@"a" withStr:@"ac"];
+//    BOOL d = [b isOneEditDistance:@"abc" withStr:@"ac"];
+//    BOOL dd = [b isOneEditDistance:@"abcc" withStr:@"ac"];
 
 
 }

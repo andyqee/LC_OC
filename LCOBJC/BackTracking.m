@@ -15,9 +15,9 @@
     NSInteger m = [board count];
     NSInteger n = [[board firstObject] count];
     //initilize visited array
-    NSMutableArray *visited = [NSMutableArray array];
+    NSMutableArray *visited = [NSMutableArray arrayWithCapacity:m];
     for(NSInteger i = 0; i < m; i++) {
-        NSMutableArray *subArray = [NSMutableArray array];
+        NSMutableArray *subArray = [NSMutableArray arrayWithCapacity:n];
         for(NSInteger j = 0; j < n; j++) {
             [subArray addObject:@(NO)];
         }
@@ -57,6 +57,7 @@
 }
 
 //先来个递归版本，再来个迭代 DFS的思路
+#pragma mark  letter Combinations
 
 - (NSArray<NSString *> *)letterCombinations:(NSString *)digits
 {
@@ -80,11 +81,11 @@
     for(NSInteger i = 0; i < digits.length; i++) {
         NSString *key = [digits substringWithRange:NSMakeRange(i, 1)];
         NSString *mStr = map[key];
-        if(mStr.length) { //这里要添加空字符串的判断
+        if(mStr.length) { //！！！这里要添加空字符串的判断
             NSInteger count = [result count];
             NSMutableArray *temp = [NSMutableArray array];
             
-            for(NSInteger j = 0; j < mStr.length; j++){
+            for(NSInteger j = 0; j < mStr.length; j++){ // 
                 NSString *ch = [mStr substringWithRange:NSMakeRange(j, 1)];
                 for(NSInteger k = 0; k < count; k++) {
                     NSMutableString *str = [NSMutableString stringWithString:result[k]];
@@ -127,7 +128,7 @@
 
     NSString *ch = [digits substringWithRange:NSMakeRange(start, 1)];
     NSString *alphaValue = map[ch];
-    if(alphaValue.length == 0) {
+    if(alphaValue.length == 0) { //skip current
         [self doLetterCombinations:digits start:start + 1 prefix:prefix result:result dic:map];
     }
     for(NSInteger i = 0; i < alphaValue.length; i++){
@@ -160,18 +161,20 @@
 
 // 这种也是要输出所有结果。and 这些结果保证不重复
 
+#pragma mark Combination Sum I
+
 - (NSArray<NSArray *> *)combinationSum:(NSArray *)array target:(NSInteger)target
 {
     if(target <= 0 || [array count] == 0){
         return nil;
     }
     NSMutableSet *result = [NSMutableSet set];
-    [self doCombinationSum:array target:target result:result currResult:[@[] mutableCopy]];
+    [self _doCombinationSum:array target:target result:result currResult:[@[] mutableCopy]];
 
     return [result allObjects]; 
 }
 
-- (void)doCombinationSum:(NSArray<NSNumber *> *)array target:(NSInteger)target result:(NSMutableSet *)result currResult:(NSMutableArray<NSNumber *> *)curr
+- (void)_doCombinationSum:(NSArray<NSNumber *> *)array target:(NSInteger)target result:(NSMutableSet *)result currResult:(NSMutableArray<NSNumber *> *)curr
 {
     if(target == 0) {
         NSArray *sorted = [curr sortedArrayUsingSelector:@selector(compare:)];
@@ -185,8 +188,8 @@
         NSInteger nextTarget = target - array[i].integerValue;
         if(nextTarget >= 0) {
             [curr addObject:array[i]];
-            [self doCombinationSum:array target:nextTarget result:result currResult:curr];
-            [curr removeObjectAtIndex:[curr count] - 1]; //递归完恢复状态,用这种方式，如果加入到result 中curr 不copy一份的话，返回的是空array，相比较上面的方法，减少了一些中间对象的创建
+            [self _doCombinationSum:array target:nextTarget result:result currResult:curr];
+            [curr removeLastObject]; //递归完恢复状态,用这种方式，如果加入到result 中curr 不copy一份的话，返回的是空array，相比较上面的方法，减少了一些中间对象的创建
         }
     }
 }
@@ -199,12 +202,12 @@
     }
     NSArray *sortedArray = [array sortedArrayUsingSelector:@selector(compare:)];
     NSMutableArray *result = [NSMutableArray array];
-    [self doCombinationSum_optimize:sortedArray start:0 target:target result:result currResult:[@[] mutableCopy]];
+    [self _doCombinationSum_optimize:sortedArray start:0 target:target result:result currResult:[@[] mutableCopy]];
 
     return result; 
 }
 
-- (void)doCombinationSum_optimize:(NSArray<NSNumber *> *)array start:(NSInteger)start target:(NSInteger)target result:(NSMutableArray *)result currResult:(NSMutableArray<NSNumber *> *)curr
+- (void)_doCombinationSum_optimize:(NSArray<NSNumber *> *)array start:(NSInteger)start target:(NSInteger)target result:(NSMutableArray *)result currResult:(NSMutableArray<NSNumber *> *)curr
 {
     if(target == 0) {
         [result addObject:[curr copy]]; //sorted first then insert
@@ -218,8 +221,8 @@
         NSInteger nextTarget = target - array[i].integerValue;
         if(nextTarget >= 0) {
             [curr addObject:array[i]]; //如果需要确保结果集合是没有重复的，但是元素是可以重复使用的,直接将start递归下
-            [self doCombinationSum_optimize:array start:start target:nextTarget result:result currResult:curr];
-            [curr removeObjectAtIndex:[curr count] - 1]; //递归完恢复状态,用这种方式，如果加入到result 中curr 不copy一份的话，返回的是空array，相比较上面的方法，减少了一些中间对象的创建
+            [self _doCombinationSum_optimize:array start:start target:nextTarget result:result currResult:curr];
+            [curr removeLastObject]; //递归完恢复状态,用这种方式，如果加入到result 中curr 不copy一份的话，返回的是空array，相比较上面的方法，减少了一些中间对象的创建
         }
     }
 }
@@ -231,12 +234,12 @@
     }
     NSArray *sortedArray = [array sortedArrayUsingSelector:@selector(compare:)];
     NSMutableArray *result = [NSMutableArray array];
-    [self doCombinationSum_optimize_2:sortedArray start:0 target:target result:result currResult:[@[] mutableCopy]];
+    [self _doCombinationSum_optimize_2:sortedArray start:0 target:target result:result currResult:[@[] mutableCopy]];
 
     return result; 
 }
 
-- (void)doCombinationSum_optimize_2:(NSArray<NSNumber *> *)array start:(NSInteger)start target:(NSInteger)target result:(NSMutableArray *)result currResult:(NSMutableArray<NSNumber *> *)curr
+- (void)_doCombinationSum_optimize_2:(NSArray<NSNumber *> *)array start:(NSInteger)start target:(NSInteger)target result:(NSMutableArray *)result currResult:(NSMutableArray<NSNumber *> *)curr
 {
     if(target == 0) {
         [result addObject:[curr copy]]; //sorted first then insert
@@ -250,17 +253,319 @@
         NSInteger nextTarget = target - array[i].integerValue;
         if(nextTarget >= 0) {
             [curr addObject:array[i]]; //如果需要确保结果集合是没有重复的，但是元素是可以重复使用的,直接将start递归下
-            [self doCombinationSum_optimize_2:array start:start+1 target:nextTarget result:result currResult:curr];
-            [curr removeObjectAtIndex:[curr count] - 1]; //递归完恢复状态,用这种方式，如果加入到result 中curr 不copy一份的话，返回的是空array，相比较上面的方法，减少了一些中间对象的创建
+            [self _doCombinationSum_optimize_2:array start:start+1 target:nextTarget result:result currResult:curr];
+            [curr removeLastObject]; //递归完恢复状态,用这种方式，如果加入到result 中curr 不copy一份的话，返回的是空array，相比较上面的方法，减少了一些中间对象的创建
         }
     }
 }
 
-// handle empty string 
+- (NSArray<NSArray *> *)combinationSum_3:(NSInteger)sum count:(NSInteger)k
+{
+    if (sum <= 0 || sum > 45) {
+        return nil; //
+    }
+    NSMutableArray *result = [NSMutableArray array];
+    [self _doCombinationSum_3:result temp:[@[] mutableCopy] sum:sum start:1 count:k];
+    
+    return [result copy];
+}
+
+- (void)_doCombinationSum_3:(NSMutableArray *)result temp:(NSMutableArray *)temp sum:(NSInteger)sum start:(NSInteger)start count:(NSInteger)k
+{
+    if(sum == 0 && [temp count] == k){
+        [result addObject:[temp copy]];
+        return;
+    }
+    if(sum < 0 || [temp count] >= k){
+        return;
+    }
+    for (NSInteger i = start ; i <= 9; i++) {
+        [temp addObject: @(i)];
+        [self _doCombinationSum_3:result temp:temp sum:sum - i start:i + 1 count:k];
+        [temp removeLastObject];
+    }
+}
+
+#pragma mark Permutations
+
+- (NSArray<NSArray *> *)permut:(NSArray<NSNumber *> *)nums
+{
+    NSMutableArray *array = [NSMutableArray array];
+    [self _permut:[nums mutableCopy] index:0 result:array];
+    return array;
+}
+
+// 第一种解法：swap index 和后面所有的元素
+
+- (void)_permut:(NSMutableArray<NSNumber *> *)nums index:(NSInteger)index result:(NSMutableArray *)result
+{
+    if(index == nums.count){
+        [result addObject:[nums copy]];
+        return;
+    }
+    for(NSInteger i = index; i < nums.count; i++){
+        [nums exchangeObjectAtIndex:i withObjectAtIndex:index]; //
+        [self _permut:nums index:index+1 result:result];
+        [nums exchangeObjectAtIndex:index withObjectAtIndex:i];
+    }
+}
+
+// 第二种解法，利用visited 排除重复
+
+- (void)_permut:(NSMutableArray<NSNumber *> *)nums temp:(NSMutableArray *)temp result:(NSMutableArray *)result visited:(NSMutableArray<NSNumber *> *)visited
+{
+    if(temp.count == nums.count){
+        [result addObject:[temp copy]];
+        return;
+    }
+    for(NSInteger i = 0; i < nums.count; i++){
+        if(visited[i].boolValue){
+            continue;
+        }
+        visited[i] = @(YES);
+        [temp addObject:nums[i]];
+        [self _permut:nums temp:temp result:result visited:visited];
+        [temp removeLastObject];
+        visited[i] = @(NO);
+    }
+}
+
+// 第三种迭代枚举写法，我比较擅长的解法
+- (NSArray<NSArray *> *)permut_i:(NSArray<NSNumber *> *)nums// handle empty string
+{
+    NSMutableArray<NSArray *> *result = [NSMutableArray arrayWithObject:@[nums[0]]];
+    for (NSInteger i = 1; i < nums.count; i++) {
+        NSMutableArray *temp = [NSMutableArray array];
+        for(NSArray *sub in result){
+            for (NSInteger j = 0; j <= sub.count; j++) {
+                NSMutableArray *newResult = [NSMutableArray arrayWithArray:sub];
+                [newResult insertObject:nums[i] atIndex:j];
+                [temp addObject:newResult];
+            }
+        }
+        result = temp;
+    }
+    return result;
+}
+
+//有重复元素
+#pragma mark Permutations 2
+
+- (NSArray<NSArray *> *)permut2:(NSArray<NSNumber *> *)nums
+{
+    NSMutableArray *array = [NSMutableArray array];
+    NSArray *sortedNums = [nums sortedArrayUsingSelector:@selector(compare:)];
+    [self _permut2:[sortedNums mutableCopy] index:0 result:array];
+    return array;
+}
+
+//这道题目比我想象中的复杂
+//解法1: 根据Permutations的第二种解法的基础上改动
+
+//关键: 1.visited[i-1].boolValue == NO 前面的必须使用了，才可以使用当前的 2. input nums 需要sort
+//这里的关键1 确实不太好理解:举个例子，假设这里第一个选的 2,第二个可能是1,这是灰出现两个 1,1.这时候痛过这种方式来进行去重，只有前面那个选了，才选第二1.
+//             /*
+//             上面的判断主要是为了去除重复元素影响。
+//             比如，给出一个排好序的数组，[1,2,2]，那么第一个2和第二2如果在结果中互换位置，
+//             我们也认为是同一种方案，所以我们强制要求相同的数字，原来排在前面的，在结果
+//             当中也应该排在前面，这样就保证了唯一性。所以当前面的2还没有使用的时候，就
+//             不应该让后面的2使用。
+//             */
+- (void)_permut2:(NSMutableArray<NSNumber *> *)nums temp:(NSMutableArray *)temp result:(NSMutableArray *)result visited:(NSMutableArray<NSNumber *> *)visited
+{
+    if(temp.count == nums.count){
+        [result addObject:[temp copy]];
+        return;
+    }
+    for(NSInteger i = 0; i < nums.count; i++){
+        if(visited[i].boolValue){
+            continue;
+        }
+        if (i > 0 && nums[i].integerValue == nums[i-1].integerValue && visited[i-1].boolValue == NO) { 
+            continue;
+        }
+        visited[i] = @(YES);
+        [temp addObject:nums[i]];
+        [self _permut2:nums temp:temp result:result visited:visited];
+        [temp removeLastObject];
+        visited[i] = @(NO);
+    }
+}
+
+//解法1: 根据Permutations的第1种解法的基础上改动
+//这种交换办法还要再想想
+// 112
+// 112 121 
+// 211 112
+
+// 大脑浮现调用stack
+
+- (void)_permut2:(NSMutableArray<NSNumber *> *)nums index:(NSInteger)index result:(NSMutableSet *)result
+{
+    if(index == nums.count){
+        if(![result containsObject:[nums copy]]){
+            [result addObject:[nums copy]];
+        }
+        return;
+    }
+    for(NSInteger i = index; i < nums.count; i++) {
+        if(i != index && nums[i].integerValue == nums[i-1].integerValue){
+            continue;
+        }
+        [nums exchangeObjectAtIndex:index withObjectAtIndex:i];
+        [self _permut2:nums index:index+1 result:result];
+        [nums exchangeObjectAtIndex:index withObjectAtIndex:i];
+    }
+}
+
+//找到数学规律
+// http://bangbingsyb.blogspot.hk/2014/11/leetcode-permutation-sequence.html
+// 有空写一下
+//- (NSString *)getPermutation:(NSInteger)n kth:(NSInteger)k
+//{
+//    
+//}
+
+#pragma mark - Palindrome
+
+- (NSArray<NSArray<NSString *> *> *)partition:(NSString *)str;
+{
+    NSMutableArray *result = [NSMutableArray array];
+    NSMutableArray *temp = [NSMutableArray array];
+    [self _partition:str start:0 temp:temp result:result];
+    return result;
+}
+// aaaaaaaaaaa
+//  |....|
+//  s    i
+//  s range 0..<len
+//  i range s..<len
+
+- (void)_partition:(NSString *)str start:(NSInteger)start temp:(NSMutableArray *)temp result:(NSMutableArray *)result
+{
+    if (start == str.length) {
+        [result addObject:[temp copy]];
+        return;
+    }
+    for (NSInteger i = start; i < str.length; i++) {
+        if([self _isPalidrome:str low:start high:i]){
+            [temp addObject:[str substringWithRange:NSMakeRange(start, i - start + 1)]];
+            [self _partition:str start:i+1 temp:temp result:result];
+            [temp removeLastObject];
+        }
+    }
+}
+
+- (BOOL)_isPalidrome:(NSString *)str low:(NSInteger)low high:(NSInteger)high
+{
+    while (low < high) {
+        NSString *ch = [str substringWithRange:NSMakeRange(low, 1)];
+        NSString *ch2 = [str substringWithRange:NSMakeRange(high, 1)];
+        if(![ch isEqualToString:ch2]){
+            return NO;
+        }
+        low++;
+        high--;
+    }
+    return YES;
+}
+
+#pragma mark Combinations
+
+//method 1: BackTracking
+
+- (NSArray<NSArray<NSNumber *> *> *)combineNumber:(NSInteger)n k:(NSInteger)k
+{
+    if (k == 0 || n == 0 || k > n) {
+        return nil;
+    }
+    NSMutableArray *result = [NSMutableArray array]; // 这里需要改成Array
+    NSMutableArray *temp = [NSMutableArray array];
+
+    [self _doCombinNumber:n start:1 k:k temp:temp result:result];
+    return result;
+}
+
+//这里的T(n) n * n - 1 * n - 2, 算法复杂度
+
+- (void)_doCombinNumber:(NSInteger)n start:(NSInteger)start k:(NSInteger)k temp:(NSMutableArray *)temp result:(NSMutableArray *)result
+{
+    if(k == 0){
+        NSArray *sub = [temp copy];
+        [result addObject:sub];
+        return;
+    }
+    for(NSInteger i = start; i <= n ;i++){
+        [temp addObject:@(i)];
+        [self _doCombinNumber:n start:i+1 k:k - 1 temp:temp result:result];//注意这里需要把 i+1 传递下去
+        [temp removeObject:@(i)];
+    }
+}
+
+//method 2: 递归
+
+- (NSArray<NSArray<NSNumber *> *> *)combineNumberMethod2:(NSInteger)n k:(NSInteger)k
+{
+    if(k == 0 || k > n || n == 0){
+        return nil;
+    }
+    if(k == 1){
+        NSMutableArray *subArray = [NSMutableArray array];
+        for(NSInteger i = 1; i <= n; i++){
+            [subArray addObject:@[@(i)]];
+        }
+        return subArray;
+    }
+
+    NSArray *sub1 = [self combineNumberMethod2:n-1 k:k]; // not chose n pick k elements from n - 1
+    NSArray *sub2 = [self combineNumberMethod2:n-1 k:k-1]; // chose n
+    
+    //merge the result;
+    NSMutableArray *result = [NSMutableArray arrayWithArray:sub1];
+    
+    for(NSArray *item in sub2){
+        NSMutableArray *res = [NSMutableArray arrayWithArray:item];
+        [res addObject:@(n)];
+        [result addObject:res];
+    }
+    return result;
+}
+
+//method 2: 枚举
+
+- (NSSet<NSSet<NSNumber *> *> *)combineNumberMethod3:(NSInteger)n k:(NSInteger)k
+{
+    if(k == 0 || k > n || n == 0){
+        return nil;
+    }
+    
+    NSMutableSet<NSMutableSet *> *result = [NSMutableSet set];
+    for (NSInteger i = 1; i <= n; i++) {
+        [result addObject:[NSMutableSet setWithObject:@(i)]];
+    }
+    
+    for (NSInteger i = 2; i <= k; i++) {
+        NSMutableSet *temp = [NSMutableSet set];
+        
+        for (NSInteger j = 1; j <= n; j++) {
+            for (NSMutableSet *set in result) {
+                if(![set containsObject:@(1)]){
+                    [set addObject:@(1)];
+                    if(![temp containsObject:set]){
+                        [temp addObject:set];
+                    }
+                }
+            }
+        }
+        result = temp;
+    }
+    return result;
+}
+
+#pragma mark - 10. Regular Expression Matching
 
 - (BOOL)isMatch:(NSString *)str withPatten:(NSString *)p 
-{
-    //handle emtpy case
+{   //handle emtpy case
     return [self doIsMatch_re:str i:0 withPatten:p j:0];
 }
 

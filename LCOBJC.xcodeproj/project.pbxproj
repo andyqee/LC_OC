@@ -12,6 +12,7 @@
 		A1F2B7E51DC5ED4F0023278E /* Solution.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F2B7E41DC5ED4F0023278E /* Solution.m */; };
 		A1F2B7E81DC5EEE70023278E /* TreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F2B7E71DC5EEE70023278E /* TreeNode.m */; };
 		D7165C1C1DE0B48A00F12A47 /* math.m in Sources */ = {isa = PBXBuildFile; fileRef = D7165C1B1DE0B48A00F12A47 /* math.m */; };
+		D71E29931DE5C5CF006C2500 /* DP.m in Sources */ = {isa = PBXBuildFile; fileRef = D71E29921DE5C5CF006C2500 /* DP.m */; };
 		D757AAD11DD95F6900F5ED1A /* BackTracking.m in Sources */ = {isa = PBXBuildFile; fileRef = D757AAD01DD95F6900F5ED1A /* BackTracking.m */; };
 		D7DB081B1DE3EB3E001888B3 /* Tree.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DB081A1DE3EB3E001888B3 /* Tree.m */; };
 /* End PBXBuildFile section */
@@ -39,6 +40,8 @@
 		A1F2B7E71DC5EEE70023278E /* TreeNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TreeNode.m; sourceTree = "<group>"; };
 		D7165C1A1DE0B48A00F12A47 /* math.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = math.h; sourceTree = "<group>"; };
 		D7165C1B1DE0B48A00F12A47 /* math.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = math.m; sourceTree = "<group>"; };
+		D71E29911DE5C5CF006C2500 /* DP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DP.h; sourceTree = "<group>"; };
+		D71E29921DE5C5CF006C2500 /* DP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DP.m; sourceTree = "<group>"; };
 		D757AACF1DD95F6900F5ED1A /* BackTracking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackTracking.h; sourceTree = "<group>"; };
 		D757AAD01DD95F6900F5ED1A /* BackTracking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackTracking.m; sourceTree = "<group>"; };
 		D7DB08191DE3EB3E001888B3 /* Tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tree.h; sourceTree = "<group>"; };
@@ -88,6 +91,8 @@
 				D7165C1B1DE0B48A00F12A47 /* math.m */,
 				D7DB08191DE3EB3E001888B3 /* Tree.h */,
 				D7DB081A1DE3EB3E001888B3 /* Tree.m */,
+				D71E29911DE5C5CF006C2500 /* DP.h */,
+				D71E29921DE5C5CF006C2500 /* DP.m */,
 			);
 			path = LCOBJC;
 			sourceTree = "<group>";
@@ -152,6 +157,7 @@
 				A1BFBF651DD9F40E0022C1DC /* List.m in Sources */,
 				A1F2B7E51DC5ED4F0023278E /* Solution.m in Sources */,
 				D757AAD11DD95F6900F5ED1A /* BackTracking.m in Sources */,
+				D71E29931DE5C5CF006C2500 /* DP.m in Sources */,
 				D7165C1C1DE0B48A00F12A47 /* math.m in Sources */,
 				A1F2B7DD1DC5ED090023278E /* main.m in Sources */,
 				A1F2B7E81DC5EEE70023278E /* TreeNode.m in Sources */,

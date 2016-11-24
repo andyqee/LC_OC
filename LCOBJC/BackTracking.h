@@ -34,9 +34,7 @@
 
 - (BOOL)existWithBoard:(NSArray<NSArray<NSString *> *> *)board word:(NSString *)word;
 
-// 17. Letter Combinations of a Phone Number   
-// Total Accepted: 110836
-// Total Submissions: 349890
+// 17. Letter Combinations of a Phone Number
 // Difficulty: Medium
 // Contributors: Admin
 // Given a digit string, return all possible letter combinations that the number could represent.
@@ -51,6 +49,7 @@
 - (NSArray<NSString *> *)letterCombinations:(NSString *)digits;
 - (NSArray<NSString *> *)letterCombinations_recursive:(NSString *)digits;
 
+//39
 // Combination Sum I
 
 // Given a set of candidate numbers (C) and a target number (T), find all unique combinations in C where the candidate numbers sums to T.
@@ -66,10 +65,104 @@
 
 - (NSArray<NSArray *> *)combinationSum:(NSArray *)array target:(NSInteger)target;
 
-// Combination Sum 2
+// 40 Combination Sum 2
 - (NSArray<NSArray *> *)combinationSum_2:(NSArray *)array target:(NSInteger)target;
 
-// Combination Sum 3, 4没有做呢
+// 216. Combination Sum III
+//Find all possible combinations of k numbers that add up to a number n, given that only numbers from 1 to 9 can be used and each combination should be a unique set of numbers.
+//
+//
+//Example 1:
+//
+//Input: k = 3, n = 7
+//
+//Output:
+//
+//[[1,2,4]]
+//
+//Example 2:
+//
+//Input: k = 3, n = 9
+//
+//Output:
+//
+//[[1,2,6], [1,3,5], [2,3,4]]
+
+- (NSArray<NSArray *> *)combinationSum_3:(NSInteger)sum count:(NSInteger)k;
+
+//46. Permutations   
+//Difficulty: Medium
+//Contributors: Admin
+//Given a collection of distinct numbers, return all possible permutations.
+//
+//For example,
+//[1,2,3] have the following permutations:
+//[
+// [1,2,3],
+// [1,3,2],
+// [2,1,3],
+// [2,3,1],
+// [3,1,2],
+// [3,2,1]
+// ]
+//
+
+- (NSArray<NSArray *> *)permut:(NSArray<NSNumber *> *)nums;
+- (NSArray<NSArray *> *)permut_i:(NSArray<NSNumber *> *)nums;
+
+- (NSArray<NSArray *> *)permut2:(NSArray<NSNumber *> *)nums;
+
+// 60. Permutation Sequence
+
+//The set [1,2,3,…,n] contains a total of n! unique permutations.
+//
+//By listing and labeling all of the permutations in order,
+//We get the following sequence (ie, for n = 3):
+//
+//"123"
+//"132"
+//"213"
+//"231"
+//"312"
+//"321"
+//Given n and k, return the kth permutation sequence.
+
+- (NSString *)getPermutation:(NSInteger)n k:(NSInteger)k;
+
+//131. Palindrome Partitioning   Add to List QuestionEditorial Solution  My Submissions
+//Difficulty: Medium
+//Contributors: Admin
+//Given a string s, partition s such that every substring of the partition is a palindrome.
+//
+//Return all possible palindrome partitioning of s.
+//
+//For example, given s = "aab",
+//Return
+//
+//[
+// ["aa","b"],
+// ["a","a","b"]
+//]
+
+- (NSArray<NSArray<NSString *> *> *)partition:(NSString *)str;
+
+
+// 77. Combinations
+// Given two integers n and k, return all possible combinations of k numbers out of 1 ... n.
+// For example,
+// If n = 4 and k = 2, a solution is:
+// [
+//   [2,4],
+//   [3,4],
+//   [2,3],
+//   [1,2],
+//   [1,3],
+//   [1,4],
+// ]
+
+- (NSArray<NSNumber *> *)combineNumber:(NSInteger)n k:(NSInteger)k;
+- (NSArray<NSArray<NSNumber *> *> *)combineNumberMethod2:(NSInteger)n k:(NSInteger)k;
+- (NSSet<NSSet<NSNumber *> *> *)combineNumberMethod3:(NSInteger)n k:(NSInteger)k;
 
 // 10. Regular Expression Matching 重点
 // Difficulty: Hard

@@ -28,3 +28,13 @@
 @property (nonatomic, assign) NSInteger end;
 
 @end
+
+@interface TreeLinkNode : NSObject
+
+@property (nonatomic, strong) TreeLinkNode *left;
+@property (nonatomic, strong) TreeLinkNode *right;
+@property (nonatomic, strong) TreeLinkNode *next;
+
+@property (nonatomic, assign) NSInteger val;
+
+@end
