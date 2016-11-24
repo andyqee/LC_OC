@@ -163,51 +163,51 @@
 
 #pragma mark Combination Sum I
 
+//- (NSArray<NSArray *> *)combinationSum:(NSArray *)array target:(NSInteger)target
+//{
+//    if(target <= 0 || [array count] == 0){
+//        return nil;
+//    }
+//    NSMutableSet *result = [NSMutableSet set];
+//    [self _doCombinationSum:array target:target result:result currResult:[@[] mutableCopy]];
+//
+//    return [result allObjects]; 
+//}
+//
+//- (void)_doCombinationSum:(NSArray<NSNumber *> *)array target:(NSInteger)target result:(NSMutableSet *)result currResult:(NSMutableArray<NSNumber *> *)curr
+//{
+//    if(target == 0) {
+//        NSArray *sorted = [curr sortedArrayUsingSelector:@selector(compare:)];
+//        if(![result containsObject:sorted]) {
+//            [result addObject:curr]; //sorted first then insert
+//        }
+//        return;
+//    }
+//    
+//    for(NSInteger i = 0; i < [array count]; i++){
+//        NSInteger nextTarget = target - array[i].integerValue;
+//        if(nextTarget >= 0) {
+//            [curr addObject:array[i]];
+//            [self _doCombinationSum:array target:nextTarget result:result currResult:curr];
+//            [curr removeLastObject]; //递归完恢复状态,用这种方式，如果加入到result 中curr 不copy一份的话，返回的是空array，相比较上面的方法，减少了一些中间对象的创建
+//        }
+//    }
+//}
+
+// 上面这种方法是在最终搜索到解的情况下进行去重判断，这样就相当于在搜索的过程中，有很多无效的搜索。
 - (NSArray<NSArray *> *)combinationSum:(NSArray *)array target:(NSInteger)target
 {
     if(target <= 0 || [array count] == 0){
         return nil;
     }
-    NSMutableSet *result = [NSMutableSet set];
-    [self _doCombinationSum:array target:target result:result currResult:[@[] mutableCopy]];
-
-    return [result allObjects]; 
-}
-
-- (void)_doCombinationSum:(NSArray<NSNumber *> *)array target:(NSInteger)target result:(NSMutableSet *)result currResult:(NSMutableArray<NSNumber *> *)curr
-{
-    if(target == 0) {
-        NSArray *sorted = [curr sortedArrayUsingSelector:@selector(compare:)];
-        if(![result containsObject:sorted]) {
-            [result addObject:curr]; //sorted first then insert
-        }
-        return;
-    }
-    
-    for(NSInteger i = 0; i < [array count]; i++){
-        NSInteger nextTarget = target - array[i].integerValue;
-        if(nextTarget >= 0) {
-            [curr addObject:array[i]];
-            [self _doCombinationSum:array target:nextTarget result:result currResult:curr];
-            [curr removeLastObject]; //递归完恢复状态,用这种方式，如果加入到result 中curr 不copy一份的话，返回的是空array，相比较上面的方法，减少了一些中间对象的创建
-        }
-    }
-}
-
-// 上面这种方法是在最终搜索到解的情况下进行去重判断，这样就相当于在搜索的过程中，有很多无效的搜索。
-- (NSArray<NSArray *> *)combinationSum_optimize:(NSArray *)array target:(NSInteger)target
-{
-    if(target <= 0 || [array count] == 0){
-        return nil;
-    }
-    NSArray *sortedArray = [array sortedArrayUsingSelector:@selector(compare:)];
+    NSArray *sortedArray = [array sortedArrayUsingSelector:@selector(compare:)];// 1.先排序
     NSMutableArray *result = [NSMutableArray array];
-    [self _doCombinationSum_optimize:sortedArray start:0 target:target result:result currResult:[@[] mutableCopy]];
+    [self _doCombinationSum:sortedArray start:0 target:target result:result currResult:[@[] mutableCopy]];
 
     return result; 
 }
 
-- (void)_doCombinationSum_optimize:(NSArray<NSNumber *> *)array start:(NSInteger)start target:(NSInteger)target result:(NSMutableArray *)result currResult:(NSMutableArray<NSNumber *> *)curr
+- (void)_doCombinationSum:(NSArray<NSNumber *> *)array start:(NSInteger)start target:(NSInteger)target result:(NSMutableArray *)result currResult:(NSMutableArray<NSNumber *> *)curr
 {
     if(target == 0) {
         [result addObject:[curr copy]]; //sorted first then insert
@@ -220,8 +220,8 @@
         }
         NSInteger nextTarget = target - array[i].integerValue;
         if(nextTarget >= 0) {
-            [curr addObject:array[i]]; //如果需要确保结果集合是没有重复的，但是元素是可以重复使用的,直接将start递归下
-            [self _doCombinationSum_optimize:array start:start target:nextTarget result:result currResult:curr];
+            [curr addObject:array[i]]; //如果需要确保结果集合是没有重复的，但是元素是可以重复使用的,直接将i递归下,如果将start 传递下去，就会出现重复的如[3, 4] [4, 3] 之类的
+            [self _doCombinationSum:array start:i target:nextTarget result:result currResult:curr];
             [curr removeLastObject]; //递归完恢复状态,用这种方式，如果加入到result 中curr 不copy一份的话，返回的是空array，相比较上面的方法，减少了一些中间对象的创建
         }
     }
@@ -253,7 +253,7 @@
         NSInteger nextTarget = target - array[i].integerValue;
         if(nextTarget >= 0) {
             [curr addObject:array[i]]; //如果需要确保结果集合是没有重复的，但是元素是可以重复使用的,直接将start递归下
-            [self _doCombinationSum_optimize_2:array start:start+1 target:nextTarget result:result currResult:curr];
+            [self _doCombinationSum_optimize_2:array start:i+1 target:nextTarget result:result currResult:curr];
             [curr removeLastObject]; //递归完恢复状态,用这种方式，如果加入到result 中curr 不copy一份的话，返回的是空array，相比较上面的方法，减少了一些中间对象的创建
         }
     }
@@ -418,6 +418,64 @@
     }
 }
 
+//31. Next Permutation
+// 这个题目的技巧性略强
+// permutation 序列中比这个大的元素中的最小的一个
+
+//https://discuss.leetcode.com/topic/15216/a-simple-algorithm-from-wikipedia-with-c-implementation-can-be-used-in-permutations-and-permutations-ii/2
+
+- (void)nexetPermutation:(NSMutableArray *)nums
+{
+    // 1) scan from right to left, find the first element that is less than its previous one
+//    4 5 6 3 2 1
+//      |
+//      p
+    // 2)scan from right to left, find the first element that is greater than p.
+//    4 5 6 3 2 1
+//        |
+//        q
+    // swap p and q
+//    4 5 6 3 2 1
+//    swap
+//    4 6 5 3 2 1
+    // 4) reverse elements [p+1, nums.length]
+//  4 6 1 2 3 5
+    
+    if (nums == nil || [nums count] < 2) {
+        return;
+    }
+    NSInteger t = - 1;
+    for (NSInteger i = nums.count - 2; i > 0; i--) {
+        if (nums[i] < nums[i+1]) {
+            t = i;
+            break;
+        }
+    }
+    if (t == -1) {
+        [self _reverse:nums low:0 high:nums.count-1];
+        return;
+    }
+    NSInteger s = -1;
+    for (NSInteger i = nums.count - 1; i > t; i--) {
+        if (nums[i] > nums[t]) {
+            s = i;
+            break;
+        }
+    }
+    [nums exchangeObjectAtIndex:t withObjectAtIndex:s];
+    
+    [self _reverse:nums low:t + 1 high:nums.count-1];
+}
+
+- (void)_reverse:(NSMutableArray *)array low:(NSInteger)low high:(NSInteger)high
+{
+    while (low < high) {
+        [array exchangeObjectAtIndex:low withObjectAtIndex:high];
+        low++;
+        high--;
+    }
+}
+
 //找到数学规律
 // http://bangbingsyb.blogspot.hk/2014/11/leetcode-permutation-sequence.html
 // 有空写一下
@@ -469,6 +527,8 @@
     }
     return YES;
 }
+
+//这题目有动态规划可以弄，DP不局限于找最优解之类的提醒
 
 #pragma mark Combinations
 
@@ -709,6 +769,8 @@
     return counter == 0;//最后要判断和0 是否相等
 }
 
+#pragma mark - subSets
+
 // DFS solution 
 // [1, 2, 3] = subset of [1, 2] union with insert 3 into the subset of [1,2]
 // subset(n) = subset(n-1) union [insert n in the subset(n-1)]
@@ -722,27 +784,28 @@
         return @[@[]];
     }
     NSMutableArray *result = [NSMutableArray array];
-    [result addObject:@[]];
-    [self _subSet:nums start:0 set:result];
+    [result addObject:@[]]; // 插入一个空数组
+    
+    [self _subSet:nums start:0 result:result];
     return result;
 }
 
 //我这种递归和网上的不太一样. 插入法。 这两种方法到底有哪些差异呢？
 
-- (void)_subSet:(NSArray *)nums start:(NSInteger)start set:(NSMutableArray *)set;
+- (void)_subSet:(NSArray *)nums start:(NSInteger)start result:(NSMutableArray *)result;
 {
     if(start == [nums count]){
         return;
     }
     NSNumber *e = nums[start];
     NSMutableArray *newResult = [NSMutableArray array];//因为在遍历set的时候不能直接更新
-    for(NSArray *item in set){
+    for(NSArray *item in result){
         NSMutableArray *newItem = [NSMutableArray arrayWithArray:item];
         [newItem addObject:e]; //这里
         [newResult addObject:newItem];
     }
-    [set addObjectsFromArray:newResult];
-    [self _subSet:nums start:start + 1 set:set];
+    [result addObjectsFromArray:newResult];
+    [self _subSet:nums start:start + 1 result:result];
 }
 
 //另外一种递归，网上的版本, 这是标准的backtracking
@@ -781,6 +844,7 @@
     }
 }
 //这个解法和论坛一样
+
 - (NSArray<NSArray *> *)subSets_iterate:(NSArray *)nums
 {
     NSUInteger capacity = 1 << nums.count;

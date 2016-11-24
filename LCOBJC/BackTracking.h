@@ -65,6 +65,9 @@
 
 - (NSArray<NSArray *> *)combinationSum:(NSArray *)array target:(NSInteger)target;
 
+- (NSArray<NSArray *> *)combinationSum_optimize:(NSArray *)array target:(NSInteger)target;
+
+
 // 40 Combination Sum 2
 - (NSArray<NSArray *> *)combinationSum_2:(NSArray *)array target:(NSInteger)target;
 
@@ -129,9 +132,23 @@
 
 - (NSString *)getPermutation:(NSInteger)n k:(NSInteger)k;
 
+//31. Next Permutation
+//Difficulty: Medium
+//Implement next permutation, which rearranges numbers into the lexicographically next greater permutation of numbers.
+//
+//If such arrangement is not possible, it must rearrange it as the lowest possible order (ie, sorted in ascending order).
+//
+//The replacement must be in-place, do not allocate extra memory.
+//
+//Here are some examples. Inputs are in the left-hand column and its corresponding outputs are in the right-hand column.
+//1,2,3 → 1,3,2
+//3,2,1 → 1,2,3
+//1,1,5 → 1,5,1
+
+- (void)nexetPermutation:(NSMutableArray *)nums;
+
 //131. Palindrome Partitioning   Add to List QuestionEditorial Solution  My Submissions
 //Difficulty: Medium
-//Contributors: Admin
 //Given a string s, partition s such that every substring of the partition is a palindrome.
 //
 //Return all possible palindrome partitioning of s.

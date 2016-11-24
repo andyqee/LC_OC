@@ -155,6 +155,7 @@ void testBackTracking()
     NSMutableArray *arry = [@[@(0), @(2)] mutableCopy];
     [arry insertObject:@(1) atIndex:2];
 //    NSArray *tem =  [b combinationSum_3:16 count:3];
+
 //    NSArray *res = [b permut:@[@(1), @(2), @(3)]];
 //    NSArray *ress = [b permut_i:@[@(1), @(2), @(3)]];
     
@@ -168,8 +169,9 @@ void testBackTracking()
     
 //    NSArray *re = [b letterCombinations:@"12345"];
 //    NSArray *re_r = [b letterCombinations_recursive:@"12345"];
-//    NSArray *r = [b combinationSum:@[@2,@3,@6,@7,@4] target:7];
-    
+    NSArray *r = [b combinationSum:@[@2,@3,@6,@7,@4] target:7];
+    NSArray *r2 = [b combinationSum_2:@[@10, @1, @2, @7, @6, @1, @5] target:8];
+
     WordDictionary *dic = [WordDictionary new];
     [dic addWord:@"bad"];
     [dic addWord:@"dad"];
