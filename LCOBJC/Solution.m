@@ -21,6 +21,71 @@
 @end
 
 @implementation Solution (String)
+
+- (NSInteger)romanToInt:(NSString *)str
+{
+    NSDictionary<NSString *, NSNumber *> *dic = @{@"I" : @1,
+                          @"V" : @5,
+                          @"X" : @10,
+                          @"L" : @50,
+                          @"C" : @100,
+                          @"D" : @500,
+                          @"M" : @1000};
+    NSInteger result = 0;
+    for (NSInteger i = 0; i < str.length; i++) {
+        NSString *ch = [str substringWithRange:NSMakeRange(i, 1)];
+        result += dic[ch].integerValue;
+        
+        if (i > 0 && dic[[str substringWithRange:NSMakeRange(i, 1)]].integerValue >  dic[[str substringWithRange:NSMakeRange(i-1, 1)]].integerValue) {
+            result += [str substringWithRange:NSMakeRange(i, 1)].integerValue - 2 * [str substringWithRange:NSMakeRange(i-1, 1)].integerValue; // 需要减2倍
+        }
+    }
+    return result;
+}
+
+- (NSInteger)compareVersion:(NSString *)str1 str:(NSString *)str2
+{
+    NSArray<NSString *> *pair = [str1 componentsSeparatedByString:@"."];//如果11. 这个字符串split之后第二个就是空字符串
+    NSArray<NSString *> *pair2 = [str2 componentsSeparatedByString:@"."];
+    
+    if ([[pair firstObject] isEqualToString:[pair2 firstObject]]) {
+        if ([[pair lastObject] isEqualToString:[pair2 lastObject]]) {
+            return 0;
+        } else {
+            return [pair lastObject].integerValue > [pair2 lastObject].integerValue ? 1 : -1;
+        }
+    } else {
+        return [pair firstObject].integerValue > [pair2 firstObject].integerValue ? 1 : -1;
+    }
+}
+
+#pragma mark - Simplify Path
+
+//各种corner case
+//关键: 是处理 .. 需要pop
+
+- (NSString *)simplifyPath:(NSString *)path
+{
+    if ([path length] == 0) {
+        return nil;
+    }
+    
+    NSArray<NSString *> *paths = [path componentsSeparatedByString:@"/"];
+    NSMutableArray *res = [NSMutableArray array];
+    
+    for(NSString *p in paths){
+        if(!([p isEqualToString:@"."] || [p isEqualToString:@""])){
+            [res addObject:p];
+        } else if([p isEqualToString:@".."]){
+            if ([res count] > 0) {
+                [res removeLastObject];
+            }
+        }
+    }
+    NSString *sp = [res componentsJoinedByString:@"/"]; //"res 是空数组，这里是返回nil
+    return [NSString stringWithFormat:@"/%@",sp];
+}
+
 // 这种方法估计面试官不同意
 // split the array 
 // travese the array in reverse order
@@ -36,7 +101,23 @@
 
 - (void)reverseWords:(NSMutableString *)str
 {
-
+    if ([str length] == 0) {
+        return;
+    }
+    
+    [str stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSArray *temp = [str componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    
+    NSMutableString *new = [NSMutableString string];
+    for (NSInteger i = [temp count] -1 ; i >= 0; i--) {
+        if (![temp[i] isEqualToString:@" "]) {
+            if (i >= 0) {
+                [new appendString:temp[i]];
+            }
+            [new appendString:@" "];
+        }
+    }
+    str = new;
 }
 
 //Furthermore, you may assume that the original data does not contain any digits and that digits are only for those repeat numbers, k. For example, there won't be input like 3a or 2[4].
@@ -112,52 +193,142 @@
 
 // }
 
-// - (NSInteger)numDecodings:(NSString *)s
-// {
+#pragma mark - decode way
 
-// }
+// 数子字符串,
+// 这题目的关键是对不同数字 0，1，2，6，对应着不同的组合情况，其中0的处理尤其特别
+// 注意: 如果第一个字符是0，直接返回0
+// FB 重点
+// O(n)
+// 字符串转换的一定要考虑有哪些 invalid case
+
+- (NSInteger)numDecodings:(NSString *)str
+{
+    //corner case
+    if ([str length] == 0) {
+        return 0;
+    }
+    //check if the first ch is 0
+    NSString *ch = [str substringWithRange:NSMakeRange(0, 1)];
+    if([ch isEqualToString:@"0"]){
+        return 0;
+    }
+    
+    NSMutableArray<NSNumber *> *dp = [NSMutableArray arrayWithCapacity:str.length + 1];
+    for(NSInteger i = 0; i <= str.length; i++){
+        [dp addObject:@1];//这里初始化应该是1
+    }
+
+    for (NSInteger i = 1; i < str.length; i++) {
+       NSString *ch = [str substringWithRange:NSMakeRange(i, 1)];
+       NSString *prev = [str substringWithRange:NSMakeRange(i - 1, 1)];
+        
+      if(ch.integerValue > 6){
+        if(prev.integerValue == 1){
+            dp[i+1] = @(dp[i].integerValue + dp[i-1].integerValue);
+        } else {
+            dp[i+1] = dp[i];
+        }      
+      } else if(ch.integerValue > 0){
+          if(prev.integerValue == 1 || prev.integerValue == 2){
+              dp[i+1] = @(dp[i].integerValue + dp[i-1].integerValue);
+          } else {
+             dp[i+1] = dp[i];
+          }
+      } else {
+          if (prev.integerValue == 1 || prev.integerValue == 2) {
+              dp[i+1] = dp[i-1];
+          } else {
+              return 0;
+          }
+      }
+    }
+    return dp[str.length].integerValue;
+}
+
+- (NSInteger)numDecodings_optimizeSpace:(NSString *)str
+{
+    if ([str length] == 0) {
+        return 0;
+    }
+    //check if the first ch is 0
+    if ([str hasPrefix:@"0"]) {
+        return 0;
+    } //用这个就可以不用写下面这种呕心的饭食
+//    NSString *ch = [str substringWithRange:NSMakeRange(0, 1)];
+//    if([ch isEqualToString:@"0"]){
+//        return 0;
+//    }
+    
+    NSInteger fn = 1;
+    NSInteger fn_1 = 1;
+    NSInteger fn_2 = 1;
+
+    for (NSInteger i = 1; i < str.length; i++) {
+        NSString *ch = [str substringWithRange:NSMakeRange(i, 1)];
+        NSString *prev = [str substringWithRange:NSMakeRange(i - 1, 1)];
+        
+        if(ch.integerValue > 6){
+            if(prev.integerValue == 1){
+                fn = fn_1 + fn_2;
+            } else {
+                fn = fn_1;
+            }
+        } else if(ch.integerValue > 0){
+            if(prev.integerValue == 1 || prev.integerValue == 2){
+                fn = fn_1 + fn_2;
+            } else {
+                fn = fn_1;
+            }
+        } else { //0
+            if (prev.integerValue == 1 || prev.integerValue == 2) {
+                fn = fn_2; //这里是fn_2
+            } else {
+                return 0;
+            }
+        }
+        //update
+        fn_2 = fn_1;
+        fn_1 = fn;
+    }
+    return fn_1;
+}
+
+#pragma mark - decode way prefer way
+
+//九章的解法，更简洁,巧妙些
+- (NSInteger)numDecodingsMethod2:(NSString *)str
+{
+    if ([str length] == 0) {
+        return 0;
+    }
+    // invalid case
+    NSString *ch = [str substringWithRange:NSMakeRange(0, 1)];
+    if([ch isEqualToString:@"0"]){
+        return 0;
+    }
+    
+    NSMutableArray<NSNumber *> *dp = [NSMutableArray arrayWithCapacity:str.length + 1];
+    for(NSInteger i = 0; i <= str.length; i++){
+        [dp addObject:@1];//这里初始化应该是1
+    }
+    
+    for (NSInteger i = 2; i <= str.length; i++) {
+        NSString *oneDigit = [str substringWithRange:NSMakeRange(i - 1, 1)];
+        dp[i] = oneDigit.integerValue != 0 ? dp[i-1] : @(0); //如果不为数字字符，这里应该是0
+
+        NSString *twoDigit = [str substringWithRange:NSMakeRange(i - 2, 2)];
+        if (twoDigit.integerValue >= 10 && twoDigit.integerValue <= 26) {
+            dp[i] = @(dp[i].integerValue + dp[i-2].integerValue);
+        }
+    }
+    return dp[str.length].integerValue;
+}
 
 //属于比较繁琐的问题，主要是耐心和细心
 
-// - (NSString *)multiplyStr:(NSString *)str1 andStr:(NSString *)str2
-// {
-//     if (str1.length == 0 || str2.length == 0)
-//     {
-//         return nil;
-//     }
-
-//     NSMutableString *res = [NSMutableString string];
-//     NSMutableArray<NSString *> *strArray = [NSMutableArray array];
-
-//     for (NSInteger i = str1.length - 1; i >= 0; i--) 
-//     {
-//         NSString *m = [str1 substringWithRange:NSMakeRange(i, 1)];
-//         NSInteger mInt = m.integerValue;
-
-//         NSMutableString *tempRes = [NSMutableString string];
-//         NSInteger tempCarry = 0;
-//         for (NSInteger j = str2.length - 1; j >= 0; j--)
-//         {
-//             NSString *n = [str2 substringWithRange:NSMakeRange(j, 1)]];
-//             NSInteger nInt = n.integerValue;
-
-//             NSInteger mn = mInt * nInt + tempCarry;
-//             NSInteger tailToken = mn % 10;
-//             tempCarry = mn / 10;
-
-//             [tempRes insertString:[NSString stringWithFormat:@"%(ld)", (long)tailToken] atIndex:0];
-//         }
-//         [strArray addObject:tempRes];
-//     }
-
-//     //process strArray
-//     for (int i = 0; i < strArray.length; ++i)
-//     {
-        
-//     }
-// }
-
 // https://discuss.leetcode.com/topic/30508/easiest-java-solution-with-graph-explanation/2
+#pragma mark - Multiply Strings
 
 - (NSString *)multiplyStr:(NSString *)str1 andStr:(NSString *)str2
 {
@@ -182,7 +353,7 @@
         NSString *m = [str1 substringWithRange:NSMakeRange(i, 1)];
         NSInteger mInt = m.integerValue;
 
-        for(NSInteger j = n -1; j >= 0; j--) {
+        for(NSInteger j = n - 1; j >= 0; j--) {
             NSString *n = [str2 substringWithRange:NSMakeRange(j, 1)];
             NSInteger nInt = n.integerValue;
 
@@ -191,13 +362,12 @@
             res[i + j] = @(product / 10);
         }
     }
-
     NSMutableString *resStr = [@"" mutableCopy];
     for (NSInteger i = 0; i < [res count]; ++i)
     {
         //trime starting zeros
         if(!(resStr.length == 0 && res[i].integerValue == 0)) {
-            [resStr appendString:[res[i]  description]];
+            [resStr appendString:[res[i] description]];
         }
     }
     return (resStr.length == 0) ? @"0" : [resStr copy];
@@ -232,6 +402,8 @@
 //     return sb.length() == 0 ? "0" : sb.toString();
 // }
 
+// 关键是 carry, 还有头部清零
+
 - (NSString *)addBinary:(NSString *)str1 andStr:(NSString *)str2
 {
     if (str1.length == 0 || str2.length == 0) // return "" emtpy string and nil
@@ -256,13 +428,17 @@
         j--;
     }
     //这里可以check 下 是否对00 这样的输出结果，直接输出还是trim the zero
+    while ([[sum substringToIndex:1] isEqualToString:@"0"]) {
+        [sum deleteCharactersInRange:NSMakeRange(0, 1)];
+    }
     return [sum copy];
 }
 
-// - (NSString *)palindromePairs:(NSArray<NSString *> *)
-// {
-
-// }
+//method1: backtracking
+//- (NSArray<NSNumber *> *)palindromePairs:(NSArray<NSString *> *)strs
+//{
+//    
+//}
 
 // 2 pointers 
 
@@ -271,7 +447,7 @@
     //which integer indicate not found index
     // m * n
     NSInteger idx = 0;
-    for (NSInteger i = 0; i < haystack.length; i++)
+    for (NSInteger i = 0; i < haystack.length; ++i)
     {
         NSInteger curr = i;
         for (NSUInteger j = 0; j < needle.length; ++j)
@@ -293,7 +469,6 @@ BOOL isAalphaNumber(unichar ch)
 }
 
 //头尾双指针，可以和快速排序对比下
-
 - (BOOL)isPalindrome:(NSString *)str
 {
     if(str.length <= 1) {

@@ -215,13 +215,13 @@
     }
     for(NSInteger i = start; i < [array count]; i++){
         // skip duplicate, 这里需要确认array里面是否包含重复的数据结构
-        if(i > start && array[i].integerValue == array[i-1].integerValue){
+        if(i > start && array[i].integerValue == array[i-1].integerValue){ //用来过滤input nums 是否有重复
             continue;
         }
         NSInteger nextTarget = target - array[i].integerValue;
         if(nextTarget >= 0) {
-            [curr addObject:array[i]]; //如果需要确保结果集合是没有重复的，但是元素是可以重复使用的,直接将i递归下,如果将start 传递下去，就会出现重复的如[3, 4] [4, 3] 之类的
-            [self _doCombinationSum:array start:i target:nextTarget result:result currResult:curr];
+            [curr addObject:array[i]]; //如果需要确保结果集合是没有重复的，但是元素是可以重复使用的,直接将i递归下,如果将start传递下去，就会出现重复的如[3, 4] [4, 3] 之类的
+            [self _doCombinationSum:array start:i target:nextTarget result:result currResult:curr];// 这里是i还是i+1,取决于元素是否只能用一次 
             [curr removeLastObject]; //递归完恢复状态,用这种方式，如果加入到result 中curr 不copy一份的话，返回的是空array，相比较上面的方法，减少了一些中间对象的创建
         }
     }
@@ -252,7 +252,7 @@
         }
         NSInteger nextTarget = target - array[i].integerValue;
         if(nextTarget >= 0) {
-            [curr addObject:array[i]]; //如果需要确保结果集合是没有重复的，但是元素是可以重复使用的,直接将start递归下
+            [curr addObject:array[i]]; //如果需要确保结果集合是没有重复的，但是元素是可以重复使用的,直接将i递归下
             [self _doCombinationSum_optimize_2:array start:i+1 target:nextTarget result:result currResult:curr];
             [curr removeLastObject]; //递归完恢复状态,用这种方式，如果加入到result 中curr 不copy一份的话，返回的是空array，相比较上面的方法，减少了一些中间对象的创建
         }
@@ -986,7 +986,6 @@
 }
 
 // 字符串问题，可以问下哪些接口可以用
-
 // 设计case: 正确的几种,错误的,边界的,极端的
 
 - (BOOL)isOneEditDistance:(NSString *)str withStr:(NSString *)str2

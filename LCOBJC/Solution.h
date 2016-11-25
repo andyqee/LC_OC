@@ -15,6 +15,58 @@
 
 @interface Solution (String)
 
+//13. Roman to Integer
+//Difficulty: Easy
+//Contributors: Admin
+//Given a roman numeral, convert it to an integer.
+//
+//Input is guaranteed to be within the range from 1 to 3999.
+
+- (NSInteger)romanToInt:(NSString *)str;
+
+//165. Compare Version Numbers
+
+//Difficulty: Easy
+//Contributors: Admin
+//Compare two version numbers version1 and version2.
+//If version1 > version2 return 1, if version1 < version2 return -1, otherwise return 0.
+//
+//You may assume that the version strings are non-empty and contain only digits and the . character.
+//The . character does not represent a decimal point and is used to separate number sequences.
+//For instance, 2.5 is not "two and a half" or "half way to version three", it is the fifth second-level revision of the second first-level revision.
+//
+//Here is an example of version numbers ordering:
+//
+//0.1 < 1.1 < 1.2 < 13.37
+
+- (NSInteger)compareVersion:(NSString *)str1 str:(NSString *)str2;
+
+// Read N Characters Given Read4
+
+//The API: int read4(char *buf) reads 4 characters at a time from a file.
+//
+//The return value is the actual number of characters read. For example, it returns 3 if there is only 3 characters left in the file.
+//
+//By using the read4 API, implement the function int read(char *buf, int n) that reads n characters from the file.
+//
+//Note:
+//The read function will only be called once for each test case
+
+//71. Simplify Path
+//Difficulty: Medium
+//Given an absolute path for a file (Unix-style), simplify it.
+
+//For example,
+//path = "/home/", => "/home"
+//path = "/a/./b/../../c/", => "/c"
+
+//Did you consider the case where path = "/../"?
+//In this case, you should return "/".
+//Another corner case is the path might contain multiple slashes '/' together, such as "/home//foo/".
+//In this case, you should ignore redundant slashes and return "/home/foo"
+
+- (NSString *)simplifyPath:(NSString *)path;
+
 // 151. Reverse Words in a String
 // Difficulty: Medium  
 // Given an input string, reverse the string word by word.
@@ -46,9 +98,7 @@
 
 - (NSString *)decodeString:(NSString *)str;
 
-//91. Decode Ways   
-//Total Accepted: 91338
-//Total Submissions: 493602
+//91. Decode Ways
 //Difficulty: Medium
 //Contributors: Admin
 //A message containing letters from A-Z is being encoded to numbers using the following mapping:
@@ -61,16 +111,14 @@
 //
 //For example,
 //Given encoded message "12", it could be decoded as "AB" (1 2) or "L" (12).
-//
 //The number of ways decoding "12" is 2.
 
 - (NSInteger)numDecodings:(NSString *)s;
+- (NSInteger)numDecodings_optimizeSpace:(NSString *)s;
+- (NSInteger)numDecodingsMethod2:(NSString *)s;
 
 // 43. Multiply Strings   
-// Total Accepted: 80404
-// Total Submissions: 316395
 // Difficulty: Medium
-// Contributors: Admin
 // Given two numbers represented as strings, return multiplication of the numbers as a string.
 
 // Note:
@@ -81,7 +129,6 @@
 - (NSString *)multiplyStr:(NSString *)str1 andStr:(NSString *)str2;
 
 // Given two binary strings, return their sum (also a binary string).
-
 // For example,
 // a = "11"
 // b = "1"
@@ -102,20 +149,16 @@
 // Return [[0, 1], [1, 0], [3, 2], [2, 4]]
 // The palindromes are ["dcbaabcd", "abcddcba", "slls", "llssssll"]
 
-- (NSString *)palindromePairs:(NSArray<NSString *> *)strs;
+- (NSArray<NSNumber *> *)palindromePairs:(NSArray<NSString *> *)strs;
 
-// 28. Implement strStr()   
-// Total Accepted: 139091
-// Total Submissions: 524976
+// 28. Implement strStr()
 // Difficulty: Easy
-// Contributors: Admin
 // Implement strStr().
 
 // Returns the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.
 
 // 278. First Bad Version   
-// Total Accepted: 70219
-// Total Submissions: 293176
+
 // Difficulty: Easy
 // Contributors: Admin
 // You are a product manager and currently leading a team to develop a new product. Unfortunately, the latest version of your product fails the quality check. Since each version is developed based on the previous version, all the versions after a bad version are also bad.

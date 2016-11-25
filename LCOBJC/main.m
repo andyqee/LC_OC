@@ -56,7 +56,6 @@ void testList()
     f4.val = 5;
     
     ListNode *new = [list deleteDuplicates:f0];
-    new;
 //    NSMutableArray *listArray = [NSMutableArray array];
 //    [listArray addObject:f0];
 //    [listArray addObject:f2];
@@ -110,14 +109,20 @@ void testTree() {
 //    
 //    NSString *seriaze_r = [s serialize_R:node];
 //    TreeNode *des_r = [s deserialize_I:seriaze_r];
-    BOOL r = [s isValidBST:node];
-    BOOL rr = [s isValidBST_r:node];
+//    BOOL r = [s isValidBST:node];
+//    BOOL rr = [s isValidBST_r:node];
 
 }
 
 void testString()
 {
     Solution *s = [Solution new];
+//    NSInteger b = [s numDecodings:@"26782011"];
+//    NSInteger bo = [s numDecodings_optimizeSpace:@"26782011"];
+//    NSInteger bob = [s numDecodingsMethod2:@"26782011"];
+    NSString *b = [s multiplyStr:@"123" andStr:@"123"];
+    NSInteger re = [s compareVersion:@"11." str:@"0.7"];
+    NSString *pp = [s simplifyPath:@"/"];
 //    NSString *product = [s multiplyStr:@"0" andStr:@"75"];
 //    NSString *sum = [s addBinary:@"111" andStr:@"1"];
 //    
