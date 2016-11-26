@@ -28,6 +28,11 @@ int main(int argc, const char * argv[]) {
         testBackTracking();
         testList();
         
+//        NSComparisonResult rst = [@"中国" localizedCompare:@"武汉"];
+//        NSComparisonResult rst1 = [@"武汉" localizedCompare:@"中国"];
+//        NSComparisonResult rst2 = [@"武汉" localizedCompare:@"萝卜"];
+//        NSComparisonResult rst3 = [@"萝卜" localizedCompare:@"哎啊"];
+
     }
     return 0;
 }
@@ -120,19 +125,21 @@ void testString()
 //    NSInteger b = [s numDecodings:@"26782011"];
 //    NSInteger bo = [s numDecodings_optimizeSpace:@"26782011"];
 //    NSInteger bob = [s numDecodingsMethod2:@"26782011"];
-    NSString *b = [s multiplyStr:@"123" andStr:@"123"];
-    NSInteger re = [s compareVersion:@"11." str:@"0.7"];
-    NSString *pp = [s simplifyPath:@"/"];
+//    NSString *b = [s multiplyStr:@"123" andStr:@"123"];
+//    NSInteger re = [s compareVersion:@"11." str:@"0.7"];
+//    NSString *pp = [s simplifyPath:@"/"];
 //    NSString *product = [s multiplyStr:@"0" andStr:@"75"];
 //    NSString *sum = [s addBinary:@"111" andStr:@"1"];
 //    
 //    NSString *str = [s countAndSay_recursive:5];
-//    NSString *str_ite = [s countAndSay_iterative:5];
+    NSString *str_ite = [s countAndSay_iterative:5];
 //    NSString *f = [s groupAnagrams:@[@"eat", @"tea", @"tan", @"ate", @"nat", @"bat"]];
 //    BOOL re = [s wordBreak:@"leetcccode" set:[NSSet setWithArray:@[@"leet", @"code", @"cc"]]];
 //    NSArray *res = [s wordBreak_2:@"catsanddog" set:[NSSet setWithArray:@[@"cat", @"cats", @"and", @"sand", @"dog"]]];
 //    NSArray *ress = [s wordBreak_2:@"aaaa" set:[NSSet setWithArray:@[@"a", @"aa", @"aaa", @"aaaa"]]];
     
+    
+    NSInteger i = [s strStr:@"fkdsfsdfskkkk" needle:@"kkk"];
 }
 
 void testArray()
