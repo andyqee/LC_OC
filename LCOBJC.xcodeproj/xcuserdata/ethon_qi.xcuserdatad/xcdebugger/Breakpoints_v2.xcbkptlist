@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LCOBJC/main.m"
-            timestampString = "501784589.896721"
+            timestampString = "501865226.336453"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "135"
-            endingLineNumber = "135"
-            landmarkName = "testString()"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
+            landmarkName = "testArray()"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

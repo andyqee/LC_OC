@@ -198,4 +198,86 @@
     return (listNode.val == listNode.next.val) ? listNode.next : listNode;
 }
 
+//方法1: Hash Map
+// loop 1. copy all the nodes
+// loop 2. assign next and random pointers 
+
+- (RandomListNode *)copyRandomList:(RandomListNode *)head
+{
+    if(head == nil){
+        return nil;
+    }
+    NSMutableDictionary<RandomListNode *, RandomListNode *> *dic = [NSMutableDictionary dictionary];
+    RandomListNode *p = head;
+    while(p){
+        RandomListNode *node = [RandomListNode new];
+        node.label = p.label;
+        dic[p] = node;
+        p = p.next;
+    }
+
+    p = head;
+    while(p != nil){
+        dic[p].next = dic[p.next];
+        dic[p].random = dic[p.random];
+        p = p.next;
+    }
+    return dic[head];
+}
+
+- (RandomListNode *)copyRandomLis_ondic:(RandomListNode *)head
+{
+    if(head == nil) {
+        return nil;
+    }
+    [self copyNext:head];
+    [self copyRandom:head];
+    return [self splitList:head];
+}
+
+// assign random pointer for the copy nodes
+
+- (void)copyRandom:(RandomListNode *)head
+{
+    RandomListNode *p = head;
+    while(p){
+        if(p.next.random){
+            p.next.random = p.random.next;
+        }
+        head = p.next.next;
+    }
+}
+
+// make copy of each node
+- (void)copyNext:(RandomListNode *)head
+{
+    RandomListNode *p = head;
+    RandomListNode *next = head;
+
+    while(p){
+        next = p.next;
+        RandomListNode *node = [RandomListNode new];
+        p.next = node;
+        node.next = next;
+        p = next;
+    }
+}
+
+- (RandomListNode *)splitList:(RandomListNode *)head
+{
+    RandomListNode *p = head;
+    RandomListNode *cloneHead = p.next;
+// 1   ->   1'   ->   2   ->   2'
+// p     cloneI
+
+    while (p) {
+        RandomListNode *cloneIter = p.next;
+        p.next = p.next.next;
+        cloneIter.next = p.next.next; // may be nil 最后一个是nil
+        p = p.next;
+    }
+    
+    return cloneHead;
+}
+
 @end

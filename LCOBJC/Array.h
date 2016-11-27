@@ -75,12 +75,10 @@
 - (NSInteger)longestConsecutive:(NSArray<NSNumber *> *)nums;
 
 // sum 系列
-// Given an array S of n integers, are there elements a, b, c in S such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
-
+// Given an array S of n integers, are there elements a, b, c in S such that a + b + c = 0? 
+// Find all unique triplets in the array which gives the sum of zero.
 // Note: The solution set must not contain duplicate triplets.
-
 // For example, given array S = [-1, 0, 1, 2, -1, -4],
-
 // A solution set is:
 // [
 //   [-1, 0, 1],
@@ -98,7 +96,6 @@
 - (NSInteger)threeSumCloset:(NSArray *)nums target:(NSInteger)target; // 3sum
 
 //- (NSInteger)3sumSmaller;
-
 // Given an array of integers, return indces of the two numbers such that they add up to a specific target.
 
 // You may assume that each input would have exactly one solution.
@@ -111,11 +108,10 @@
 // UPDATE (2016/2/13):
 // The return format had been changed to zero-based indices. Please read the above updated description carefully.
 
-- (NSArray *)Twosum:(NSArray *)nums target:(NSInteger)target;
+- (NSArray *)twoSum:(NSArray *)nums target:(NSInteger)target;
 
 //167. Two Sum II - Input array is sorted
 //Difficulty: Medium
-//Contributors: Admin
 //Given an array of integers that is already sorted in ascending order, find two numbers such that they add up to a specific target number.
 //
 //The function twoSum should return indices of the two numbers such that they add up to the target, where index1 must be less than index2. Please note that your returned answers (both index1 and index2) are not zero-based.
@@ -166,11 +162,9 @@
 // (i.e., 0 1 2 4 5 6 7 might become 4 5 6 7 0 1 2). 分析偏移的数组最大值在中点左边还是右边两种情况
 // 说明其中有一半是递增的，那么就可以锁定区间啦。😄😄
 // eg 67012345
-
 // eg 34567012
 
 // You are given a target value to search. If found in the array return its index, otherwise return -1.
-
 // You may assume no duplicate exists in the array.
 
 - (NSInteger)searchInRotatedArray:(NSArray *)nums target:(NSInteger)target;
@@ -214,12 +208,27 @@
 // For example,
 // Given [1,3],[2,6],[8,10],[15,18
 
-//- (NSArray<interval *> *)mergeIntervals:(NSArray<interval *> *)intervals;
+- (NSArray<Interval *> *)mergeIntervals:(NSArray<Interval *> *)intervals;
+
+//57. Insert Interval   Add to List QuestionEditorial Solution  My Submissions
+//Difficulty: Hard
+//Contributors: Admin
+//Given a set of non-overlapping intervals, insert a new interval into the intervals (merge if necessary).
+//
+//You may assume that the intervals were initially sorted according to their start times.
+//
+//Example 1:
+//Given intervals [1,3],[6,9], insert and merge [2,5] in as [1,5],[6,9].
+//
+//Example 2:
+//Given [1,2],[3,5],[6,7],[8,10],[12,16], insert and merge [4,9] in as [1,2],[3,10],[12,16].
+//
+//This is because the new interval [4,9] overlaps with [3,5],[6,7],[8,10].
+
+- (NSArray<Interval *> *)insert:(Interval *)interval1 withInterval:(Interval *)interval2;
 
 //350. Intersection of Two Arrays II
-//
 //Given two arrays, write a function to compute their intersection.
-//
 //Example:
 //Given nums1 = [1, 2, 2, 1], nums2 = [2, 2], return [2, 2].
 //
@@ -235,7 +244,6 @@
 
 // 349. Intersection of Two Arrays
 // Difficulty: Easy
-// Contributors: Admin
 // Given two arrays, write a function to compute their intersection.
 
 // Example:
@@ -247,6 +255,8 @@
 
 // unique
 - (NSArray<NSNumber *> *)intersectionOfTwoArrayUnique:(NSArray<NSNumber *> *)array andArray2:(NSArray<NSNumber *> *)array2;
+
+- (void)sortedColors_bs:(NSMutableArray<NSNumber *> *)nums k:(NSInteger)k;
 
 // 75. Sort Colors
 // Difficulty: Medium
@@ -265,11 +275,9 @@
 // Difficulty: Medium
 // Contributors: Admin
 // Suppose a sorted array is rotated at some pivot unknown to you beforehand.
-
 // (i.e., 0 1 2 4 5 6 7 might become 4 5 6 7 0 1 2).
 
 // Find the minimum element.
-
 // You may assume no duplicate exists in the array.
 
 - (NSNumber *)findMin:(NSArray<NSNumber *> *)nums;
@@ -318,5 +326,7 @@
 // return 2.
 
 - (NSInteger)minMeetingRooms:(NSArray<Interval *> *)intervals;
+
+- (NSArray *)mergeKSortedArray:(NSArray *)array;
 
 @end

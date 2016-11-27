@@ -38,3 +38,11 @@
 @property (nonatomic, assign) NSInteger val;
 
 @end
+
+@interface RandomListNode : NSObject<NSCopying>
+@property (nonatomic, strong) RandomListNode *random;
+@property (nonatomic, strong) RandomListNode *next;
+
+@property (nonatomic, assign) NSInteger label;
+
+@end

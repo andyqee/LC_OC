@@ -12,6 +12,7 @@
 #import "BackTracking.h"
 #import "List.h"
 #import "Tree.h"
+#import "Array.h"
 
 void testTree();
 void testString();
@@ -132,25 +133,24 @@ void testString()
 //    NSString *sum = [s addBinary:@"111" andStr:@"1"];
 //    
 //    NSString *str = [s countAndSay_recursive:5];
-    NSString *str_ite = [s countAndSay_iterative:5];
+//    NSString *str_ite = [s countAndSay_iterative:5];
 //    NSString *f = [s groupAnagrams:@[@"eat", @"tea", @"tan", @"ate", @"nat", @"bat"]];
 //    BOOL re = [s wordBreak:@"leetcccode" set:[NSSet setWithArray:@[@"leet", @"code", @"cc"]]];
 //    NSArray *res = [s wordBreak_2:@"catsanddog" set:[NSSet setWithArray:@[@"cat", @"cats", @"and", @"sand", @"dog"]]];
 //    NSArray *ress = [s wordBreak_2:@"aaaa" set:[NSSet setWithArray:@[@"a", @"aa", @"aaa", @"aaaa"]]];
     
     
-    NSInteger i = [s strStr:@"fkdsfsdfskkkk" needle:@"kkk"];
+//    NSInteger i = [s strStr:@"fkdsfsdfskkkk" needle:@"kkk"];
 }
 
 void testArray()
 {
-    Solution *s = [Solution new];
+    Array *s = [Array new];
 //    NSInteger re = [s searchInRotatedArray:@[@(3), @(1)] target:1];
 //    NSArray *res = [s threeSum:@[@(-1), @(0), @(1), @(2), @(-1), @(-4)]];
 //    
 //    NSArray *va = [s intersectionOfTwoArray:@[@(1), @(2),@(2),@(1)] andArray2:@[@(2),@(2)]];
 //    NSArray *va2 = [s intersectionOfTwoArrayUnique:@[@(1), @(2),@(2),@(1)] andArray2:@[@(2),@(2)]];
-    
 
 //    NSInteger pro = [s maxProduct:@[@(2),@(3),@(-2),@(0),@(121212121.2)]];
 //    NSInteger po = [s maxProduct_OptimizeSpace:@[@(2),@(3),@(-2),@(0),@(6)]];
@@ -159,13 +159,15 @@ void testArray()
 //    
 //    NSArray *re = [s productExceptSelf:@[@(2), @(3), @(9), @(1)]];
 //    NSNumber *kth = [s findKthLargest:2 inArray:@[@(2),@(3),@(5),@(0),@(6)]];
+    
+    NSMutableArray *arr = [@[@2, @2, @1, @2, @0] mutableCopy];
+    [s sortedColors_bs:arr k:3];
 }
 
 void testBackTracking()
 {
     BackTracking *b = [BackTracking new];
-    NSMutableArray *arry = [@[@(0), @(2)] mutableCopy];
-    [arry insertObject:@(1) atIndex:2];
+
 //    NSArray *tem =  [b combinationSum_3:16 count:3];
 
 //    NSArray *res = [b permut:@[@(1), @(2), @(3)]];
