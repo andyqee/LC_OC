@@ -70,6 +70,7 @@
 // http://bangbingsyb.blogspot.jp/2014/11/leetcode-merge-k-sorted-lists.html
 // http://www.jiuzhang.com/solutions/merge-k-sorted-lists/
 
+// 
 - (ListNode *)mergeKList:(NSArray<ListNode *> *)listNodeArray
 {
     if([listNodeArray count] == 0){
@@ -269,7 +270,6 @@
     RandomListNode *cloneHead = p.next;
 // 1   ->   1'   ->   2   ->   2'
 // p     cloneI
-
     while (p) {
         RandomListNode *cloneIter = p.next;
         p.next = p.next.next;

@@ -58,6 +58,7 @@
 
 //先来个递归版本，再来个迭代 DFS的思路
 #pragma mark  letter Combinations
+//Follow up http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=160432&extra=page%3D12%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3046%5D%5Bvalue%5D%3D2%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
 
 - (NSArray<NSString *> *)letterCombinations:(NSString *)digits
 {
@@ -1107,6 +1108,47 @@
     return MAX([self rob:nums l:0 r:n-2], [self rob:nums l:1 r:n-1]); //递归调用
 }
 
+#pragma mak - Expression Add Operators
+
+- (NSMutableArray *)addOperators:(NSString *)num target:(NSInteger)target
+{
+    NSMutableArray *res = [NSMutableArray array];
+    NSString *ch = [num substringWithRange:NSMakeRange(1, 1)];
+    
+    [self addOperators:num start:1 target:target temp:[ch mutableCopy] result:res eval:ch.integerValue expr:ch.integerValue];
+    return res;
+}
+
+//overflow: we use a long type once it is larger than Integer.MAX_VALUE or minimum, we get over it.
+//0 sequence: because we can't have numbers with multiple digits started with zero, we have to deal with it too.
+//a little trick is that we should save the value that is to be multiplied in the next recursion.
+
+- (void)addOperators:(NSString *)nums start:(NSInteger)start target:(NSInteger)target temp:(NSMutableString *)temp result:(NSMutableArray *)resutArray eval:(NSInteger)eval expr:(NSInteger)expr
+{
+    if(eval == target){
+        [resutArray addObject:[temp copy]];
+        return;
+    }
+    for (NSInteger i = start; i < nums.length; i++) {
+        //
+        if(i != start && [[nums substringWithRange:NSMakeRange(start, 1)] isEqualToString:@"0"]) {
+            return;
+        }
+        NSString *ch = [nums substringWithRange:NSMakeRange(start, 1 + i)];
+        
+        [temp appendString:[NSString stringWithFormat:@"+%@",ch]];
+        [self addOperators:nums start:start+1 target:i temp:temp result:resutArray eval:(eval + ch.integerValue) expr:ch.integerValue];
+        [temp deleteCharactersInRange:NSMakeRange(temp.length - 2, 2)];
+        
+        [temp appendString:[NSString stringWithFormat:@"-%@",ch]];
+        [self addOperators:nums start:start+1 target:i temp:temp result:resutArray eval:(eval - ch.integerValue) expr:(0 - ch.integerValue)];
+        [temp deleteCharactersInRange:NSMakeRange(temp.length - 2, 2)];
+        
+        [temp appendString:[NSString stringWithFormat:@"*%@",ch]]; //关键是 * 的处理
+        [self addOperators:nums start:start+1 target:i temp:temp result:resutArray eval:(eval - expr + expr * ch.integerValue) expr:(expr * ch.integerValue)];
+        [temp deleteCharactersInRange:NSMakeRange(temp.length - 2, 2)];
+    }
+}
 
 @end
 
@@ -1139,6 +1181,10 @@
 }
 
 @end
+
+// 211. Add and Search Word
+
+#pragma mark - 211. Add and Search Word
 
 @interface WordDictionary()
 @property (nonatomic, strong) Trie *trie;

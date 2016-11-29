@@ -8,6 +8,30 @@
 
 #import "Array.h"
 
+@interface NSValue (Compare)
+
+- (NSComparisonResult)fbiCompare:(NSValue *)value;
+
+@end
+
+@implementation NSValue (Compare)
+
+- (NSComparisonResult)fbiCompare:(NSValue *)value
+{
+    float d = self.pointValue.x * self.pointValue.x + self.pointValue.y * self.pointValue.y;
+    float b = value.pointValue.x * value.pointValue.x + value.pointValue.y * value.pointValue.y;
+    
+    if(d == b){
+        return NSOrderedSame;
+    } else if(d > b){
+        return NSOrderedDescending;
+    } else {
+        return NSOrderedAscending;
+    }
+}
+
+@end
+
 @implementation Array
 
 #pragma mark - Array
@@ -22,21 +46,16 @@
 - (NSInteger)longestConsecutive:(NSArray<NSNumber *> *)nums
 {
     NSInteger res = 0;
-    NSMutableSet *set = [NSMutableSet set];
+    NSMutableSet *set = [NSMutableSet setWithArray:nums];
+
     for(NSInteger i = 0; i < nums.count; i++){
-        [set addObject:nums[i]];
-    }
-    for(NSInteger i = 0; i < nums.count; i++){
-        if([set count] == 0){ //判断set是否是空
-            break;
-        }
         NSNumber *down = @(nums[i].integerValue - 1);
-        if([set containsObject:down]){
+        while([set containsObject:down]){
             [set removeObject:down]; //避免重复
             down = @(down.integerValue - 1);
         }
         NSNumber *up = @(nums[i].integerValue + 1);
-        if([set containsObject:up]){
+        while([set containsObject:up]){
             [set removeObject:up]; //避免重复
             up = @(up.integerValue + 1);
         }
@@ -72,41 +91,7 @@
 #pragma mark - 3Sum
 
 // MIT open class has video. 这里面用的双指针法，可以解决 “一道把排好序的数组每个element平方，输出还是排好序的”。 head tail 进行比较
-- (NSArray<NSArray *> *)threeSum:(NSArray *)nums // 3sum
-{
-    //sort array
-    NSAssert([nums count] >= 3 , @"");
-    
-    NSArray<NSNumber *> *sortedNums = [nums sortedArrayUsingSelector:@selector(compare:)];
-    
-    NSMutableArray *result = [NSMutableArray array];
-    for (NSUInteger i = 0; i < [nums count] - 2 ; i++) {
-        if(i == 0 || (i > 0 && sortedNums[i].integerValue != sortedNums[i-1].integerValue)) { //注意去除重复，这里可以提取出来，写成continue 的形式，或者while 的形式
-            NSUInteger left = i + 1;
-            NSUInteger right = [nums count] - 1;
-            NSInteger sum = 0 - sortedNums[i].integerValue;
-            
-            while (left < right) {
-                if(sortedNums[left].integerValue + sortedNums[right].integerValue == sum) {
-                    [result addObject: @[sortedNums[left], sortedNums[right], sortedNums[i]]];
-                    while(left < right && sortedNums[left].integerValue == sortedNums[left + 1].integerValue) { //注意去除重复
-                        left += 1;
-                    }
-                    while (left < right && sortedNums[right].integerValue == sortedNums[right - 1].integerValue) { //注意去除重复
-                        right -= 1;
-                    }
-                    left++;
-                    right--;
-                } else if (sortedNums[left].integerValue + sortedNums[right].integerValue < sum) {
-                    left ++;
-                } else {
-                    right--;
-                }
-            }
-        }
-    }
-    return result;
-}
+// follow up : dont sort use HashMap
 
 - (NSArray<NSArray *> *)threeSum_w3:(NSArray<NSNumber *> *)nums
 {
@@ -144,7 +129,6 @@
     return result;
 }
 
-
 - (NSInteger)threeSumCloset:(NSArray<NSNumber *> *)nums target:(NSInteger)target; // 3sum
 {
     //sort array
@@ -181,7 +165,7 @@
     }
     return result;
 }
-
+//下面这个版本好
 - (NSInteger)threeSumCloset_w2:(NSArray *)nums target:(NSInteger)target
 {
     NSAssert([nums count] >= 3, @"invalid input");
@@ -648,8 +632,8 @@
     }
     return [result copy]; // we should return an imutable object
 }
-// unique 的话, we can use an set
 
+// unique 的话, we can use an set
 - (NSArray<NSNumber *> *)intersectionOfTwoArray_TwoPointer:(NSArray<NSNumber *> *)array andArray2:(NSArray<NSNumber *> *)array2
 {
     if([array2 count] == 0 || [array count] == 0) {
@@ -693,6 +677,7 @@
 }
 
 #pragma mark - sorted colors
+// fellow up 写一个stable color color，相同的key 保持原来的顺序
 
 - (void)sortedColors_bs:(NSMutableArray<NSNumber *> *)nums k:(NSInteger)k
 {
@@ -764,7 +749,7 @@
 - (NSNumber *)findKthLargest:(NSInteger)k inArray:(NSArray<NSNumber *> *)nums
 {
     NSInteger left = 0;
-    NSInteger right = [nums count] -1;
+    NSInteger right = [nums count] - 1;
     
     NSInteger p = 0;
     NSMutableArray *mutableNums = [NSMutableArray arrayWithArray:nums];
@@ -780,15 +765,15 @@
     }
     return mutableNums[p];
 }
-
+//这里是把大的放在左边
 - (NSInteger)partition:(NSMutableArray<NSNumber *> *)nums left:(NSInteger)left right:(NSInteger)right
 {
     NSInteger pivot = nums[left].integerValue;
-    NSInteger i = left + 1;
+    NSInteger i = left + 1; // 
     NSInteger j = right;
-    while(i <= j) {
-        if(nums[j].integerValue > pivot && nums[i].integerValue < pivot) {
-            [nums exchangeObjectAtIndex:i withObjectAtIndex:j];
+    while(i <= j) { //把大的放置在左边
+        if(nums[j].integerValue > pivot && nums[i].integerValue < pivot) { // 右边比pivot 大 以及 left 比pivot小
+            [nums exchangeObjectAtIndex:i withObjectAtIndex:j]; // 交换
             i++;
             j--;
         }
@@ -803,9 +788,41 @@
     return j;
 }
 
+// put small in left
+
+- (NSInteger)partition2DPoints:(NSMutableArray<NSValue *> *)nums left:(NSInteger)left right:(NSInteger)right
+{
+    NSValue *pivot = nums[left];
+
+    NSInteger i = left + 1;
+    NSInteger j = right;
+
+    while(i <= j) {
+        // put small in
+        if ([nums[i] fbiCompare:pivot] == NSOrderedDescending && [nums[j] fbiCompare:pivot] == NSOrderedAscending) {
+            [nums exchangeObjectAtIndex:i withObjectAtIndex:j];
+            i++;
+            j--;
+        }
+        if([nums[i] fbiCompare:pivot] == NSOrderedAscending){
+            i++;
+        }
+        if([nums[j] fbiCompare:pivot] == NSOrderedDescending){
+            j--;
+        }
+    }   //最后j会退到比pivot大的元素上。所以需要exchage一下
+    [nums exchangeObjectAtIndex:left withObjectAtIndex:j];
+    return j;
+}
+
 // https://discuss.leetcode.com/topic/17063/4ms-o-n-8ms-o-nlogn-c
 // Binary Search 的实现有些复杂 Olg(n). TODO： 可以自己实现下
+// 209. Minimum Size Subarray Sum
+// 滑动窗口 
+// >= s
 
+//  Since the array elements are all positive numbers, we could use a sliding window approach. W first move the front pointer until the sum of the subarray is greater or equal to the target value s, then we calculate the size of the window. Then we try to move the rear pointer and recalculate the window size, until the sum of the window is less than the target s.
+//  要求是非负数
 - (NSInteger)minimumSizeSubArraySum:(NSInteger)s nums:(NSArray<NSNumber *> *)nums
 {
     NSInteger start = 0;
@@ -814,7 +831,7 @@
     
     for(NSInteger i = 0; i < [nums count]; i++) {
         sum += nums[i].integerValue;
-        while(sum >= s) {
+        while(sum >= s) {//
             minSize = MIN(minSize, i - start + 1);
             sum = sum - nums[start].integerValue;
             start++;
@@ -822,6 +839,40 @@
     }
     return minSize == NSIntegerMax ? 0 : minSize;
 }
+
+//这种解法是找 sum == s， >=s不行吧
+- (NSInteger)minimumSizeSubArraySum_Method:(NSInteger)target nums:(NSArray<NSNumber *> *)nums
+{
+    NSMutableArray<NSNumber *> *sum = [NSMutableArray array];
+    [sum addObject:nums[0]];
+
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    NSInteger minSize = NSIntegerMax;
+
+    for(NSInteger i = 1; i < nums.count; i++){
+        [sum addObject: @(sum[i-1].integerValue + nums[i].integerValue)];
+        dic[sum[i]] = @(i);
+        NSNumber *start = dic[@(sum[i].integerValue - target)];
+        if(start){
+            minSize = MIN(minSize, i - start.integerValue + 1);
+        }
+    }
+    return minSize;
+}
+
+// 地里的面筋题，方法还蛮具有代表性的
+// Find subsequence in an array which sums up to given target
+// 使用hash table 法，这个和 two sum，使用了类似的技巧
+
+//s[0] = a[0]
+//map[s[0]] = 0 // s[i] => i
+//for j = 1 to n-1:
+//  s[j] = s[j-1] + a[j]
+//  map[s[j]] = j
+//if map has key (s[j] - target)
+//   i = map[s[j]-target]+1
+//find_solution(a[i..j])
+
 
 // 注意over flow
 // 没想到 one pass 的方法
@@ -877,7 +928,7 @@
     if([intervals count] < 2) {
         return intervals;
     }
-    //step 1: sort the intercal
+    //step 1: sort the interval
     NSArray *sortedIntervals = [intervals sortedArrayUsingComparator:^NSComparisonResult(Interval *first, Interval *second ) {
         if(first.start < second.start) {
             return NSOrderedAscending;
@@ -889,7 +940,6 @@
     }];
     // step 2 : compare cur.start inter with next 
     // if > merge  else insert to array
-
     NSMutableArray *result;
     Interval *cur = sortedIntervals[0];
     Interval *next;
@@ -906,25 +956,26 @@
     return result;
 }
 
+//
 - (NSArray<Interval *> *)insert:(NSArray<Interval *> *)intervals withInterval:(Interval *)interval2
 {
     NSMutableArray *result = [NSMutableArray array];
 
     NSInteger k = 0;
     NSInteger count = intervals.count;
-    //先加入比插入的小的
+    //step 1: insert the left side part which is not verlap with interval2 
     while(k < count && intervals[k].end < interval2.start){
         [result addObject: intervals[k]];
         k++;
     }
-    Interval *newInterval = interval2;
-    while(k < count && intervals[k].start <= newInterval.end){
+    Interval *newInterval = interval2; // 如果没有overlap 也要加进去
+    while(k < count && intervals[k].start <= newInterval.end){ // step2 : merge the overlap interval
         newInterval = [Interval new];
         newInterval.start = MIN(intervals[k].start, newInterval.start); //start 挑选小的合并
         newInterval.end = MAX(intervals[k].end, newInterval.end); //start 挑选小的合并
         k++;
     }
-    [result addObject:newInterval];
+    [result addObject:newInterval]; // step3 : insert right part 
     while(k < count){
         [result addObject:intervals[k]];
         k++;
@@ -977,6 +1028,8 @@
 
 // https://discuss.leetcode.com/topic/20971/c-o-n-log-n-584-ms-3-solutions
 
+//Fellow up: 给出重合最多的时间点，或者说有最多meeting的时间点
+
 - (NSInteger)minMeetingRooms:(NSArray<Interval *> *)intervals
 {
     NSMutableArray<NSNumber *> *starts = [NSMutableArray array];
@@ -986,7 +1039,6 @@
         [ends addObject:@(it.end)];
     }
     //step 1.分别排序
-    
     [starts sortUsingSelector:@selector(compare:)]; // nlog(n)
     [ends sortUsingSelector:@selector(compare:)];
     
@@ -997,7 +1049,7 @@
     NSInteger j = 0;
     NSInteger len = [intervals count];
     
-    while (i < len) { //为什么这里i < len 之后就不用判断了呢？
+    while (i < len) { //
         if(starts[i].integerValue < ends[j].integerValue) { //任意开始时间 小于结束时间，需要会议室
             if(numOfFreeRooms > 0){  // 有空余的
                 numOfFreeRooms--;
@@ -1018,4 +1070,128 @@
 //    
 //}
 
+// All elements before the slow pointer (lastNonZeroFoundAt) are non-zeroes.
+// All elements between the current and slow pointer are zeroes
+
+//    1 , 0, 3,
+//    n 
+//   cur
+
+//       n
+//      curr
+//       3 0
+//         curr
+//        n 
+// 另一种情况 0 , 1 
+//
+
+- (void)moveZeros:(NSMutableArray<NSNumber *> *)nums
+{    
+    if([nums count] <= 1){
+        return;
+    }
+    NSInteger curr = 0;
+    NSInteger nonZeroIndex = 0;
+    while(curr < nums.count){
+        if(nums[curr].integerValue != 0){
+            [nums exchangeObjectAtIndex:curr withObjectAtIndex:nonZeroIndex];
+            nonZeroIndex++;
+        } 
+        curr++;
+    }
+}
+
+- (void)moveZeros_no_order:(NSMutableArray<NSNumber *> *)nums
+{
+    if([nums count] <= 1){
+        return;
+    }
+    NSInteger left = 0;
+    NSInteger right = nums.count - 1;
+    while(left < right){
+        while(left < right && nums[right].integerValue == 0){
+            right--;
+        }// use right to track the right most no zero element
+        while(left < right && nums[left].integerValue != 0){
+            left++;
+        }
+        if(left < right){
+            [nums exchangeObjectAtIndex:left withObjectAtIndex:right];
+        }
+    }
+}
+
+//191. Number of 1 Bits
+
+// 这里还有个更佳简介的 直接和 & 1 相yu
+
+- (NSInteger)hammingWeight:(NSInteger)n
+{
+    NSInteger count = 0;
+    NSInteger b = 0;
+    while (n != 0) {
+        b = n >> 1;
+        if(n != b << 1){
+            count++;
+        }
+        n = b;
+    }
+    return count;
+}
+
+- (double)power:(NSInteger)n k:(NSInteger)k
+{
+    if(n < 0){
+        return 1.0 / [self _power:-n k:k];
+    } else {
+        return [self power:n k:k];
+    }
+}
+
+- (double)_power:(NSInteger)n k:(NSInteger)k
+{
+    if(n == 0){
+        return 1;
+    }
+    double v = [self _power:n / 2 k:k];
+    if(n % 2 == 0){
+        return v * v;
+    } else {
+        return v * v * k;
+    }
+}
+
+- (NSInteger)vector:(NSArray<NSNumber *> *)vector dotVector:(NSArray<NSNumber *> *)vector2
+{
+    NSAssert([vector count] == [vector2 count], @"");
+    NSInteger result = 0;
+    for(NSInteger i = 0; i < vector.count; i++){
+        result += vector[i].integerValue * vector2[i].integerValue;
+    }
+    return result;
+}
+
+//Fellow up
+//   input A=[[1, a1], [300, a300], [5000, a5000]]
+//         B=[[100, b100], [300, b300], [1000, b1000]]
+
+- (NSInteger)sparseVector:(NSArray<NSArray<NSNumber *> *> *)vector dotVector:(NSArray<NSArray<NSNumber *> *> *)vector2
+{
+    //假设vector <<< vector2
+    NSInteger result = 0;
+    for(NSInteger i = 0; i < vector.count; i++){
+        NSUInteger index = [vector2 indexOfObject:vector[i]
+                                    inSortedRange:NSMakeRange(0, vector2.count - 1)
+                                          options:NSBinarySearchingFirstEqual
+                                  usingComparator:^NSComparisonResult(NSArray *a, NSArray *b){
+                                           return [[a firstObject] compare:[b firstObject]]; 
+                                       }];
+        
+        if(index < vector2.count){
+            result += [vector[i] lastObject].integerValue * [vector2[index] lastObject].integerValue;
+        }                               
+    }
+    return result;
+}
 @end
+

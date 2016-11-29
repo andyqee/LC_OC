@@ -367,7 +367,23 @@
 // After robbing those houses on that street, the thief has found himself a new place for his thievery so that he will not get too much attention. This time, all houses at this place are arranged in a circle. That means the first house is the neighbor of the last one. Meanwhile, the security system for these houses remain the same as for those in the previous street.
 
 // Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight without alerting the police.
+
 - (NSInteger)rob_2:(NSArray<NSNumber *> *)nums;
+
+//282. Expression Add Operators
+
+//Difficulty: Hard
+//Contributors: Admin
+//Given a string that contains only digits 0-9 and a target value, return all possibilities to add binary operators (not unary) +, -, or * between the digits so they evaluate to the target value.
+//
+//Examples:
+//"123", 6 -> ["1+2+3", "1*2*3"]
+//"232", 8 -> ["2*3+2", "2+3*2"]
+//"105", 5 -> ["1*0+5","10-5"]
+//"00", 0 -> ["0+0", "0-0", "0*0"]
+//"3456237490", 9191 -> []
+
+- (NSString *)addOperators:(NSString *)num target:(NSInteger)target;
 
 @end
 

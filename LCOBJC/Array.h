@@ -63,7 +63,6 @@
 // Input: 14
 // Returns: False
 
-
 // 128. Longest Consecutive Sequence
 // 最长连续序列
 // Given an unsorted array of integers, find the length of the longest consecutive elements sequence.
@@ -210,13 +209,11 @@
 
 - (NSArray<Interval *> *)mergeIntervals:(NSArray<Interval *> *)intervals;
 
-//57. Insert Interval   Add to List QuestionEditorial Solution  My Submissions
+//57. Insert Interval
 //Difficulty: Hard
 //Contributors: Admin
 //Given a set of non-overlapping intervals, insert a new interval into the intervals (merge if necessary).
-//
 //You may assume that the intervals were initially sorted according to their start times.
-//
 //Example 1:
 //Given intervals [1,3],[6,9], insert and merge [2,5] in as [1,5],[6,9].
 //
@@ -225,7 +222,7 @@
 //
 //This is because the new interval [4,9] overlaps with [3,5],[6,7],[8,10].
 
-- (NSArray<Interval *> *)insert:(Interval *)interval1 withInterval:(Interval *)interval2;
+- (NSArray<Interval *> *)insert:(NSArray<Interval *> *)intervals withInterval:(Interval *)interval2;
 
 //350. Intersection of Two Arrays II
 //Given two arrays, write a function to compute their intersection.
@@ -328,5 +325,31 @@
 - (NSInteger)minMeetingRooms:(NSArray<Interval *> *)intervals;
 
 - (NSArray *)mergeKSortedArray:(NSArray *)array;
+
+//283. Move Zeroes   Add to List QuestionEditorial Solution  My Submissions
+
+//Difficulty: Easy
+//Contributors: Admin
+//Given an array nums, write a function to move all 0's to the end of it while maintaining the relative order of the non-zero elements.
+//
+//For example, given nums = [0, 1, 0, 3, 12], after calling your function, nums should be [1, 3, 12, 0, 0].
+//
+//Note:
+//You must do this in-place without making a copy of the array.
+//Minimize the total number of operations.
+
+- (void)moveZeros:(NSMutableArray<NSNumber *> *)nums;
+- (void)moveZeros_no_order:(NSMutableArray<NSNumber *> *)nums;
+
+//191. Number of 1 Bits
+
+//Difficulty: Easy
+//Contributors: Admin
+//Write a function that takes an unsigned integer and returns the number of ’1' bits it has (also known as the Hamming weight).
+//
+//For example, the 32-bit integer ’11' has binary representation 00000000000000000000000000001011, so the function should return 3.
+- (NSInteger)hammingWeight:(NSInteger)n;
+
+- (NSInteger)sparseVector:(NSArray<NSArray<NSNumber *> *> *)vector dotVector:(NSArray<NSArray<NSNumber *> *> *)vector2;
 
 @end

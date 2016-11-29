@@ -22,7 +22,6 @@
 
 @end
 
-
 @interface Interval : NSObject
 @property (nonatomic, assign) NSInteger start;
 @property (nonatomic, assign) NSInteger end;
@@ -44,5 +43,23 @@
 @property (nonatomic, strong) RandomListNode *next;
 
 @property (nonatomic, assign) NSInteger label;
+
+@end
+
+
+@interface UndirectedGraphNode : NSObject<NSCopying>
+@property (nonatomic, strong) NSMutableArray<UndirectedGraphNode *> *neighbors;
+@property (nonatomic, assign) NSInteger label;
+
+- (instancetype)initWithLabel:(NSInteger)label;
+
+@end
+
+//Doubly Linked List
+
+@interface DoublyLinkedListNode : NSObject
+@property (nonatomic, assign) NSInteger val;
+@property (nonatomic, strong) DoublyLinkedListNode *next;
+@property (nonatomic, strong) DoublyLinkedListNode *prev;
 
 @end

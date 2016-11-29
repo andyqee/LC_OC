@@ -138,7 +138,7 @@
 //Two elements of a binary search tree (BST) are swapped by mistake.
 //Recover the tree without changing its structure.
 //A solution using O(n) space is pretty straight forward. Could you devise a constant space solution?
-
+// 只是值发生变化
 - (void)recoverTree:(TreeNode *)treeNode
 {
     
@@ -281,7 +281,52 @@
     node.val = nodes[mid].integerValue;
     node.left = [self sortedArrayToBST:nodes withLeftIndex:leftIdx andRightIndex:mid - 1]; // 注意下标
     node.right = [self sortedArrayToBST:nodes withLeftIndex:mid + 1 andRightIndex:rightIdx];
+    
+    return node;
+}
 
+- (TreeNode *)sortedArrayToBST_i:(NSArray<NSNumber *> *)nodes
+{
+    if (!nodes.count) {
+        return nil;
+    }
+    //需要额外信息的可以用多个stack
+    TreeNode *node = [TreeNode new];
+    
+    NSMutableArray<TreeNode *> *stack = [NSMutableArray array];
+    [stack addObject:node];
+    
+    NSMutableArray<NSNumber *> *leftIndexStack = [NSMutableArray array];
+    [leftIndexStack addObject:@0];
+    
+    NSMutableArray<NSNumber *> *rightIndexStack = [NSMutableArray array];
+    [rightIndexStack addObject:@(nodes.count -1)];
+    
+    while ([stack count]> 0) {
+        TreeNode *node = [stack lastObject];
+        [stack removeLastObject];
+        
+        NSInteger left = [leftIndexStack lastObject].integerValue;
+        [leftIndexStack removeLastObject];
+        NSInteger right = [rightIndexStack lastObject].integerValue;
+        [rightIndexStack removeLastObject];
+        
+        NSInteger mid = (right - left) / 2 + left;
+        node.val = nodes[mid].integerValue;
+
+        if(left <= mid - 1){
+            node.left = [TreeNode new];
+            [stack addObject:node.left];
+            [leftIndexStack addObject:@(left)];
+            [leftIndexStack addObject:@(mid - 1)];
+        }
+        if(right >= mid + 1){
+            node.right = [TreeNode new];
+            [stack addObject:node.right];
+            [leftIndexStack addObject:@(mid + 1)];
+            [leftIndexStack addObject:@(right)];
+        }
+    }
     return node;
 }
 
@@ -590,7 +635,6 @@
 //    return leftNode ? leftNode : rightNode;
 }
 
-
 - (NSInteger)minDepth:(TreeNode *)root
 {
     if(root == nil){
@@ -699,7 +743,7 @@
         
         if(prev != nil && p.val <= prev.val){  //task部分
             return NO;
-        }
+        }   
         prev = p; //update prev;
         //3.右边处理是关键
         p = p.right; //
@@ -872,6 +916,48 @@ static TreeNode *prev = nil;
         //we can get prev node by call [stack lastObject]
     }
     return [preorder copy];
+}
+
+// 1. If left subtree exists, process the left subtree
+// …..1.a) Recursively convert the left subtree to DLL.
+// …..1.b) Then find inorder predecessor of root in left subtree (inorder predecessor is rightmost node in left subtree).
+// …..1.c) Make inorder predecessor as previous of root and root as next of inorder predecessor.
+// 2. If right subtree exists, process the right subtree (Below 3 steps are similar to left subtree).
+// …..2.a) Recursively convert the right subtree to DLL.
+// …..2.b) Then find inorder successor of root in right subtree (inorder successor is leftmost node in right subtree).
+// …..2.c) Make inorder successor as next of root and root as previous of inorder successor.
+// 3. Find the leftmost node and return it (the leftmost node is always head of converted DLL).
+
+- (TreeNode *)convertBT:(TreeNode *)node
+{
+    if(!node){
+        return nil;
+    }
+    TreeNode newHead = node;
+    if(node.left){
+        newHead = [self convertBT:node.left];
+        //find inorder predecessor of root
+        TreeNode *rightMostOfLeftSubtree = [self rightMostNode:node.left];
+        node.left = rightMostOfLeftSubtree;
+        rightMostOfLeftSubtree.right = node;
+    }
+    if(node.right){
+        TreeNode rightHead = [self convertBT:node.right];
+        node.right = rightHead;
+        rightHead.left = node;
+    }
+    return newHead;
+}
+
+- (TreeNode *)rightMostNode:(TreeNode *)node
+{
+    if(!node){
+        return nil;
+    }
+    if(node.right){
+        return [self rightMostNode:node.right];
+    }
+    return node;
 }
 
 @end

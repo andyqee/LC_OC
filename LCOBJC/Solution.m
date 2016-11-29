@@ -493,7 +493,7 @@ BOOL isAalphaNumber(unichar ch)
         while(!isAalphaNumber([str characterAtIndex:end]) && start < end) {
             end--;
         }
-        if(![[str substringWithRange:NSMakeRange(start, 1)] isEqualToString:[str substringWithRange:NSMakeRange(end, 1)]]) {
+        if([[str substringWithRange:NSMakeRange(start, 1)] caseInsensitiveCompare:[str substringWithRange:NSMakeRange(end, 1)]] != NSOrderedSame) {
             return NO;
         }
         start++;
@@ -573,7 +573,7 @@ BOOL isAalphaNumber(unichar ch)
 
     NSMutableDictionary<NSString *, NSMutableArray *> *dic = [NSMutableDictionary dictionary];
     for(NSString *str in strs) {
-        NSString *key = [str sorted];
+        NSString *key = [str sorted];// 如果不排序,可以用prime计算hash
         if(dic[key]) {
             [dic[key] addObject:str];
         } else {

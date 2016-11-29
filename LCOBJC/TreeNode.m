@@ -16,3 +16,19 @@
 
 @end
 
+@implementation RandomListNode
+
+@end
+
+@implementation Interval
+
+@end
+
+
+@implementation UndirectedGraphNode
+
+@end
+
+@implementation DoublyLinkedListNode
+
+@end

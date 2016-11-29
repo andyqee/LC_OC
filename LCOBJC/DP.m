@@ -78,5 +78,9 @@
     return result;
 }
 
+//- (BOOL)isMatchString:(NSString *)str patten:(NSString *)p
+//{
+//
+//}
 
 @end

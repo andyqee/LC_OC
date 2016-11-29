@@ -70,4 +70,42 @@
 //       return t * t == num;
 //     }
 
+ /** a/b = e^(ln(a))/e^(ln(b)) = e^(ln(a)-ln(b)) **/
+
+// 这种算法精度有限制
+
+- (NSInteger)divide:(NSInteger)dividend divisor:(NSInteger)divisor
+{
+    if(dividend == 0) return 0;
+    if(divisor == 0) return NSIntegerMax;
+
+    double t1 = log(ABS(dividend));
+    double t2 = log(ABS(divisor));
+    NSInteger res = ceil(exp(t1-t2));
+    if((dividend > 0 && divisor < 0 ) || (dividend < 0 && divisor > 0 )) res = -res;
+    return res;
+}
+
+- (NSInteger)divideMethod2:(NSInteger)dividend divisor:(NSInteger)divisor
+{
+    if (divisor == 0 || (dividend == INT_MIN && divisor == -1)) //这个细节要注意, 正数的最大值，但是 divisor 为-1， 也会溢出
+        return NSIntegerMax;
+    
+    NSInteger a = ABS(dividend);
+    NSInteger b = ABS(divisor);
+    double res = 0;
+    while(b <= a){
+        NSInteger shif = b;
+        NSInteger count = 1;
+        while(a >= (shif << 1)){
+            shif = shif << 1;
+            count <<= 1;
+        }
+        a = a - shif;
+        res = res + count;
+    }
+    if((dividend > 0 && divisor < 0 ) || (dividend < 0 && divisor > 0 )) res = -res;
+    return res;
+}
+
 @end

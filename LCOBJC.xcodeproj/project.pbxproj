@@ -13,6 +13,7 @@
 		A1F2B7E81DC5EEE70023278E /* TreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F2B7E71DC5EEE70023278E /* TreeNode.m */; };
 		D7165C1C1DE0B48A00F12A47 /* math.m in Sources */ = {isa = PBXBuildFile; fileRef = D7165C1B1DE0B48A00F12A47 /* math.m */; };
 		D71E29931DE5C5CF006C2500 /* DP.m in Sources */ = {isa = PBXBuildFile; fileRef = D71E29921DE5C5CF006C2500 /* DP.m */; };
+		D72164AB1DEB12B200B96C69 /* Graph.m in Sources */ = {isa = PBXBuildFile; fileRef = D72164AA1DEB12B200B96C69 /* Graph.m */; };
 		D757AAD11DD95F6900F5ED1A /* BackTracking.m in Sources */ = {isa = PBXBuildFile; fileRef = D757AAD01DD95F6900F5ED1A /* BackTracking.m */; };
 		D7CBAFBB1DE8958F00612214 /* Array.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CBAFBA1DE8958E00612214 /* Array.m */; };
 		D7DB081B1DE3EB3E001888B3 /* Tree.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DB081A1DE3EB3E001888B3 /* Tree.m */; };
@@ -43,6 +44,8 @@
 		D7165C1B1DE0B48A00F12A47 /* math.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = math.m; sourceTree = "<group>"; };
 		D71E29911DE5C5CF006C2500 /* DP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DP.h; sourceTree = "<group>"; };
 		D71E29921DE5C5CF006C2500 /* DP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DP.m; sourceTree = "<group>"; };
+		D72164A91DEB12B200B96C69 /* Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Graph.h; sourceTree = "<group>"; };
+		D72164AA1DEB12B200B96C69 /* Graph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Graph.m; sourceTree = "<group>"; };
 		D757AACF1DD95F6900F5ED1A /* BackTracking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackTracking.h; sourceTree = "<group>"; };
 		D757AAD01DD95F6900F5ED1A /* BackTracking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackTracking.m; sourceTree = "<group>"; };
 		D7CBAFB91DE8958E00612214 /* Array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Array.h; sourceTree = "<group>"; };
@@ -98,6 +101,8 @@
 				D71E29921DE5C5CF006C2500 /* DP.m */,
 				D7CBAFB91DE8958E00612214 /* Array.h */,
 				D7CBAFBA1DE8958E00612214 /* Array.m */,
+				D72164A91DEB12B200B96C69 /* Graph.h */,
+				D72164AA1DEB12B200B96C69 /* Graph.m */,
 			);
 			path = LCOBJC;
 			sourceTree = "<group>";
@@ -167,6 +172,7 @@
 				A1F2B7DD1DC5ED090023278E /* main.m in Sources */,
 				D7CBAFBB1DE8958F00612214 /* Array.m in Sources */,
 				A1F2B7E81DC5EEE70023278E /* TreeNode.m in Sources */,
+				D72164AB1DEB12B200B96C69 /* Graph.m in Sources */,
 				D7DB081B1DE3EB3E001888B3 /* Tree.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

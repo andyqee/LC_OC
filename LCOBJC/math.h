@@ -26,4 +26,13 @@
 // Returns: False
 
 - (BOOL)isPerfectSquare:(NSInteger)num;
+
+- (double)power:(NSInteger)n k:(NSInteger)k;
+
+//29. Divide Two Integers
+// 肯定不太可能完成float 精度级别的
+- (NSInteger)divide:(NSInteger)dividend divisor:(NSInteger)divisor;
+
+- (NSInteger)divideMethod2:(NSInteger)dividend divisor:(NSInteger)divisor;
+
 @end

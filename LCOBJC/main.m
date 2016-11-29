@@ -13,11 +13,13 @@
 #import "List.h"
 #import "Tree.h"
 #import "Array.h"
+#import "math.h"
 
 void testTree();
 void testString();
 void testArray();
 void testBackTracking();
+void testMath();
 
 void testList();
 
@@ -28,7 +30,7 @@ int main(int argc, const char * argv[]) {
         testArray();
         testBackTracking();
         testList();
-        
+        testMath();
 //        NSComparisonResult rst = [@"中国" localizedCompare:@"武汉"];
 //        NSComparisonResult rst1 = [@"武汉" localizedCompare:@"中国"];
 //        NSComparisonResult rst2 = [@"武汉" localizedCompare:@"萝卜"];
@@ -36,6 +38,14 @@ int main(int argc, const char * argv[]) {
 
     }
     return 0;
+}
+
+void testMath()
+{
+    math *m = [math new];
+    double res = [m divide:25 divisor:-5];
+    double ress = [m divideMethod2:25 divisor:-5];
+
 }
 
 void testList()
@@ -160,8 +170,15 @@ void testArray()
 //    NSArray *re = [s productExceptSelf:@[@(2), @(3), @(9), @(1)]];
 //    NSNumber *kth = [s findKthLargest:2 inArray:@[@(2),@(3),@(5),@(0),@(6)]];
     
-    NSMutableArray *arr = [@[@2, @2, @1, @2, @0] mutableCopy];
-    [s sortedColors_bs:arr k:3];
+    NSMutableArray *arr = [@[@2, @0, @1, @2, @0] mutableCopy];
+//    [s sortedColors_bs:arr k:3];
+    
+    [s moveZeros_no_order:arr];
+    
+    NSInteger b = [s hammingWeight:11];
+    //   input A=[[1, a1], [300, a300], [5000, a5000]]
+    //         B=[[100, b100], [300, b300], [1000, b1000]]
+    [s sparseVector:@[@[@(1), @1], @[@300, @300], @[@5000, @5000]] dotVector: @[@[@100, @100], @[@300, @300], @[@1000, @1000]]];
 }
 
 void testBackTracking()
@@ -179,12 +196,12 @@ void testBackTracking()
 //    NSArray *com2 = [b combineNumberMethod2:5 k:1];
 //    NSArray *com3 = [b combineNumberMethod3:5 k:1];
     
-    NSArray *tem = [b partition:@"aaab"];
+//    NSArray *tem = [b partition:@"aaab"];
     
 //    NSArray *re = [b letterCombinations:@"12345"];
 //    NSArray *re_r = [b letterCombinations_recursive:@"12345"];
-    NSArray *r = [b combinationSum:@[@2,@3,@6,@7,@4] target:7];
-    NSArray *r2 = [b combinationSum_2:@[@10, @1, @2, @7, @6, @1, @5] target:8];
+//    NSArray *r = [b combinationSum:@[@2,@3,@6,@7,@4] target:7];
+//    NSArray *r2 = [b combinationSum_2:@[@10, @1, @2, @7, @6, @1, @5] target:8];
 
     WordDictionary *dic = [WordDictionary new];
     [dic addWord:@"bad"];
@@ -209,6 +226,5 @@ void testBackTracking()
 //    BOOL c = [b isOneEditDistance:@"a" withStr:@"ac"];
 //    BOOL d = [b isOneEditDistance:@"abc" withStr:@"ac"];
 //    BOOL dd = [b isOneEditDistance:@"abcc" withStr:@"ac"];
-
 
 }
