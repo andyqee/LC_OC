@@ -138,12 +138,28 @@
 //Two elements of a binary search tree (BST) are swapped by mistake.
 //Recover the tree without changing its structure.
 //A solution using O(n) space is pretty straight forward. Could you devise a constant space solution?
-// 只是值发生变化
+// 只是值发生变化 inorder traversal
+
 - (void)recoverTree:(TreeNode *)treeNode
 {
     
 }
 
+- (void)traversal:(TreeNode *)treeNode
+{
+    if(!treeNode){
+        return;
+    }
+    [self traversal:treeNode.left];
+    if(prevNode && firstNode == nil && prevNode.val >= treeNode.val){
+        firstNode = prevNode.val;
+    }
+    if(prevNode && firstNode && prevNode.val >= treeNode.val){
+        secondNode = treeNode.val;
+    }
+    prevNode = treeNode;
+    [self traversal:treeNode.right];
+}
 // pre order traversal
 
 - (void)flattenBSTWithNode:(TreeNode *)node
