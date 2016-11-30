@@ -140,26 +140,27 @@
 //A solution using O(n) space is pretty straight forward. Could you devise a constant space solution?
 // 只是值发生变化 inorder traversal
 
-- (void)recoverTree:(TreeNode *)treeNode
-{
-    
-}
+// - (void)recoverTree:(TreeNode *)treeNode
+// {
+//     [self traversal:treeNode];
+//     swap(firstNode, secondNode);
+// }
 
-- (void)traversal:(TreeNode *)treeNode
-{
-    if(!treeNode){
-        return;
-    }
-    [self traversal:treeNode.left];
-    if(prevNode && firstNode == nil && prevNode.val >= treeNode.val){
-        firstNode = prevNode.val;
-    }
-    if(prevNode && firstNode && prevNode.val >= treeNode.val){
-        secondNode = treeNode.val;
-    }
-    prevNode = treeNode;
-    [self traversal:treeNode.right];
-}
+// - (void)traversal:(TreeNode *)treeNode
+// {
+//     if(!treeNode){
+//         return;
+//     }
+//     [self traversal:treeNode.left];
+//     if(prevNode && firstNode == nil && prevNode.val >= treeNode.val){
+//         firstNode = prevNode.val;
+//     }
+//     if(prevNode && firstNode && prevNode.val >= treeNode.val){
+//         secondNode = treeNode.val;
+//     }
+//     prevNode = treeNode;
+//     [self traversal:treeNode.right];
+// }
 // pre order traversal
 
 - (void)flattenBSTWithNode:(TreeNode *)node
@@ -450,7 +451,7 @@
         return [self inorderSuccessor:root.right withTargetNode:targetNode];
     } else {
         TreeNode *node = [self inorderSuccessor:root.left withTargetNode:targetNode];
-        return node ?: root;
+        return node ?: root; // 这个方法真的太巧妙了。
     }
 }
 
@@ -933,6 +934,80 @@ static TreeNode *prev = nil;
     }
     return [preorder copy];
 }
+// Alternative Solution:
+// You will think that it works magically, but in fact it is doing a reversed pre-order traversal. 前序遍历reversed版本
+// That is, the order of traversal is a node, then its right child followed by its left child. This yields post-order traversal in reversed order. Using a second stack, we could reverse it back to the correct order.
+
+- (NSArray *)postorderTwoStack:(TreeNode *)treeNode
+{
+    if(!treeNode){
+        return nil;
+    }
+    NSMutableArray *stack = [NSMutableArray array];
+    NSMutableArray *result = [NSMutableArray array];
+
+    [stack addObject:treeNode];
+    while ([stack count]) {
+        TreeNode *node = [stack lastObject];
+        [result addObject: @(node.val)];
+        [stack removeLastObject];
+
+        if (node.left) {
+            [stack addObject:node.left];
+        }
+        if(node.right){ //先右边
+            [stack addObject:node.right];
+        }
+        //we can get prev node by call [stack lastObject]
+    }
+    return [[result reverseObjectEnumerator] allObjects];
+}
+
+// 分三种情况讨论
+// We use a prev variable to keep track of the previously-traversed node. Let’s assume curr is the current node that’s on top of the stack. When prev is curr‘s parent, we are traversing down the tree. In this case, we try to traverse to curr‘s left child if available (ie, push left child to the stack). If it is not available, we look at curr‘s right child. If both left and right child do not exist (ie, curr is a leaf node), we print curr‘s value and pop it off the stack.
+
+// If prev is curr‘s left child, we are traversing up the tree from the left. 
+// We look at curr‘s right child. If it is available, then traverse down the right child (ie, push right child to the stack), otherwise print curr‘s value and pop it off the stack.
+// If prev is curr‘s right child, we are traversing up the tree from the right. In this case, we print curr‘s value and pop it off the stack.
+
+- (NSArray *)postorderOneStack:(TreeNode *)treeNode
+{
+    if(!treeNode){
+        return nil;
+    }
+    NSMutableArray *stack = [NSMutableArray array];
+    NSMutableArray *result = [NSMutableArray array];
+    [stack addObject:treeNode];
+    TreeNode *prevNode;
+
+    while ([stack count]) {
+        TreeNode *node = [stack lastObject]; // 这里先不pop        
+        // we are traversing down the tree
+        if(prevNode && (prevNode.left == node || prevNode.right == node)){
+            if(node.left){
+                [stack addObject:node.left];
+            } else if(node.right){
+                [stack addObject:node.right];
+            } else {
+                [stack removeLastObject]; // 这两行代码可以在三个if else 中，可以提取出来
+                [result addObject:node];
+            }
+        } else if(node.left == prevNode){ // we are traversing up the tree from the left
+            if(node.right){
+                [stack addObject:node.right];
+            } else {
+                [result addObject:node];
+                [stack removeLastObject];
+            }
+        } else if(node.right == prevNode){         // we are traversing up the tree from the right
+                [result addObject:node];
+                [stack removeLastObject]; 
+        }    
+        //we can get prev node by call [stack lastObject]
+        prevNode = node;
+    }
+    return [result copy];
+}
 
 // 1. If left subtree exists, process the left subtree
 // …..1.a) Recursively convert the left subtree to DLL.
@@ -949,7 +1024,7 @@ static TreeNode *prev = nil;
     if(!node){
         return nil;
     }
-    TreeNode newHead = node;
+    TreeNode *newHead = node;
     if(node.left){
         newHead = [self convertBT:node.left];
         //find inorder predecessor of root
@@ -958,7 +1033,7 @@ static TreeNode *prev = nil;
         rightMostOfLeftSubtree.right = node;
     }
     if(node.right){
-        TreeNode rightHead = [self convertBT:node.right];
+        TreeNode *rightHead = [self convertBT:node.right];
         node.right = rightHead;
         rightHead.left = node;
     }

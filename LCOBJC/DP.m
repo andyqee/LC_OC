@@ -9,7 +9,6 @@
 #import "DP.h"
 
 @implementation DP
-
 // emtpy string . 如何处理 DP
 
 #pragma mark - word break
@@ -38,6 +37,45 @@
         }
     }
     return [map[count] boolValue];
+}
+
+// Fellow up 返回结果
+
+- (NSString *)wordBreakFollowup:(NSString *)str set:(NSSet*)set
+{
+    if(str.length == 0) {
+        return str;
+    }
+    
+    NSInteger count = str.length;
+    NSMutableArray *map = [NSMutableArray array];
+    NSMutableArray<NSNumber *> *from = [NSMutableArray array];
+
+    for(NSInteger k = 0; k <= count; k++) {
+        [map addObject:@(NO)];
+        [from addObject:@(-1)];
+    }
+    
+    //base case
+    map[0] = @(YES);
+    for(NSInteger i = 1; i <= count; i++) { //
+        for(NSInteger j = 0; j < i; j++) { // 拆分成sub problem
+            NSString *subStr = [str substringWithRange:NSMakeRange(j ,i - j)];
+            if(map[j] && [set containsObject:subStr]) {
+                map[i] = @(YES);
+                from[i] = @(j);
+            }
+        }
+    }
+    NSInteger t = count;
+    NSMutableArray *rest = [@[] mutableCopy];
+    while(t > 0){ // t == 0 就不需要在往前面找了
+        NSInteger p = [from[t] integerValue];
+        NSString *sub = [str substringWithRange:NSMakeRange(p, t - p)];//这里的t 是比index > 1,所有不用 t-p + 1
+        [rest addObject:sub];
+        t = p;
+    }
+    return [[[rest reverseObjectEnumerator] allObjects] componentsJoinedByString:@" "];
 }
 
 //DFS
@@ -82,5 +120,6 @@
 //{
 //
 //}
+
 
 @end

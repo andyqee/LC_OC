@@ -14,6 +14,7 @@
 #import "Tree.h"
 #import "Array.h"
 #import "math.h"
+#import "DP.h"
 
 void testTree();
 void testString();
@@ -111,6 +112,9 @@ void testTree() {
     node.right = right;
     
     Solution *s = [Solution new];
+    
+//    TreeNode *dll = [s convertBT:node];
+    NSString *abc = [s longestPalindrome:@"abcdku0839abvvba"];
     // NSArray *p = [s binaryTreePaths:node];
     // NSArray *q = [s binaryTreePaths_LJSolution:node];
     // NSArray *m = [s zigzagLevelOrder:node];
@@ -132,7 +136,7 @@ void testTree() {
 
 void testString()
 {
-    Solution *s = [Solution new];
+    DP *s = [DP new];
 //    NSInteger b = [s numDecodings:@"26782011"];
 //    NSInteger bo = [s numDecodings_optimizeSpace:@"26782011"];
 //    NSInteger bob = [s numDecodingsMethod2:@"26782011"];
@@ -145,7 +149,9 @@ void testString()
 //    NSString *str = [s countAndSay_recursive:5];
 //    NSString *str_ite = [s countAndSay_iterative:5];
 //    NSString *f = [s groupAnagrams:@[@"eat", @"tea", @"tan", @"ate", @"nat", @"bat"]];
-//    BOOL re = [s wordBreak:@"leetcccode" set:[NSSet setWithArray:@[@"leet", @"code", @"cc"]]];
+    BOOL re = [s wordBreak:@"leetcccode" set:[NSSet setWithArray:@[@"leet", @"code", @"cc"]]];
+    NSString *res = [s wordBreakFollowup:@"leetcccode" set:[NSSet setWithArray:@[@"leet", @"code", @"cc"]]];
+
 //    NSArray *res = [s wordBreak_2:@"catsanddog" set:[NSSet setWithArray:@[@"cat", @"cats", @"and", @"sand", @"dog"]]];
 //    NSArray *ress = [s wordBreak_2:@"aaaa" set:[NSSet setWithArray:@[@"a", @"aa", @"aaa", @"aaaa"]]];
     
@@ -226,5 +232,7 @@ void testBackTracking()
 //    BOOL c = [b isOneEditDistance:@"a" withStr:@"ac"];
 //    BOOL d = [b isOneEditDistance:@"abc" withStr:@"ac"];
 //    BOOL dd = [b isOneEditDistance:@"abcc" withStr:@"ac"];
+    
+    BOOL is = [b isMatch:@"abc" withPatten:@"*abc"];
 
 }

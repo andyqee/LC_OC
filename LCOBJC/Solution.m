@@ -583,6 +583,60 @@ BOOL isAalphaNumber(unichar ch)
     return [dic allValues];
 }
 
+#pragma mark - 5. Longest Palindromic Substring
+
+// ....abcd.....
+//  i - j < 2    ji  这种和dp[i][j] 和 dp[j+1][i-1] 没有关系
+// time n^2 space n^2
+
+- (NSString *)longestPalindrome:(NSString *)str
+{
+    if (str.length < 2) {
+        return str;
+    }
+    NSInteger m = str.length;
+    //dp[i][j] used to indicate if the substring with the range [j, i] is a substring
+    NSMutableArray<NSMutableArray<NSNumber *> *> *map = [NSMutableArray array];
+    for(NSInteger i = 0; i <= m; i++){
+        NSMutableArray<NSNumber *> *sub = [NSMutableArray array];
+        for(NSInteger j = 0; j <= m; j++){
+            [sub addObject:@(i == j)]; //if it's one single char, set YES
+        }
+        [map addObject:sub];
+    }
+
+    NSInteger start = 0;
+    NSInteger end = 0;
+    //base case
+    
+    //事实上这里上面 i=j 的判断也可以合并到下面来
+    for(NSInteger i = 2; i <= m; i++){ //
+        for(NSInteger j = i - 1; j > 0; j--){
+            NSString *p = [str substringWithRange:NSMakeRange(i - 1, 1)];
+            NSString *q = [str substringWithRange:NSMakeRange(j - 1, 1)];
+            if((i - j < 2) || map[i - 1][j + 1].boolValue){
+                map[i][j] = @([p isEqualToString:q]);
+                if(map[i][j].boolValue && i - j > end - start){
+                    end = i;
+                    start = j;
+                }
+            }
+        }
+    }
+    return [str substringWithRange:NSMakeRange(start - 1, end - start + 1)];//注意这里是 start - 1
+}
+
+//半径法
+//- (NSString *)longestPalindromeMethod2:(NSString *)str
+//{
+//    if (str.length < 2) {
+//        return str;
+//    }
+//    for (NSInteger i = 1; i < str.length - 1; i++) {
+//        
+//    }
+//}
+
 @end
 
 @implementation NSString (FBSort) 

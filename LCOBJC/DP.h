@@ -23,6 +23,8 @@
 
 - (BOOL)wordBreak:(NSString *)str set:(NSSet*)set;
 
+- (NSString *)wordBreakFollowup:(NSString *)str set:(NSSet*)set;
+
 // 140. Word Break II
 
 // Difficulty: Hard
@@ -60,4 +62,5 @@
 
 - (BOOL)isMatchString:(NSString *)str patten:(NSString *)p;
 
+//https://leetcode.com/articles/longest-palindromic-substring/
 @end

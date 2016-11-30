@@ -529,7 +529,7 @@
     return YES;
 }
 
-//这题目有动态规划可以弄，DP不局限于找最优解之类的提醒
+//这题目有动态规划可以弄，DP不局限于找最优解之类
 
 #pragma mark Combinations
 
@@ -624,36 +624,55 @@
 }
 
 #pragma mark - 10. Regular Expression Matching
-
+//递归版本
 - (BOOL)isMatch:(NSString *)str withPatten:(NSString *)p 
 {   //handle emtpy case
-    return [self doIsMatch_re:str i:0 withPatten:p j:0];
+    NSAssert(str, @"");
+    NSAssert(p, @"");
+    if(p.length == 0){
+        return str.length == 0;
+    }
+    
+    return [self _isMatch_recursive:str strIndex:0 withPatten:p pattenIndex:0];
 }
 
-- (BOOL)doIsMatch_re:(NSString *)str i:(NSInteger)i withPatten:(NSString *)p j:(NSInteger)j
+//If the next character of p is NOT ‘*’, then it must match the current character of s. Continue pattern matching with the next character of both s and p.
+//If the next character of p is ‘*’, then we do a brute force exhaustive matching of 0, 1, or more repeats of current character of p… Until we could not match any more characters.
+
+// http://articles.leetcode.com/regular-expression-matching
+
+- (BOOL)_isMatch_recursive:(NSString *)str strIndex:(NSInteger)i withPatten:(NSString *)p pattenIndex:(NSInteger)j
 {
-    if(i > str.length || j > str.length){
-        return NO;
+    if(j == p.length){
+        return i == str.length;
     }
-
-    if(i == str.length && j == str.length){
-        return YES;
+    NSString *nextCh = @"";
+    if(p.length > j + 1){
+        nextCh = [str substringWithRange:NSMakeRange(j + 1, 1)];
     }
+    
     NSString *strCh = [str substringWithRange:NSMakeRange(i, 1)];
-    NSString *pCh = [str substringWithRange:NSMakeRange(j, 1)];
-
-    if([pCh isEqualToString:@"."] || [pCh isEqualToString:strCh]){
-        return [self doIsMatch_re:str i:i+1 withPatten:p j:j+1];
-    } else if([pCh isEqualToString:@"*"]){
-        return [self doIsMatch_re:str i:i+1 withPatten:p j:j] || [self doIsMatch_re:str i:i+1 withPatten:p j:j+1];
+    NSString *pCh = [p substringWithRange:NSMakeRange(j, 1)];
+    
+    if([nextCh isEqualToString:@"*"]) {
+        if ([self _isMatch_recursive:str strIndex:i withPatten:p pattenIndex:j + 2]) { //"bcd" vs "a*bcd" 这种不管当前有没有相等，如果直接跳过。
+            return YES;
+        }
+        while ([strCh isEqualToString:pCh] || [strCh isEqualToString:@"."]) { // "abcd" vs "a*bcd"
+            if ([self _isMatch_recursive:str strIndex:++i withPatten:p pattenIndex:j + 2]) { // bcd vs "bcd"
+                return YES;
+            }
+        }
     } else {
-        return NO;
+        return ([strCh isEqualToString:pCh] || [strCh isEqualToString:@"."]) && // case 2: 下一个不是“*”，所以当前ch 得匹配上 “abc” -- "abd"
+                [self _isMatch_recursive:str strIndex:i + 1 withPatten:p pattenIndex:j + 1]; // 匹配下一个
     }
+    return NO;
 }
 
 // 如果是两个string，每个字符串相互关联,就用二维数组
 // 各种case 应该考虑全面
-
+// https://discuss.leetcode.com/topic/17901/accepted-c-dp-solution-with-a-trick/2
 - (BOOL)isMatch_dp:(NSString *)str withPatten:(NSString *)p
 {
     NSInteger m = str.length;
@@ -667,16 +686,163 @@
         }
         [map addObject:sub];
     }
-
+    /**
+     * f[i][j]: if s[0..i-1] matches p[0..j-1]
+     * if p[j - 1] != '*'
+     *      f[i][j] = f[i - 1][j - 1] && s[i - 1] == p[j - 1]
+     * if p[j - 1] == '*', denote p[j - 2] with x
+     *      f[i][j] is true iff any of the following is true
+     *      1) "x*" repeats 0 time and matches empty: f[i][j - 2]
+     *      2) "x*" repeats >= 1 times and matches "x*x": s[i - 1] == x && f[i - 1][j]
+     * '.' matches any single character
+     */
+    
     map[0][0] = @(YES);
-    for(NSInteger i = 0; i <= m; i++){
+    map[0][1] = @(NO);// 特殊处理下 str 是空，p 是一个字符此时是NO
+    
+    for(NSInteger i = 1; i <= m; i++){ // p is emtpy
+        map[i][0] = @(NO);
+    }
+    for(NSInteger j = 2; j <= n; j++){ // str is emtpy. start from 2
+        map[0][j] = @(map[0][j - 2].boolValue && [[p substringWithRange:NSMakeRange(j - 1, 1)] isEqualToString:@"*"]);
+    }
+    
+    for(NSInteger i = 1; i <= m; i++){
         for(NSInteger j = 1; j <= n; j++) {
-            NSString *p = [str substringWithRange:NSMakeRange(j - 1, 1)];
-            NSString *ch = [str substringWithRange:NSMakeRange(i - 1, 1)];
-
+            NSString *strCh = [str substringWithRange:NSMakeRange(i - 1 , 1)];
+            NSString *pCh = [p substringWithRange:NSMakeRange(j - 1, 1)];
+            if([pCh isEqualToString:@"*"]) {// j >= 2
+                NSString *prevCh = [p substringWithRange:NSMakeRange(j - 2, 1)]; //注意数组越界
+                map[i][j] = @(map[i][j - 2].boolValue || (([prevCh isEqualToString:@"."] || [prevCh isEqualToString:strCh]) && map[i-1][j].boolValue));
+            } else {
+                map[i][j] = @(map[i - 1][j - 1].boolValue && ([strCh isEqualToString:pCh] || [strCh isEqualToString:@"."]));
+            }
         }
     }
     return map[m][n].boolValue;
+}
+
+#pragma mark - 44. Wildcard Matching
+
+//p[j-1] == s[i-1] || p[j-1] == '?'：dp[i][j] = dp[i-1][j-1]
+//p[j-1] == '*'：
+//1. 匹配0个字符：dp[i][j] = dp[i][j-1]
+//2. 匹配1个字符：dp[i][j] = dp[i-1][j-1]
+//3. 匹配多个字符：dp[i][j] = dp[i-1][j]
+
+- (BOOL)isMatchWildcard_dp2Array:(NSString *)str withPatten:(NSString *)p
+{
+    NSInteger m = str.length + 1;
+    NSInteger n = p.length + 1;
+    
+    NSMutableArray<NSMutableArray<NSNumber *> *> *dp = [NSMutableArray array];
+    for (NSInteger i = 0 ; i < m; i++) {
+        NSMutableArray *sub = [NSMutableArray array];
+        for(NSInteger j = 0; j < n; j++){
+            [sub addObject:@NO];
+        }
+        [dp addObject:sub];
+    }
+    
+    dp[0][0] = @(YES); // base case
+    for(NSInteger j = 1; j < n; j++){
+        dp[0][j] = @(dp[0][j - 1].boolValue && ([[p substringWithRange:NSMakeRange(j - 1, 1)] isEqualToString:@"*"])); //str = "" p ="********"
+    }
+    
+    for (NSInteger i = 1 ; i < m; i++) {
+        for(NSInteger j = 1; j < n; j++){
+            NSString *strCh = [str substringWithRange:NSMakeRange(i - 1, 1)];
+            NSString *pCh = [p substringWithRange:NSMakeRange(j - 1, 1)];
+            if([pCh isEqualToString:@"?"] || [pCh isEqualToString:strCh]) {
+                dp[i][j] = dp[i-1][j-1];
+            } else if([pCh isEqualToString:@"*"]){
+                dp[i][j] = @(dp[i-1][j-1].boolValue || dp[i][j-1].boolValue || dp[i-1][j].boolValue);// 中间那个是匹配灵个
+            } else {
+                dp[i][j] = @(NO);
+            }
+        }
+    }
+    
+    return dp[m][n].boolValue;
+}
+
+//1. 转成一维，size 和inloop 相同
+//2. 需要两个变量
+//3.
+- (BOOL)isMatchWildcard_dp1Array:(NSString *)str withPatten:(NSString *)p
+{
+    NSMutableArray<NSNumber *> *dp = [NSMutableArray array];
+    
+    NSInteger m = str.length + 1;
+    NSInteger n = p.length + 1;
+    dp[0] = @(YES);
+    
+    for (NSInteger i = 0 ; i < m; i++) {
+        NSNumber *prev = dp[0]; //这里是0
+        dp[0] = (i== 0) ? @YES : @NO;// 这里有些问题
+        for(NSInteger j = 1; j < n; j++){
+            NSNumber *temp = dp[j]; // 相当于 dp[i-1][j]
+            
+            NSString *strCh = [str substringWithRange:NSMakeRange(i - 1, 1)];
+            NSString *pCh = [p substringWithRange:NSMakeRange(j - 1, 1)];
+            
+            if([pCh isEqualToString:@"?"] || [pCh isEqualToString:strCh]) {
+                dp[j] = prev;
+            } else if([pCh isEqualToString:@"*"]){
+                dp[j] = @(prev.boolValue || dp[j].boolValue || dp[j-1].boolValue); // 中间那个是匹配灵个
+            }
+            prev = temp; // dp[i][j-1] 保留上一次内部循环的作用
+        }
+    }
+    return dp[m].boolValue;
+}
+
+//class Solution {
+//public:
+//    bool isMatch(string s, string p) {
+//        int m = s.length(), n = p.length();
+//        vector<bool> cur(m + 1, false);
+//        cur[0] = true;
+//        for (int j = 1; j <= n; j++) {
+//            bool pre = cur[0]; // use the value before update
+//            cur[0] = cur[0] && p[j - 1] == '*';
+//            for (int i = 1; i <= m; i++) {
+//                bool temp = cur[i]; // record the value before update
+//                if (p[j - 1] != '*')
+//                    cur[i] = pre && (s[i - 1] == p[j - 1] || p[j - 1] == '?');
+//                else cur[i] = cur[i - 1] || cur[i];
+//                pre = temp;
+//            }
+//        }
+//        return cur[m];
+//    }
+//};
+
+//二维数组转成 1纬
+
+- (BOOL)isMatchWildcard:(NSString *)str withPatten:(NSString *)p
+{
+    return [self _isMatchWildcard:str i:0 withPatten:p j:0];
+}
+
+- (BOOL)_isMatchWildcard:(NSString *)str i:(NSInteger)i withPatten:(NSString *)p j:(NSInteger)j
+{
+    if(i > str.length || j > str.length){
+        return NO;
+    }
+    if(i == str.length && j == str.length){
+        return YES;
+    }
+    NSString *strCh = [str substringWithRange:NSMakeRange(i, 1)];
+    NSString *pCh = [p substringWithRange:NSMakeRange(j, 1)];
+    
+    if([pCh isEqualToString:@"?"] || [pCh isEqualToString:strCh]){
+        return [self _isMatchWildcard:str i:i+1 withPatten:p j:j+1]; //匹配一个字符
+    } else if([pCh isEqualToString:@"*"]){ //
+        return [self _isMatchWildcard:str i:i+1 withPatten:p j:j] || [self _isMatchWildcard:str i:i+1 withPatten:p j:j+1];
+    } else {
+        return NO;
+    }
 }
 
 //301
@@ -921,7 +1087,7 @@
     if(i < 0 || j < 0 || i >= grid.count || j >= [grid firstObject].count || grid[i][j].integerValue == 0){
         return;
     }
-    grid[i][j] = @(0);
+    grid[i][j] = @(0); //关键是这里设成0
     [self _dfsSearch:grid i:i - 1 j:j];
     [self _dfsSearch:grid i:i + i j:j];
     [self _dfsSearch:grid i:i j:j - 1];

@@ -147,12 +147,10 @@
 
 - (void)nexetPermutation:(NSMutableArray *)nums;
 
-//131. Palindrome Partitioning   Add to List QuestionEditorial Solution  My Submissions
+//131. Palindrome Partitioning
 //Difficulty: Medium
 //Given a string s, partition s such that every substring of the partition is a palindrome.
-//
 //Return all possible palindrome partitioning of s.
-//
 //For example, given s = "aab",
 //Return
 //
@@ -183,7 +181,6 @@
 
 // 10. Regular Expression Matching 重点
 // Difficulty: Hard
-// Contributors: Admin
 // Implement regular expression matching with support for '.' and '*'.
 
 // '.' Matches any single character.
@@ -204,6 +201,29 @@
 // isMatch("aab", "c*a*b") → true
 
 - (BOOL)isMatch:(NSString *)str withPatten:(NSString *)p;
+
+// 44. Wildcard Matching
+// Difficulty: Hard
+// Implement wildcard pattern matching with support for '?' and '*'.
+
+// '?' Matches any single character.
+// '*' Matches any sequence of characters (including the empty sequence).
+
+// The matching should cover the entire input string (not partial).
+
+// The function prototype should be:
+// bool isMatch(const char *s, const char *p)
+
+// Some examples:
+// isMatch("aa","a") → false
+// isMatch("aa","aa") → true
+// isMatch("aaa","aa") → false
+// isMatch("aa", "*") → true
+// isMatch("aa", "a*") → true
+// isMatch("ab", "?*") → true
+// isMatch("aab", "c*a*b") → false
+- (BOOL)isMatchWildcard:(NSString *)str withPatten:(NSString *)p;
+
 
 // 301. Remove Invalid Parentheses
 // Remove the minimum number of invalid parentheses in order to make the input string valid. Return all possible results.
