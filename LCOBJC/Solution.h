@@ -52,6 +52,8 @@
 //Note:
 //The read function will only be called once for each test case
 
+//- (NSInteger)read
+
 //71. Simplify Path
 //Difficulty: Medium
 //Given an absolute path for a file (Unix-style), simplify it.
@@ -152,9 +154,6 @@
 - (NSArray<NSNumber *> *)palindromePairs:(NSArray<NSString *> *)strs;
 
 // 28. Implement strStr()
-// Difficulty: Easy
-// Implement strStr().
-
 // Returns the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.
 
 - (NSInteger)strStr:(NSString *)haystack needle:(NSString *)needle;

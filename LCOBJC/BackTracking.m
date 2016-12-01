@@ -332,6 +332,7 @@
 }
 
 // 第三种迭代枚举写法，我比较擅长的解法
+// T(o) = n!
 - (NSArray<NSArray *> *)permut_i:(NSArray<NSNumber *> *)nums// handle empty string
 {
     NSMutableArray<NSArray *> *result = [NSMutableArray arrayWithObject:@[nums[0]]];
@@ -507,7 +508,7 @@
         return;
     }
     for (NSInteger i = start; i < str.length; i++) {
-        if([self _isPalidrome:str low:start high:i]){
+        if([self _isPalindrome:str low:start high:i]){
             [temp addObject:[str substringWithRange:NSMakeRange(start, i - start + 1)]];
             [self _partition:str start:i+1 temp:temp result:result];
             [temp removeLastObject];
@@ -515,7 +516,7 @@
     }
 }
 
-- (BOOL)_isPalidrome:(NSString *)str low:(NSInteger)low high:(NSInteger)high
+- (BOOL)_isPalindrome:(NSString *)str low:(NSInteger)low high:(NSInteger)high
 {
     while (low < high) {
         NSString *ch = [str substringWithRange:NSMakeRange(low, 1)];
@@ -528,6 +529,11 @@
     }
     return YES;
 }
+
+//- (NSInteger)numberOfPalindrome:(NSString *)str
+//{
+//
+//}
 
 //这题目有动态规划可以弄，DP不局限于找最优解之类
 
@@ -756,7 +762,7 @@
             if([pCh isEqualToString:@"?"] || [pCh isEqualToString:strCh]) {
                 dp[i][j] = dp[i-1][j-1];
             } else if([pCh isEqualToString:@"*"]){
-                dp[i][j] = @(dp[i-1][j-1].boolValue || dp[i][j-1].boolValue || dp[i-1][j].boolValue);// 中间那个是匹配灵个
+                dp[i][j] = @(dp[i-1][j-1].boolValue || dp[i][j-1].boolValue || dp[i-1][j].boolValue);// 中间那个是匹配0个
             } else {
                 dp[i][j] = @(NO);
             }
@@ -1200,11 +1206,22 @@
 
 //121. Best Time to Buy and Sell Stock
 
+// Example 1:
+// Input: [7, 1, 5, 3, 6, 4]
+// Output: 5
+
+// max. difference = 6-1 = 5 (not 7-1 = 6, as selling price needs to be larger than buying price)
+// Example 2:
+// Input: [7, 6, 4, 3, 1]
+// Output: 0
+
 - (NSInteger)maxProfit:(NSArray<NSNumber *> *)prices
 {
-    if([prices count] < 2){
-        return 0;
-    }
+//    if([prices count] < 2){
+//        return 0;
+//    }
+    NSAssert([prices count] >= 2, @"");
+    
     NSInteger maxProfit = 0;
     NSInteger minPrice = 0;
 

@@ -126,19 +126,10 @@
 // 1[] 应该返回什么？
 // 1[a]
 
-//- (NSString *)decodeString_i:(NSString *)str
-//{
-//    if(str.length < 4) {
-//        return str;
-//    }
-//    
-//}
-
 // 在写这些问题的过程中，碰到要存储字符，用oc 的容器肯定不行
 
 // 可以设计一个状态机
-// 
-
+//
 //static NSDictionary *map = {"", }
 //这背后除了状态机，和Tree 有没有什么关系
 //lj 上有大神用两行 2 行正则表达式搞定了，靠！
@@ -188,11 +179,6 @@
     return [currStr copy];
 }
 
-// - (NSString *)decodeString_r:(NSString *)str
-// {
-
-// }
-
 #pragma mark - decode way
 
 // 数子字符串,
@@ -201,50 +187,6 @@
 // FB 重点
 // O(n)
 // 字符串转换的一定要考虑有哪些 invalid case
-
-- (NSInteger)numDecodings:(NSString *)str
-{
-    //corner case
-    if ([str length] == 0) {
-        return 0;
-    }
-    //check if the first ch is 0
-    NSString *ch = [str substringWithRange:NSMakeRange(0, 1)];
-    if([ch isEqualToString:@"0"]){
-        return 0;
-    }
-    
-    NSMutableArray<NSNumber *> *dp = [NSMutableArray arrayWithCapacity:str.length + 1];
-    for(NSInteger i = 0; i <= str.length; i++){
-        [dp addObject:@1];//这里初始化应该是1
-    }
-
-    for (NSInteger i = 1; i < str.length; i++) {
-       NSString *ch = [str substringWithRange:NSMakeRange(i, 1)];
-       NSString *prev = [str substringWithRange:NSMakeRange(i - 1, 1)];
-        
-      if(ch.integerValue > 6){
-        if(prev.integerValue == 1){
-            dp[i+1] = @(dp[i].integerValue + dp[i-1].integerValue);
-        } else {
-            dp[i+1] = dp[i];
-        }      
-      } else if(ch.integerValue > 0){
-          if(prev.integerValue == 1 || prev.integerValue == 2){
-              dp[i+1] = @(dp[i].integerValue + dp[i-1].integerValue);
-          } else {
-             dp[i+1] = dp[i];
-          }
-      } else {
-          if (prev.integerValue == 1 || prev.integerValue == 2) {
-              dp[i+1] = dp[i-1];
-          } else {
-              return 0;
-          }
-      }
-    }
-    return dp[str.length].integerValue;
-}
 
 - (NSInteger)numDecodings_optimizeSpace:(NSString *)str
 {
@@ -324,6 +266,25 @@
     }
     return dp[str.length].integerValue;
 }
+
+// Read N Characters Given Read4
+
+//- (NSInteger)readFromString:(NSMutableString *)buffer count:(NSInteger)count
+//{
+//    NSInteger len = 0;
+//    BOOL endOfFile = NO;
+//    while(len < count || !endOfFile){
+//        NSInteger num = [self read:buffer];
+//        len += num;
+//        if(num < 4){
+//            endOfFile = YES;
+//        }
+//    }
+//    while(len > count){
+//        [buffer deleteCharactersInRange:NSMakeRange(count, len - count)];
+//    }
+//    return buffer.length;
+//}
 
 //属于比较繁琐的问题，主要是耐心和细心
 
@@ -626,16 +587,39 @@ BOOL isAalphaNumber(unichar ch)
     return [str substringWithRange:NSMakeRange(start - 1, end - start + 1)];//注意这里是 start - 1
 }
 
+
 //半径法
 //- (NSString *)longestPalindromeMethod2:(NSString *)str
 //{
 //    if (str.length < 2) {
 //        return str;
 //    }
-//    for (NSInteger i = 1; i < str.length - 1; i++) {
+//    //odd and even len of string should be processed seperately
+//    
+//    
+//    for (NSInteger i = 0; i < str.length - 1; i++) {
+//        [self scanString:str startAtIndex:i withIndex:i];
+//        [self scanString:str startAtIndex:i withIndex:i + 1];
 //        
 //    }
+//    return substring
 //}
+
+// 这里如果改写下，也可以变成获取palindrome的数目
+
+//- (void)scanString:(NSString *)str startAtIndex:(NSInteger)left withIndex:(NSInteger)right
+//{
+//    while(left >= 0 && right < str.length){
+//        NSString *l = [str substringWithRange:NSMakeRange(left, 1)];
+//        NSString *r = [str substringWithRange:NSMakeRange(right, 1)];
+//        if([l isEqualToString:r]){
+//            left--;
+//            right++;
+//        }
+//    }
+//    maxLen = MAX(right - left - 1, maxLen);
+//}
+
 
 @end
 

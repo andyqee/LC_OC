@@ -341,6 +341,8 @@
 - (void)moveZeros:(NSMutableArray<NSNumber *> *)nums;
 - (void)moveZeros_no_order:(NSMutableArray<NSNumber *> *)nums;
 
+- (NSArray *)cooldown:(NSArray *)tasks;
+
 //191. Number of 1 Bits
 
 //Difficulty: Easy
