@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TreeNode.h";
+#import "Tree.h"
 
 @interface Graph : NSObject
 - (UndirectedGraphNode *)cloneGraph:(UndirectedGraphNode *)node;

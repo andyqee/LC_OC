@@ -67,6 +67,7 @@
 // method 1. 用product of all elements dived by each element
 // method 2
 // first scan form right to left calculate the product of all elements in the left side of a[i] excluding a[i]
+
 // scan form left to right
 
 // assum integer can hold
@@ -155,6 +156,7 @@
                     result = MIN(labs(diff), result);
                     right--;
                 }
+                //这里不需要
             while(left < right && sortedNums[left] == sortedNums[left + 1]) {
                 left++;
             }
@@ -165,6 +167,7 @@
     }
     return result;
 }
+
 //下面这个版本好
 - (NSInteger)threeSumCloset_w2:(NSArray *)nums target:(NSInteger)target
 {
@@ -330,8 +333,8 @@
 {
     return k >= 3; //fake implemetation
 }
-// 这道题目需要考虑一个情况，这里一定有bad version嘛
 
+// 这道题目需要考虑一个情况，这里一定有bad version嘛
 - (NSInteger)firstBadVersion:(NSInteger)n
 {
     //找一个满足条件的
@@ -512,6 +515,7 @@
 }
 
 // mid with left ，需要特殊处理没有排序的情况
+// 有重复元素的情况
 
 - (NSNumber *)findMin2:(NSArray<NSNumber *> *)nums
 {
@@ -634,6 +638,8 @@
 }
 
 // unique 的话, we can use an set
+// 或者添加 3 sum 那种常见的去重复方法，
+
 - (NSArray<NSNumber *> *)intersectionOfTwoArray_TwoPointer:(NSArray<NSNumber *> *)array andArray2:(NSArray<NSNumber *> *)array2
 {
     if([array2 count] == 0 || [array count] == 0) {
@@ -679,7 +685,7 @@
 #pragma mark - sorted colors
 // fellow up 写一个stable color color，相同的key 保持原来的顺序
 
-- (void)sortedColors_bs:(NSMutableArray<NSNumber *> *)nums k:(NSInteger)k
+- (void)sortedColorsBucketSort:(NSMutableArray<NSNumber *> *)nums k:(NSInteger)k
 {
     NSMutableDictionary<NSNumber*, NSNumber*> *dic = [NSMutableDictionary dictionary];
     for(NSNumber *num in nums){
@@ -789,6 +795,7 @@
 }
 
 // put small in left
+#pragma mark - closest point
 
 - (NSInteger)partition2DPoints:(NSMutableArray<NSValue *> *)nums left:(NSInteger)left right:(NSInteger)right
 {
@@ -963,7 +970,7 @@
 
     NSInteger k = 0;
     NSInteger count = intervals.count;
-    //step 1: insert the left side part which is not verlap with interval2 
+    //step 1: insert the left side part which is not overlap with interval2
     while(k < count && intervals[k].end < interval2.start){
         [result addObject: intervals[k]];
         k++;
@@ -1252,5 +1259,66 @@
     }
     return result;
 }
+
+//public String frequencySort(String s) {
+//    Map<Character, Integer> map = new HashMap<>();
+//    for (char c : s.toCharArray()) {
+//        if (map.containsKey(c)) {
+//            map.put(c, map.get(c) + 1);
+//        } else {
+//            map.put(c, 1);
+//        }
+//    }
+//    List<Character> [] bucket = new List[s.length() + 1];
+//    for (char key : map.keySet()) {
+//        int frequency = map.get(key);
+//        if (bucket[frequency] == null) {
+//            bucket[frequency] = new ArrayList<>();
+//        }
+//        bucket[frequency].add(key);
+//    }
+//    StringBuilder sb = new StringBuilder();
+//    for (int pos = bucket.length - 1; pos >=0; pos--) {
+//        if (bucket[pos] != null) {
+//            for (char num : bucket[pos]) {
+//                for (int i = 0; i < map.get(num); i++) {
+//                    sb.append(num);
+//                }
+//            }
+//        }
+//    }
+//    return sb.toString();
+//}
+
+// 堆的办法
+
+//public String frequencySort(String s) {
+//    Map<Character, Integer> map = new HashMap<>();
+//    for (char c : s.toCharArray()) {
+//        if (map.containsKey(c)) {
+//            map.put(c, map.get(c) + 1);
+//        } else {
+//            map.put(c, 1);
+//        }
+//    }
+//    PriorityQueue<Map.Entry<Character, Integer>> pq = new PriorityQueue<>(
+//                                                                          new Comparator<Map.Entry<Character, Integer>>() {
+//                                                                              @Override
+//                                                                              public int compare(Map.Entry<Character, Integer> a, Map.Entry<Character, Integer> b) {
+//                                                                                  return b.getValue() - a.getValue();
+//                                                                              }
+//                                                                          }
+//                                                                          );
+//    pq.addAll(map.entrySet());
+//    StringBuilder sb = new StringBuilder();
+//    while (!pq.isEmpty()) {
+//        Map.Entry e = pq.poll();
+//        for (int i = 0; i < (int)e.getValue(); i++) {
+//            sb.append(e.getKey());
+//        }
+//    }
+//    return sb.toString();
+//}
+
 @end
 
