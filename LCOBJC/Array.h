@@ -74,7 +74,7 @@
 - (NSInteger)longestConsecutive:(NSArray<NSNumber *> *)nums;
 
 // sum 系列
-// Given an array S of n integers, are there elements a, b, c in S such that a + b + c = 0? 
+// Given an array S of n integers, are there elements a, b, c in S such that a + b + c = 0?
 // Find all unique triplets in the array which gives the sum of zero.
 // Note: The solution set must not contain duplicate triplets.
 // For example, given array S = [-1, 0, 1, 2, -1, -4],
@@ -353,5 +353,73 @@
 - (NSInteger)hammingWeight:(NSInteger)n;
 
 - (NSInteger)sparseVector:(NSArray<NSArray<NSNumber *> *> *)vector dotVector:(NSArray<NSArray<NSNumber *> *> *)vector2;
+
+// 34. Search for a Range   Add to List QuestionEditorial Solution  My Submissions
+
+// Difficulty: Medium
+// Given a sorted array of integers, find the starting and ending position of a given target value.
+// Your algorithm's runtime complexity must be in the order of O(log n).
+// If the target is not found in the array, return [-1, -1].
+
+// For example,
+// Given [5, 7, 7, 8, 8, 10] and target value 8,
+// return [3, 4].
+
+- (NSArray<NSNumber *> *)searchRange:(NSArray<NSNumber *> *)nums target:(NSInteger)target;
+
+- (NSArray<NSNumber *> *)searchRangeMethod2:(NSArray<NSNumber *> *)nums target:(NSInteger)target;
+
+// 42. Trapping Rain Water
+
+// Difficulty: Hard
+// Contributors: Admin
+// Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it is able to trap after raining.
+
+// For example, 
+// Given [0,1,0,2,1,0,1,3,2,1,2,1], return 6.
+
+- (NSInteger)trap:(NSArray<NSNumber *> *)nums;
+
+- (NSInteger)trap_TwoPointers:(NSArray<NSNumber *> *)nums;
+
+//54. Spiral Matrix
+//
+//Difficulty: Medium
+//Contributors: Admin
+//Given a matrix of m x n elements (m rows, n columns), return all elements of the matrix in spiral order.
+//
+//For example,
+//Given the following matrix:
+//
+//[
+// [ 1, 2, 3 ],
+// [ 4, 5, 6 ],
+// [ 7, 8, 9 ]
+// ]
+//You should return [1,2,3,6,9,8,7,4,5].
+
+- (NSArray<NSNumber *> *)spiralOrder:(NSArray<NSArray<NSNumber *> *> *)nums;
+
+// 217. Contains Duplicate
+// Given an array of integers, find if the array contains any duplicates. 
+// Your function should return true if any value appears at least twice in the array, and it should return false if every element is distinct.
+- (BOOL)containsDuplicate:(NSArray<NSNumber *> *)nums
+
+
+// Given an array of integers and an integer k, find out whether there are two distinct indices i and j in the array such that 
+// nums[i] = nums[j] and the difference between i and j is at most k.
+- (BOOL)containsDuplicate2:(NSArray<NSNumber *> *)nums
+
+// 35. Search Insert Position
+// Given a sorted array and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order.
+// You may assume no duplicates in the array.
+
+// Here are few examples.
+// [1,3,5,6], 5 → 2
+// [1,3,5,6], 2 → 1
+// [1,3,5,6], 7 → 4
+// [1,3,5,6], 0 → 0
+
+- (NSInteger)searchInsert:(NSArray<NSNumber *> *)nums target:(NSInteger)target;
 
 @end

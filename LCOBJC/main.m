@@ -176,15 +176,30 @@ void testArray()
 //    NSArray *re = [s productExceptSelf:@[@(2), @(3), @(9), @(1)]];
 //    NSNumber *kth = [s findKthLargest:2 inArray:@[@(2),@(3),@(5),@(0),@(6)]];
     
-    NSMutableArray *arr = [@[@2, @0, @1, @2, @0] mutableCopy];
+//    NSMutableArray *arr = [@[@2, @0, @1, @2, @0] mutableCopy];
 //    [s sortedColors_bs:arr k:3];
     
-    [s moveZeros_no_order:arr];
-    
-    NSInteger b = [s hammingWeight:11];
+//    [s moveZeros_no_order:arr];
+//    
+//    NSInteger b = [s hammingWeight:11];
     //   input A=[[1, a1], [300, a300], [5000, a5000]]
     //         B=[[100, b100], [300, b300], [1000, b1000]]
-    [s sparseVector:@[@[@(1), @1], @[@300, @300], @[@5000, @5000]] dotVector: @[@[@100, @100], @[@300, @300], @[@1000, @1000]]];
+//    [s sparseVector:@[@[@(1), @1], @[@300, @300], @[@5000, @5000]] dotVector: @[@[@100, @100], @[@300, @300], @[@1000, @1000]]];
+    
+    NSArray *range = [s searchRange:@[@5, @7, @7, @8, @8, @10] target:8];
+    
+    NSInteger d = [s trap:@[@0,@1,@0,@2,@1,@0,@1,@3,@2,@1,@2,@1]];
+    NSInteger dd = [s trap_TwoPointers:@[@0,@1,@0,@2,@1,@0,@1,@3,@2,@1,@2,@1]];
+    
+    NSArray *range2 = [s searchRangeMethod2:@[@5, @7, @7, @8, @8, @10] target:11];
+    
+    //[
+    // [ 1, 2, 3 ],
+    // [ 4, 5, 6 ],
+    // [ 7, 8, 9 ]
+    // ]
+    NSMutableArray *array = [NSMutableArray array];
+    
 }
 
 void testBackTracking()

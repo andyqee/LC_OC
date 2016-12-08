@@ -1320,5 +1320,244 @@
 //    return sb.toString();
 //}
 
+// 首先想到的办法是 二分法
+// worst : O(N)。 网上的解法是 对upbounds 再掉用一次 二分搜索，
+// 这里可以试情况而定，如果重复的比率很高那么使用第二次二分查找。
+// 但是如果只是频率低，就用我这里给的解法
+
+- (NSArray<NSNumber *> *)searchRange:(NSArray<NSNumber *> *)nums target:(NSInteger)target
+{
+    NSMutableArray *range = [NSMutableArray arrayWithArray:@[@(-1), @(-1)]];
+    NSInteger left = 0;
+    NSInteger right = [nums count] - 1;
+
+    while(left <= right){
+        NSInteger mid = (right - left) / 2 + left;
+        if(nums[mid].integerValue == target){
+            NSInteger start = mid;
+            NSInteger end = mid;
+            while(start >= 0 && nums[start].integerValue == target){
+                start--;
+            }
+            while(end <= [nums count] - 1 && nums[end].integerValue == target){
+                end++;
+            }
+            range[0] = @(start + 1);
+            range[1] = @(end - 1);
+            break;
+        } else if(nums[mid].integerValue > target){
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+    return range;
+}
+
+//method 2
+//step 1: 找到第一个等于target
+//step 2: 找到 >= target + 1
+
+- (NSArray<NSNumber *> *)searchRangeMethod2:(NSArray<NSNumber *> *)nums target:(NSInteger)target
+{
+    NSMutableArray *range = [NSMutableArray arrayWithArray:@[@(-1), @(-1)]];
+    NSInteger right = [nums count] - 1;
+    
+    NSInteger left = [self _searchRange:nums target:target left:0 right:nums.count];// 这里传的不是 nums.count - 1
+    if(left == nums.count || nums[left].integerValue != target){ // 没有找到
+        return range;
+    }
+    range[0] = @(left);
+    
+    right = [self _searchRange:nums target:target + 1 left:left + 1 right:nums.count];
+    range[1] = right == -1 ? @(left) : @(right - 1);
+    
+    return range;
+}
+
+- (NSInteger)_searchRange:(NSArray<NSNumber *> *)nums target:(NSInteger)target left:(NSInteger)left right:(NSInteger)right;
+{
+    NSInteger l = left;
+    NSInteger r = right;
+    
+    while(l < r){
+        NSInteger mid = (r - l) / 2 + l;
+        if(nums[mid].integerValue < target){
+            l = mid + 1;
+        } else {
+            r = mid;
+        }
+    }
+    return l;
+}
+
+// 很难想
+// 想到用stack, 但是这里面有很多状态，这里为了计算宽度需要把index存起来
+// 这里的关键还是状态控制 stack 为空，bottom 状态的变化
+
+// 方法1 stack
+// T: O(n) Space: worst case : O(n)
+
+- (NSInteger)trap:(NSArray<NSNumber *> *)nums
+{
+    NSInteger result = 0;
+    NSMutableArray<NSNumber *> *stack = [NSMutableArray array];
+    NSInteger bottom = 0;//底部
+    
+    NSInteger idx = 0;
+    while (idx < nums.count) {
+        if([stack count] == 0 || nums[idx].integerValue <= nums[[stack lastObject].integerValue].integerValue){ //这里需要注意的是stack为空
+            [stack addObject:@(idx)];
+            idx++;
+        } else {
+            bottom = nums[[stack lastObject].integerValue].integerValue;
+            [stack removeLastObject];
+            
+            if([stack count]){
+                NSInteger height = MIN(nums[idx].integerValue, nums[[stack lastObject].integerValue].integerValue) - bottom;
+                result += height * (idx - [stack lastObject].integerValue - 1);
+            }
+        }
+    }
+    
+    return result;
+}
+
+//方法二 Two pointers
+// https://discuss.leetcode.com/topic/3016/share-my-short-solution
+// 这种方法不太好想，需要对照着图，大脑演示一遍.
+// Search from left to right and maintain a max height of left and right separately, which is like a one-side wall of partial container. Fix the higher one and flow water from the lower part. For example, if current height of left is lower, we fill water in the left bin. Until left meets right, we filled the whole container.
+
+// 除此之外有第三种方法： https://discuss.leetcode.com/topic/40609/c-time-o-n-space-o-1-no-stack-no-two-pointers
+
+- (NSInteger)trap_TwoPointers:(NSArray<NSNumber *> *)nums
+{
+    NSInteger left = 0;
+    NSInteger right = nums.count - 1;
+    NSInteger result = 0;
+    
+    NSInteger maxLeft = 0;
+    NSInteger maxRight = 0;
+
+    while (left < right) {
+        if(nums[left].integerValue <= nums[right].integerValue){  //说明比maxLeft 矮的肯定可以容下水
+            if(maxLeft < nums[left].integerValue){
+                maxLeft = nums[left].integerValue;
+            } else { // max > nums[left] && nums[left].integerValue <= nums[right].integerValue
+                result += maxLeft - nums[left].integerValue;
+            }
+            left++;
+        } else {
+            if(maxRight < nums[right].integerValue){ //说明比maxRight 矮的肯定可以容下水
+                maxRight = nums[right].integerValue;
+            } else {
+                result += maxRight - nums[right].integerValue;
+            }
+            right--;
+        }
+    }
+    
+    return result;
+}
+
+// 54. Spiral Matrix
+// 四个方向的遍历，还有一个关键是去除重复，因为头有重叠,以及什么终止
+// 还有一个需要注意的是两种corner case 就是 1 * n 和 n * 1 数组，需要在第3个和第四个循环中 添加检测
+// [1,2] 和
+// [[1],
+// [2]]
+
+- (NSArray<NSNumber *> *)spiralOrder:(NSArray<NSArray<NSNumber *> *> *)nums
+{
+    NSMutableArray *result = [NSMutableArray array];
+    NSInteger m = nums.count;
+    NSInteger n = nums.firstObject.count;
+    if(m == 0 || n == 0){
+        return result;
+    }
+    //traversal from left to right
+    NSInteger left = 0;
+    NSInteger right = m - 1;
+    NSInteger bottom = n - 1;
+    NSInteger top = 0;
+    
+    while(left <= right && top >= bottom){
+        for(NSInteger i = left; i <= right; i++){
+            [result addObject:nums[top][i]];
+        }
+        top++;
+        
+        for(NSInteger i = top; i <= bottom; i++){
+            [result addObject:nums[i][right]];
+        }
+        right--;
+        
+        if(top <= bottom){  // 过滤只剩下一行
+            for(NSInteger i = right; i >= left; i--){ //这里是 >=
+                [result addObject:nums[bottom][i]];
+            }
+            bottom--;
+        }
+        if(left <= right){
+            for(NSInteger i = bottom; i >= top; i--){
+                [result addObject:nums[i][left]];
+            }
+            left++;
+        }
+    }
+    
+    return result;
+}
+
+//class Solution {
+//public:
+//    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+//        if (matrix.empty()) return {};
+//        int m = matrix.size(), n = matrix[0].size();
+//        vector<int> spiral(m * n);
+//        int u = 0, d = m - 1, l = 0, r = n - 1, k = 0;
+//        while (true) {
+//            // up
+//            for (int col = l; col <= r; col++) spiral[k++] = matrix[u][col];
+//            if (++u > d) break;
+//            // right
+//            for (int row = u; row <= d; row++) spiral[k++] = matrix[row][r];
+//            if (--r < l) break;
+//            // down
+//            for (int col = r; col >= l; col--) spiral[k++] = matrix[d][col];
+//            if (--d < u) break;
+//            // left
+//            for (int row = d; row >= u; row--) spiral[k++] = matrix[row][l];
+//            if (++l > r) break;
+//        }
+//        return spiral;
+//    }
+//};
+
+// 也可以使用排序的办法
+- (BOOL)containsDuplicate:(NSArray<NSNumber *> *)nums
+{
+    if(nums.count == 0){
+        return YES;
+    }
+
+    NSSet *set = [NSSet setWithArray:nums];
+    return set.count != nums.count;
+}
+
+//使用dic保存index
+
+// - (BOOL)containsDuplicate2:(NSArray<NSNumber *> *)nums
+// {
+
+// }
+
+// 35. Search Insert Position
+
+- (NSInteger)searchInsert:(NSArray<NSNumber *> *)nums target:(NSInteger)target
+{
+
+}
+
 @end
 
