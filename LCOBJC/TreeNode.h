@@ -63,3 +63,18 @@
 @property (nonatomic, strong) DoublyLinkedListNode *prev;
 
 @end
+
+@interface SegmentTreeNode : NSObject
+
+@property (nonatomic, assign) NSInteger sum;
+@property (nonatomic, assign) NSInteger start;
+@property (nonatomic, assign) NSInteger end;
+
+@property (nonatomic, strong) SegmentTreeNode *left;
+@property (nonatomic, strong) SegmentTreeNode *right;
+
+@end
+
+@interface PriorityQueue : NSObject
+
+@end

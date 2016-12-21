@@ -23,22 +23,30 @@ void testBackTracking();
 void testMath();
 
 void testList();
+void testSumRange();
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         testTree();
         testString();
-        testArray();
-        testBackTracking();
-        testList();
-        testMath();
-//        NSComparisonResult rst = [@"中国" localizedCompare:@"武汉"];
-//        NSComparisonResult rst1 = [@"武汉" localizedCompare:@"中国"];
-//        NSComparisonResult rst2 = [@"武汉" localizedCompare:@"萝卜"];
-//        NSComparisonResult rst3 = [@"萝卜" localizedCompare:@"哎啊"];
-
+//        testArray();
+//        testBackTracking();
+//        testList();
+//        testMath();
+//        testSumRange();
     }
     return 0;
+}
+
+void testSumRange()
+{
+    NSArray *num = @[@(2),@(3),@(-2),@(1),@(6)];
+    NumArray2 *segement = [[NumArray2 alloc] initWithNums:num];
+    NSInteger aa = [segement sumRange:1 r:2];
+    
+    [segement update:2 val:2];
+    NSInteger a = [segement sumRange:1 r:2];
+
 }
 
 void testMath()
@@ -113,8 +121,11 @@ void testTree() {
     
     Solution *s = [Solution new];
     
+//    NSString *str = [s minWindow:@"ADOBECODEBANC" t:@"AB"];
+    NSSet *wordList = [NSMutableSet setWithArray: @[@"hot", @"dot", @"dog", @"lot", @"log"]];
+    NSInteger steps = [s ladderLength:@"hit" endWord:@"cog" set:wordList];
 //    TreeNode *dll = [s convertBT:node];
-    NSString *abc = [s longestPalindrome:@"abcdku0839abvvba"];
+//    NSString *abc = [s longestPalindrome:@"abcdku0839abvvba"];
     // NSArray *p = [s binaryTreePaths:node];
     // NSArray *q = [s binaryTreePaths_LJSolution:node];
     // NSArray *m = [s zigzagLevelOrder:node];
@@ -149,14 +160,22 @@ void testString()
 //    NSString *str = [s countAndSay_recursive:5];
 //    NSString *str_ite = [s countAndSay_iterative:5];
 //    NSString *f = [s groupAnagrams:@[@"eat", @"tea", @"tan", @"ate", @"nat", @"bat"]];
-    BOOL re = [s wordBreak:@"leetcccode" set:[NSSet setWithArray:@[@"leet", @"code", @"cc"]]];
-    NSString *res = [s wordBreakFollowup:@"leetcccode" set:[NSSet setWithArray:@[@"leet", @"code", @"cc"]]];
+//    BOOL re = [s wordBreak:@"leetcccode" set:[NSSet setWithArray:@[@"leet", @"code", @"cc"]]];
+//    NSString *res = [s wordBreakFollowup:@"leetcccode" set:[NSSet setWithArray:@[@"leet", @"code", @"cc"]]];
 
 //    NSArray *res = [s wordBreak_2:@"catsanddog" set:[NSSet setWithArray:@[@"cat", @"cats", @"and", @"sand", @"dog"]]];
 //    NSArray *ress = [s wordBreak_2:@"aaaa" set:[NSSet setWithArray:@[@"a", @"aa", @"aaa", @"aaaa"]]];
     
     
 //    NSInteger i = [s strStr:@"fkdsfsdfskkkk" needle:@"kkk"];
+    
+    NSInteger rs = [s maxKilledEnemies:@[@[@"0", @"E", @"0", @"0"], @[@"E", @"0", @"W", @"E"], @[@"0", @"E", @"0", @"0"]]];
+    
+    NSInteger maxRetangel4 = [s maximalRectangle:@[@[@"1", @"0", @"1", @"0", @"0"], @[@"1", @"0", @"1", @"1", @"1"], @[@"1", @"1", @"1", @"1", @"1"],  @[@"1", @"0", @"0", @"1", @"0"]]];
+//        NSInteger maxRetangel3 = [s maximalRectangle:@[ @[@"1", @"0", @"1", @"1", @"1"], @[@"1", @"1", @"1", @"1", @"1"],  @[@"1", @"0", @"0", @"1", @"0"]]];
+//    
+//       NSInteger maxRetangel2 = [s maximalRectangle:@[ @[@"1", @"1", @"1", @"1", @"1"],  @[@"1", @"0", @"0", @"1", @"0"]]];
+    
 }
 
 void testArray()
@@ -186,20 +205,28 @@ void testArray()
     //         B=[[100, b100], [300, b300], [1000, b1000]]
 //    [s sparseVector:@[@[@(1), @1], @[@300, @300], @[@5000, @5000]] dotVector: @[@[@100, @100], @[@300, @300], @[@1000, @1000]]];
     
-    NSArray *range = [s searchRange:@[@5, @7, @7, @8, @8, @10] target:8];
-    
-    NSInteger d = [s trap:@[@0,@1,@0,@2,@1,@0,@1,@3,@2,@1,@2,@1]];
-    NSInteger dd = [s trap_TwoPointers:@[@0,@1,@0,@2,@1,@0,@1,@3,@2,@1,@2,@1]];
-    
-    NSArray *range2 = [s searchRangeMethod2:@[@5, @7, @7, @8, @8, @10] target:11];
+//    NSArray *range = [s searchRange:@[@5, @7, @7, @8, @8, @10] target:8];
+//    
+//    NSInteger d = [s trap:@[@0,@1,@0,@2,@1,@0,@1,@3,@2,@1,@2,@1]];
+//    NSInteger dd = [s trap_TwoPointers:@[@0,@1,@0,@2,@1,@0,@1,@3,@2,@1,@2,@1]];
+//    
+//    NSArray *range2 = [s searchRangeMethod2:@[@5, @7, @7, @8, @8, @10] target:11];
     
     //[
     // [ 1, 2, 3 ],
     // [ 4, 5, 6 ],
     // [ 7, 8, 9 ]
     // ]
-    NSMutableArray *array = [NSMutableArray array];
+//    NSMutableArray *array = [NSMutableArray array];
+//    
+//    NSInteger a = [s searchInsert:@[@1,@3,@5,@6] target:2];
+//    NSInteger b = [s searchInsert:@[@1,@3,@5,@6] target:7];
+//    NSInteger c = [s searchInsert:@[@1,@3,@5,@6] target:0];
     
+    
+    NSInteger a = [s maxSubArray:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4]];
+    NSInteger b = [s maxSubArrayM2:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4]];
+
 }
 
 void testBackTracking()

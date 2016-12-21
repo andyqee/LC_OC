@@ -7,6 +7,7 @@
 //
 
 #import "Array.h"
+#import "TreeNode.h"
 
 @interface NSValue (Compare)
 
@@ -822,51 +823,6 @@
     return j;
 }
 
-// https://discuss.leetcode.com/topic/17063/4ms-o-n-8ms-o-nlogn-c
-// Binary Search 的实现有些复杂 Olg(n). TODO： 可以自己实现下
-// 209. Minimum Size Subarray Sum
-// 滑动窗口 
-// >= s
-
-//  Since the array elements are all positive numbers, we could use a sliding window approach. W first move the front pointer until the sum of the subarray is greater or equal to the target value s, then we calculate the size of the window. Then we try to move the rear pointer and recalculate the window size, until the sum of the window is less than the target s.
-//  要求是非负数
-- (NSInteger)minimumSizeSubArraySum:(NSInteger)s nums:(NSArray<NSNumber *> *)nums
-{
-    NSInteger start = 0;
-    NSInteger minSize = NSIntegerMax;
-    NSInteger sum = 0;
-    
-    for(NSInteger i = 0; i < [nums count]; i++) {
-        sum += nums[i].integerValue;
-        while(sum >= s) {//
-            minSize = MIN(minSize, i - start + 1);
-            sum = sum - nums[start].integerValue;
-            start++;
-        }
-    }
-    return minSize == NSIntegerMax ? 0 : minSize;
-}
-
-//这种解法是找 sum == s， >=s不行吧
-- (NSInteger)minimumSizeSubArraySum_Method:(NSInteger)target nums:(NSArray<NSNumber *> *)nums
-{
-    NSMutableArray<NSNumber *> *sum = [NSMutableArray array];
-    [sum addObject:nums[0]];
-
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    NSInteger minSize = NSIntegerMax;
-
-    for(NSInteger i = 1; i < nums.count; i++){
-        [sum addObject: @(sum[i-1].integerValue + nums[i].integerValue)];
-        dic[sum[i]] = @(i);
-        NSNumber *start = dic[@(sum[i].integerValue - target)];
-        if(start){
-            minSize = MIN(minSize, i - start.integerValue + 1);
-        }
-    }
-    return minSize;
-}
-
 // 地里的面筋题，方法还蛮具有代表性的
 // Find subsequence in an array which sums up to given target
 // 使用hash table 法，这个和 two sum，使用了类似的技巧
@@ -880,6 +836,93 @@
 //   i = map[s[j]-target]+1
 //find_solution(a[i..j])
 
+// 53. Maximum Subarray
+// 经典题目
+
+- (NSInteger)maxSubArray:(NSArray<NSNumber *>*)nums
+{
+    NSInteger sum = 0;
+    NSInteger maxSum = NSIntegerMin;
+
+    for(NSInteger i = 0; i < nums.count; i++){
+        sum += nums[i].integerValue;
+        maxSum = MAX(sum, maxSum);
+        if(sum < 0){ // 当小于，我们就可以放弃前面的部分了
+            sum = 0;
+        }
+    }
+    return maxSum;
+}
+
+// divid and conquer
+// 3 posibility 1. subarray in left part 2. in right part 3. both
+
+- (NSInteger)maxSubArrayM2:(NSArray<NSNumber *>*)nums
+{
+    return [self maxSubArrayM2:nums left:0 right:nums.count - 1];
+}
+
+// 有点问题
+
+- (NSInteger)maxSubArrayM2:(NSArray<NSNumber *>*)nums left:(NSInteger)left right:(NSInteger)right
+{
+    if(left > right){ //break recursive
+        return NSIntegerMin;
+    }
+
+    NSInteger mid = ( right - left ) / 2 + left;
+    NSInteger leftRes = [self maxSubArrayM2:nums left:left right:mid - 1];
+    NSInteger rightRes = [self maxSubArrayM2:nums left:mid + 1 right:right];
+
+    NSInteger leftMax = NSIntegerMin;
+    NSInteger sum = 0;
+    for(NSInteger i = mid - 1; i >= left; i--){
+        sum += nums[i].integerValue;
+        leftMax = MAX(leftMax, sum);
+    }
+    
+    NSInteger rightMax = NSIntegerMin;
+    sum = 0;
+    for(NSInteger i = mid + 1; i <= right; i++){
+        sum += nums[i].integerValue;
+        rightMax = MAX(rightMax, sum);
+    }
+
+    return MAX(rightMax + leftMax + nums[mid].integerValue, MAX(leftRes, rightRes));
+}
+
+//index 的转移规律
+// step1; 找到index转移关系
+// step2: travesal 可以想象成 n/2 环，旋转这 n/2个环形.
+// 举例子 4 * 4  3 * 3 这里需要注意的是 4 需要处理两环 那么 i < n/2 没有等于
+
+// O(n * n) each element in the matrix will be write only once
+// 另外一种解法 https://discuss.leetcode.com/topic/6796/a-common-method-to-rotate-the-image
+// 这是一道非常容易出错的题目，各种index, 判断条件很多，要写对不容易啊
+
+- (void)rotate:(NSMutableArray<NSMutableArray *> *)matrix
+{
+    if(!matrix || matrix.count <= 1 || matrix.firstObject.count <= 1){
+        return ;
+    }
+    NSInteger n = matrix.count;
+
+    for(NSInteger i = 0; i < n/2; i++) { // represent each cycle 
+        for(NSInteger j = i; j < n - i - 1; j++) { // 这里是主意每一行的最后一个不需要处理，因为是下一列的开头，是有重叠的，所以这里的区间是
+            // 0 ~ len - 2
+            // 四次替换
+            NSNumber *temp = matrix[i][j];
+            matrix[i][j] = matrix[n-j-1][i]; //最后一个赋给第一个  4 --> 1
+            matrix[n-j-1][i] = matrix[n-i][j]; // 3 --> 4
+            matrix[n-i-1][j] = matrix[j][n-i-1]; // 2-->3
+            matrix[j][n-i-1] = temp;  // 1 --> 2
+            // nums[i][j]; //  状态转移
+            // nums[j][n-i];
+            // nums[n-i][j];
+            // nums[n-j][i];
+        }
+    }
+}
 
 // 注意over flow
 // 没想到 one pass 的方法
@@ -1391,6 +1434,26 @@
     return l;
 }
 
+// 35. Search Insert Position
+// *** 这个题目和搜索返回的那个道题目一个意思. 这里用到了同一个技巧！！！！
+
+- (NSInteger)searchInsert:(NSArray<NSNumber *> *)nums target:(NSInteger)target
+{
+    NSInteger left = 0;
+    NSInteger right = nums.count;
+    
+    while (left < right) {
+        NSInteger mid = (right - left) / 2 + left;
+        
+        if(nums[mid].integerValue < target){
+            left = mid + 1;
+        } else {
+            right = mid;
+        }
+    }
+    return left;
+}
+
 // 很难想
 // 想到用stack, 但是这里面有很多状态，这里为了计算宽度需要把index存起来
 // 这里的关键还是状态控制 stack 为空，bottom 状态的变化
@@ -1552,11 +1615,434 @@
 
 // }
 
-// 35. Search Insert Position
+// 很多种方法
+// brute force
 
-- (NSInteger)searchInsert:(NSArray<NSNumber *> *)nums target:(NSInteger)target
+- (BOOL)know:(NSObject *)a with:(NSObject *)b
 {
+    return YES;
+}
 
+// 这个brute force 是不对的,没有记录 outdgree, outdegree should be zero
+
+- (NSInteger)findCelebrityBruteForce:(NSArray *)nums
+{
+    NSAssert([nums count] > 1, @"");
+    
+    for(NSInteger idx = 0; idx < nums.count; idx++){
+        NSInteger result = 0;
+        for(NSInteger j = 0; j < nums.count; j++){
+            if(j == idx){
+                continue;
+            }
+            if([self know:nums[idx] with:nums[j]]){
+                result++;
+            }
+        }
+        if(result == nums.count -1){
+            return idx;
+        }
+    }
+    return -1;
+}
+
+//public int findCelebrity(int n) {
+//    if (n <= 1) {
+//        return -1;
+//    }
+//    
+//    int[] inDegree = new int[n];
+//    int[] outDegree = new int[n];
+//    
+//    for (int i = 0; i < n; i++) {
+//        for (int j = 0; j < n; j++) {
+//            if (i != j && knows(i, j)) {
+//                outDegree[i]++;
+//                inDegree[j]++;
+//            }
+//        }
+//    }
+//    
+//    for (int i = 0; i < n; i++) {
+//        if (inDegree[i] == n - 1 && outDegree[i] == 0) {
+//            return i;
+//        }
+//    }
+//    
+//    return -1;
+//}
+
+//Two pointers
+//
+//   1---->2    3--->4
+//        /^       /^
+//       /        /
+//      3        5
+// 这道题 主要有两部分构成 、
+// 1. loop through the array 找出candidate
+// 2. 验证 candidate ,注意两个条件
+// http://www.geeksforgeeks.org/the-celebrity-problem/
+
+- (NSInteger)findCelebrity1:(NSArray *)nums
+{
+    NSAssert([nums count] > 1, @"");
+    // other --> celebrity, celebrity has no directed path to b
+    
+    NSNumber *candidate = [nums firstObject];
+    for(NSInteger idx = 1; idx < nums.count; idx++){
+        if(![self know:nums[idx] with:candidate]) {
+            candidate = nums[idx];  //如果a not knows b, b 肯定不是, a可能是。 如果a knows b, skip a, beacuse a is not celebrity
+        }
+    } //note 但是仅仅这样检查完是不行的，可能出现的情况是 上图，也就是这个图不是联通的，2 与 3 相互不认识，此时会更新成 3，但是3 不是整个graph的celebirty
+    
+    NSInteger count = 0;
+    for (NSInteger i = 0; i < nums.count; i++) {
+        if(candidate == nums[i]){
+            continue;
+        } //充分条件
+        if([self know:nums[i] with:candidate] && ![self know:candidate with:nums[i]]){ //所有的都是指向candidate，不能通过验证它不指向其他所有
+            count++;
+        }
+    }
+    return count == nums.count - 1 ? candidate.integerValue : -1;
+    //获取到candidate
+}
+
+- (NSInteger)findCelebrityCorrect:(NSArray *)nums
+{
+    NSAssert([nums count] > 1, @"");
+    
+    // other --> celebrity, celebrity has no directed path to b
+    NSNumber *candidate = [nums firstObject];
+    for(NSInteger idx = 1; idx < nums.count; idx++){
+        if(![self know:nums[idx] with:candidate]) {
+            candidate = nums[idx];  //如果a not knows b, b 肯定不是, a可能是。 如果a knows b, skip a, beacuse a is not celebrity
+        }
+    } //note 但是仅仅这样检查完是不行的，可能出现的情况是上图，也就是这个图不是联通的，2与3 相互不认识，此时会更新成 3，但是3 不是整个graph的celebirty
+    
+    for (NSInteger i = 0; i < nums.count; i++) {
+        if(candidate == nums[i]){
+            continue;
+        }
+        if(![self know:nums[i] with:candidate] || [self know:candidate with:nums[i]]){
+            return -1;
+        }
+    }
+    return candidate.integerValue;
+}
+
+#pragma mark - wiggle sort
+
+// 280 wiggle sort
+// 元素不能重复
+
+- (void)wiggleSort:(NSMutableArray<NSNumber *> *)nums
+{
+    if([nums count] <= 1){
+        return;
+    }
+    for (NSInteger idx = 0; idx < nums.count - 1; idx++) { // 倒数第二个停止
+        if(idx % 2 == 0){
+            if(nums[idx].integerValue < nums[idx+1].integerValue){
+                [nums exchangeObjectAtIndex:idx withObjectAtIndex:idx + 1];
+            }
+        } else {
+            if(nums[idx].integerValue > nums[idx+1].integerValue){
+                [nums exchangeObjectAtIndex:idx withObjectAtIndex:idx + 1];
+            }
+        }
+    }
+}
+
+// 如果有重复元素咋办？
+// Can you do it in O(n) time and/or in-place with O(1) extra space?
+
+// HARD
+#pragma mark - Fellow up
+//https://discuss.leetcode.com/topic/32929/o-n-o-1-after-median-virtual-indexing
+//https://discuss.leetcode.com/topic/41464/step-by-step-explanation-of-index-mapping-in-java
+
+//- (void)wiggleSortII:(NSMutableArray<NSNumber *> *)nums
+//{
+//
+//}
+
+- (BOOL)searchMatrix:(NSMutableArray< NSMutableArray<NSNumber *> *> *)nums target:(NSInteger)target;
+{
+    NSInteger left = 0;
+    NSInteger right = nums.count * nums.firstObject.count - 1;
+
+    while(left <= right){
+        NSInteger mid = (right - left) / 2 + left;
+        NSInteger i = mid / nums.firstObject.count; // 这里不能除 nums.count
+        NSInteger j = mid % nums.firstObject.count;
+
+        if(nums[i][j].integerValue == target){
+            return YES;
+        } else if(nums[i][j].integerValue < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return NO;
+}
+
+// 没有顺序 no order
+
+// sum 
+- (NSInteger)missingNumber:(NSArray<NSNumber *> *)nums
+{
+    NSInteger sum = nums.count;
+    for(NSInteger i = 0; i < nums.count; i++){
+        sum += i - nums[i].integerValue;
+    }
+    return sum;
+}
+
+// XOR 技巧 a^b^b = a 
+
+- (NSInteger)missingNumber_xor:(NSArray<NSNumber *> *)nums
+{
+    NSInteger sum = nums.count;
+    for(NSInteger i = 0; i < nums.count; i++){
+        sum = sum^i;
+        sum = sum^nums[i].integerValue;
+    }
+    return sum; 
+}
+
+// 二分法
+- (NSInteger)missingNumber_bs:(NSArray<NSNumber *> *)nums
+{
+    NSArray<NSNumber *> *sortedNums = [nums sortedArrayUsingSelector:@selector(compare:)];
+    NSInteger left = 0;
+    NSInteger right = nums.count; //结果有可能是 nums.length
+
+    while(left < right){    
+        NSInteger mid = (right - left) / 2 + left;
+        if(sortedNums[mid].integerValue > mid) {
+            right = mid;
+        } else {
+            left = mid + 1;
+        }
+    }
+    return left;
+}
+
+// A = [2,3,1,1,4], return true.
+// A = [3,2,1,0,4], return false.
+
+// 第一次想这个问题，想偏了，试图用dp去解决这个问题，死活没想明白
+// greedy alogrithm
+
+- (BOOL)canJump:(NSArray<NSNumber *> *)nums
+{
+    NSInteger reachIndex = 0;
+    for(NSInteger i = 0; i < nums.count; i++){
+        if(i > reachIndex || reachIndex >= nums.count - 1) break;// 前面是到不了 i 的，后面是已经到终点的，都可以终止循环
+        reachIndex = MAX(reachIndex, i + nums[i].integerValue);
+    }
+    return reachIndex >= nums.count - 1;
+}
+
+// 最少需要多少步
+// Given array A = [2,3,1,1,4]
+// 背后有一个BFS模式
+// 这种型用到的方法，之前没有见到过，
+// greedy 算法的有效性？
+
+// start end  masEnd
+//   0   0      2
+//   1   2      MAX(4,3)
+
+- (NSInteger)jump:(NSArray<NSNumber *> *)nums
+{
+    NSInteger minSteps = 0;
+    NSInteger start = 0;
+    NSInteger end = 0;
+    NSInteger n = nums.count;
+    
+    NSInteger maxEnd = 0;
+    while(end < n - 1){
+        minSteps++;
+        for(NSInteger i = start; i <= end; i++){
+            if(i + nums[i].integerValue >= n - 1) 
+                return minSteps;
+            maxEnd = MAX(maxEnd, i + nums[i].integerValue); //每一次最远 
+        }
+        start = end + 1; //注意这里假设了没有0
+        end = maxEnd;
+    }
+    return minSteps;
+}
+
+// 下面这种算法需要调研下
+
+//  int jump(int A[], int n) {
+// 	 if(n<2)return 0;
+// 	 int level=0,currentMax=0,i=0,nextMax=0;
+
+// 	 while(currentMax-i+1>0){		//nodes count of current level>0
+// 		 level++;
+// 		 for(;i<=currentMax;i++){	//traverse current level , and update the max reach of next level
+// 			nextMax=max(nextMax,A[i]+i);
+// 			if(nextMax>=n-1)return level;   // if last element is in level+1,  then the min jump=level 
+// 		 }
+// 		 currentMax=nextMax;
+// 	 }
+// 	 return 0;
+//  }
+
+
+
+@end
+
+@interface NumArray()
+@property (nonatomic, strong) NSMutableArray<NSNumber *> *sum;
+@end
+
+@implementation NumArray
+
+- (instancetype)initWithNums:(NSArray<NSNumber *> *)nums
+{
+    NSAssert([nums count] > 1, @"");
+    if(self = [super init]){
+        _sum = [NSMutableArray array];
+        [_sum addObject:[nums firstObject]];
+
+        for(NSInteger idx = 1; idx < nums.count; idx++){
+            [_sum addObject:@(nums[idx].integerValue + [_sum lastObject].integerValue)];
+        }
+    }
+    return self;
+}
+
+- (NSInteger)sumRange:(NSInteger)l r:(NSInteger)r
+{
+    NSAssert(l <= r && r < self.sum.count && r >= 0 && l >= 0, @"");
+    if(l == 0) {
+        return self.sum[r].integerValue;
+    }
+    return self.sum[r].integerValue - self.sum[l - 1].integerValue;
+}
+
+@end
+
+@interface NumMatrix()
+@property (nonatomic, strong) NSMutableArray<NSMutableArray<NSNumber *> *> *sum;
+
+@end
+
+@implementation NumMatrix
+
+- (instancetype)initWithMatrix:(NSArray<NSArray<NSNumber *> *> *)matrix
+{
+    NSAssert([matrix count] >= 1 && [matrix firstObject].count >= 1, @"");
+    if(self = [super init]){
+        _sum = [NSMutableArray array];
+        //这里需要初始化一下
+        //这里在初始化的时候全部初始化为0 and size m * n ---> m + 1 * n + 1 . inorder to process base case more conveniently 
+        for(NSInteger i = 1; i <= matrix.count; i++){
+            for(NSInteger j = 1; j <= [matrix firstObject].count; j++){
+                self.sum[i][j] = @(matrix[i-1][j-1].integerValue + self.sum[i-1][j].integerValue + self.sum[i][j-1].integerValue - self.sum[i-1][j-1].integerValue);
+            }
+        }
+    }
+    return self;
+}
+
+- (NSInteger)sumRange:(NSInteger)l1 r:(NSInteger)r1 l2:(NSInteger)l2 r:(NSInteger)r2
+{
+    return self.sum[l2 + 1][r2 + 1].integerValue - self.sum[l1 + 1][r2 + 1].integerValue - self.sum[l2 + 1][r1 + 1].integerValue + self.sum[l1 + 1][r2 + 1].integerValue;
+}
+
+@end
+
+@interface NumArray2()
+@property (nonatomic, strong) SegmentTreeNode *root;
+
+@end
+
+@implementation NumArray2
+
+- (instancetype)initWithNums:(NSArray<NSNumber *> *)nums
+{
+    NSAssert([nums count] > 1, @"");
+    if(self = [super init]){
+        _root = [self buildTree:nums l:0 r: nums.count - 1];
+    }
+    return self;  
+}
+
+// O(n)
+// 这里面有另外一种构造segement tree 的方法
+
+// https://leetcode.com/articles/range-sum-query-mutable/#approach-3-segment-tree-accepted
+
+- (SegmentTreeNode *)buildTree:(NSArray<NSNumber *> *)nums l:(NSInteger)l r:(NSInteger)r
+{   
+    if(l > r){
+        return nil;
+    }
+    
+    SegmentTreeNode *node = [[SegmentTreeNode alloc] init];
+    node.start = l;
+    node.end = r;
+    
+    if(l == r){
+        node.sum = nums[l].integerValue;
+    } else {
+        NSInteger mid = (r - l) / 2 + l;
+        node.left = [self buildTree:nums l:l r:mid];
+        node.right = [self buildTree:nums l:mid+1 r:r];
+        node.sum = node.left.sum + node.right.sum;
+    }
+
+    return node;
+}
+
+- (void)update:(NSInteger)idx val:(NSInteger)val
+{
+    [self update:self.root index:idx val:@(val)];
+}
+
+//find the left node with bianry search TreeNode update leaft node
+
+- (void)update:(SegmentTreeNode *)node index:(NSInteger)idx val:(NSNumber *)val
+{
+    if(node.start == node.end){
+        node.sum = val.integerValue;
+    } else {
+        NSInteger mid = (node.end - node.start) / 2 + node.start;
+        if(idx <= mid){
+            [self update:node.left index:idx val:val];
+        } else {
+            [self update:node.right index:idx val:val];
+        }
+        node.sum = node.left.sum + node.right.sum;
+    }
+}
+
+- (NSInteger)sumRange:(NSInteger)l r:(NSInteger)r
+{
+    return [self sumRange:self.root left:l right:r];
+}
+
+- (NSInteger)sumRange:(SegmentTreeNode *)node left:(NSInteger)left right:(NSInteger)right
+{
+    if(node.start == left && node.end == right){
+        return node.sum;
+    } else {
+        NSInteger mid = (node.end - node.start) / 2 + node.start;
+        if(right <= mid){
+            return [self sumRange:node.left left:left right:mid];
+        } else if(left >= mid + 1){
+            return [self sumRange:node.right left:mid + 1 right:right];
+        } else {
+            return [self sumRange:node.left left:left right:mid] + [self sumRange:node.right left:mid+1 right:right];
+        }
+    }
 }
 
 @end

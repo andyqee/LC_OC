@@ -691,8 +691,7 @@
             [sub addObject:@(NO)];
         }
         [map addObject:sub];
-    }
-    /**
+    }    /**
      * f[i][j]: if s[0..i-1] matches p[0..j-1]
      * if p[j - 1] != '*'
      *      f[i][j] = f[i - 1][j - 1] && s[i - 1] == p[j - 1]
@@ -775,6 +774,7 @@
 //1. 转成一维，size 和inloop 相同
 //2. 需要两个变量
 //3.
+
 - (BOOL)isMatchWildcard_dp1Array:(NSString *)str withPatten:(NSString *)p
 {
     NSMutableArray<NSNumber *> *dp = [NSMutableArray array];
@@ -1333,10 +1333,226 @@
     }
 }
 
+#pragma mark - 211. The skyline Problem
+ // https://leetcode.com/problems/the-skyline-problem/
+// https://discuss.leetcode.com/topic/19978/java-570ms-heap-bst-and-430ms-divide-and-conquer-solution-with-explanation
+
+// public class Solution {
+//     public List<int[]> getSkyline(int[][] buildings) {
+//         List<int[]> heights = new ArrayList<>();
+//         for (int[] b: buildings) {
+//             heights.add(new int[]{b[0], - b[2]});
+//             heights.add(new int[]{b[1], b[2]});
+//         }
+//         Collections.sort(heights, (a, b) -> (a[0] == b[0]) ? a[1] - b[1] : a[0] - b[0]);
+//         TreeMap<Integer, Integer> heightMap = new TreeMap<>(Collections.reverseOrder());
+//         heightMap.put(0,1);
+//         int prevHeight = 0;
+//         List<int[]> skyLine = new LinkedList<>();
+//         for (int[] h: heights) {
+//             if (h[1] < 0) {
+//                 Integer cnt = heightMap.get(-h[1]);
+//                 cnt = ( cnt == null ) ? 1 : cnt + 1;
+//                 heightMap.put(-h[1], cnt);
+//             } else {
+//                 Integer cnt = heightMap.get(h[1]);
+//                 if (cnt == 1) {
+//                     heightMap.remove(h[1]);
+//                 } else {
+//                     heightMap.put(h[1], cnt - 1);
+//                 }
+//             }
+//             int currHeight = heightMap.firstKey();
+//             if (prevHeight != currHeight) {
+//                 skyLine.add(new int[]{h[0], currHeight});
+//                 prevHeight = currHeight;
+//             }
+//         }
+//         return skyLine;
+//     }
+// }
+
+// HARD
+//
+
+// - (NSArray<NSNumber *> *)getSkyline:(NSArray<NSArray<NSNumber *> *> *)nums
+// {
+//     NSMutableArray<NSArray<NSNumber *> *> *heights = [NSMutableArray array];
+//     for (NSArray<NSNumber *> *item in nums) {
+//         [heights addObject:@[item[0], @(-item[2].integerValue)]]; // step1 : sort array first based on start point value then height
+//         [heights addObject:@[item[1], @(item[2].integerValue)]];
+//     }
+    
+//     [heights sortUsingComparator:^NSComparisonResult(NSArray *obj1, NSArray *obj2) {
+//         if([[obj1 firstObject] compare:[obj2 firstObject]] != NSOrderedSame){
+//             return [[obj1 firstObject] compare:[obj2 firstObject]]; // 起点
+//             //key point 如果是起点相同，高的放在前面
+//             //如果是终点相同，矮的放在前面
+//         } else {
+//             return [[obj1 lastObject] compare:[obj2 lastObject]];  // 高度
+//         }
+//     }];
+    
+//     CFBinaryHeapRef heap;
+//     CFBinaryHeapCallBacks callBack;
+    
+//     heap = CFBinaryHeapCreate(kCFAllocatorDefault, 0, &callBack, NULL);
+//     for (NSArray<NSNumber *> *item in heights) {
+        
+//         if([item lastObject].integerValue < 0){
+//             CFBinaryHeapAddValue(heap, (__bridge const void *)(item));
+//         } else {
+//             // 没有删除 cf 没有删除
+            
+//         }
+//     }
+// }
+
+// public List<int[]> getSkyline(int[][] buildings) {
+//     List<int[]> result = new ArrayList<>();
+//     List<int[]> height = new ArrayList<>();
+//     for(int[] b:buildings) {
+//         height.add(new int[]{b[0], -b[2]});
+//         height.add(new int[]{b[1], b[2]});
+//     }
+//     Collections.sort(height, (a, b) -> { /             //key point 如果是起点相同，高的放在前面
+//                                                        //如果是终点相同，矮的放在前面
+//         if(a[0] != b[0])
+//             return a[0] - b[0];
+//         return a[1] - b[1];
+//     });
+//     Queue<Integer> pq = new PriorityQueue<>((a, b) -> (b - a));
+//     pq.offer(0);
+//     int prev = 0;
+//     for(int[] h:height) {
+//         if(h[1] < 0) { // 遇到起点入堆，
+//             pq.offer(-h[1]);
+//         } else {   //遇到终点出堆
+//             pq.remove(h[1]);
+//         }
+//         int cur = pq.peek(); //当前堆中的最大值如果和前面一样，就skip掉，这里可以看图，如果不一样就加入到堆中
+//         if(prev != cur) {
+//             result.add(new int[]{h[0], cur});
+//             prev = cur;
+//         }
+//     }
+//     return result;
+// }
+
+#pragma mark - [LOCK]Walls and Gates
+
+// DFS
+- (void)wallsAndGates:(NSMutableArray<NSMutableArray<NSNumber *> *> *)rooms
+{
+    if(rooms.count == 0 || rooms.firstObject.count == 0){
+        return;
+    }
+    //没有想到可以从0开始出发
+    for (NSInteger i = 0; i < rooms.count; i++) {
+        for(NSInteger j = 0; j < rooms[i].count; j++){
+            if(rooms[i][j].integerValue == 0){
+                [self _search:rooms atRow:i atCol:j steps:0]; //关键一点是从0 的位置开始遍历
+            }
+        }
+    }
+}
+
+// 首先这里是否需要 创建一个数组来标记是否已经访问过。 这里有距离的判断，如果重复访问到之前访问过的点的话，steps > 当前值, 
+// 所以其实不需要额外的空间来存储每个点的访问状态
+// how to anlaysis the Time comlexity and space comlexity ?
+// ?? m * n * (numbers of zero) // beacuse it will not revisited in each search progress
+
+- (void)_search:(NSMutableArray<NSMutableArray<NSNumber *> *> *)rooms atRow:(NSInteger)i atCol:(NSInteger)j steps:(NSInteger)steps
+{
+    //很多判断逻辑都是可以放在这边
+    if (i < 0 || j < 0 || i >= rooms.count || j >= rooms[i].count || rooms[i][j].integerValue < steps) {
+        return;
+    }
+    rooms[i][j] = @(steps);
+    [self _search:rooms atRow:i + 1 atCol:j steps:steps + 1];
+    [self _search:rooms atRow:i atCol:j + 1 steps:steps + 1];
+    [self _search:rooms atRow:i - 1 atCol:j steps:steps + 1];
+    [self _search:rooms atRow:i atCol:j - 1 steps:steps + 1];
+}
+
+- (void)wallsAndGatesBFS:(NSMutableArray<NSMutableArray<NSNumber *> *> *)rooms
+{
+    if(rooms.count == 0 || rooms.firstObject.count == 0){
+        return;
+    }
+    NSMutableArray *queue = [NSMutableArray array];
+    for (NSInteger i = 0; i < rooms.count; i++) {
+        for(NSInteger j = 0; j < rooms[i].count; j++){
+            if(rooms[i][j].integerValue == 0){
+                [queue addObject:@[@(i), @(j)]];
+            }
+        }
+    }
+    while([queue count]){
+        NSArray<NSNumber *> *p = queue.firstObject;
+        [queue removeObjectAtIndex:0];
+        // 四个方向
+        NSInteger i = p.firstObject.integerValue;
+        NSInteger j = p.lastObject.integerValue;
+        // 针对这个地方可以优化下
+        if(i > 0 && rooms[i - 1][j].integerValue == NSIntegerMax) { //这里直接和
+            rooms[i - 1][j] = @(rooms[i][j].integerValue + 1);
+            [queue addObject: @[@(i - 1), @(j)]];
+        }
+        if(i < rooms.count - 1 && rooms[i + 1][j].integerValue == NSIntegerMax) {
+            rooms[i + 1][j] = @(rooms[i][j].integerValue + 1);
+            [queue addObject: @[@(i + 1), @(j)]];
+        }
+        if(j > 0 && rooms[i][j - 1].integerValue == NSIntegerMax) {
+            rooms[i][j - 1] = @(rooms[i][j].integerValue + 1);
+            [queue addObject: @[@(i), @(j - 1)]];
+        }
+        if(j < rooms[i].count - 1 && rooms[i][j + 1].integerValue == NSIntegerMax) {
+            rooms[i][j + 1] = @(rooms[i][j].integerValue + 1);
+            [queue addObject: @[@(i), @(j + 1)]];
+        }
+    }
+}
+
+// 为什么BFS是最近的呢？
+- (void)wallsAndGatesBFSOptimize:(NSMutableArray<NSMutableArray<NSNumber *> *> *)rooms
+{
+    if(rooms.count == 0 || rooms.firstObject.count == 0){
+        return;
+    }
+    NSMutableArray *queue = [NSMutableArray array];
+    for (NSInteger i = 0; i < rooms.count; i++) {
+        for(NSInteger j = 0; j < rooms[i].count; j++){
+            if(rooms[i][j].integerValue == 0){
+                [queue addObject:@[@(i), @(j)]];
+            }
+        }
+    }
+    NSArray<NSNumber *> *x = @[@(-1),@0,@1,@0];
+    NSArray<NSNumber *> *y = @[@0,@1,@0,@(-1)];
+
+    while([queue count]){
+        NSArray<NSNumber *> *p = queue.firstObject;
+        [queue removeObjectAtIndex:0];
+        // 四个方向
+        NSInteger i = p.firstObject.integerValue;
+        NSInteger j = p.lastObject.integerValue;
+        // 针对这个地方可以优化下
+        for(NSInteger k = 0; k < p.count; i++){
+            NSInteger row = i - x[k].integerValue;
+            NSInteger col = j - y[k].integerValue;
+            if(row < 0 || row == rooms.count || col < 0 || col == rooms.lastObject.count || rooms[i][j].integerValue == NSIntegerMax){ // 肯定是最近的,比较难想
+                continue;
+            }
+            rooms[row][col] = @(rooms[i][j].integerValue + 1);
+            [queue addObject: @[@(row), @(col)]];
+        }
+    }
+}
+
 @end
 
 @interface Trie : NSObject
-
 @property (nonatomic, strong) NSMutableDictionary<NSString*, Trie*> *map;
 - (BOOL)hasWord:(NSString *)word;
 

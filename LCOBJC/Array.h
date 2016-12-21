@@ -282,15 +282,24 @@
 // 允许重复，会对time complexity 有什么影响
 - (NSNumber *)findMin2:(NSArray<NSNumber *> *)nums;
 
-// 209. Minimum Size Subarray Sum
+// 53. Maximum Subarray
 // Difficulty: Medium
-// Contributors: Admin
-// Given an array of n positive integers and a positive integer s, find the minimal length of a subarray of which the sum ≥ s. If there isn't one, return 0 instead.
+// Find the contiguous subarray within an array (containing at least one number) which has the largest sum.
 
-// For example, given the array [2,3,1,2,4,3] and s = 7,
-// the subarray [4,3] has the minimal length under the problem constraint.
+// For example, given the array [-2,1,-3,4,-1,2,1,-5,4],
+// the contiguous subarray [4,-1,2,1] has the largest sum = 6.
 
-- (NSInteger)minimumSizeSubArraySum:(NSInteger)s nums:(NSArray *)nums;
+- (NSInteger)maxSubArray:(NSArray<NSNumber *>*)nums;
+- (NSInteger)maxSubArrayM2:(NSArray<NSNumber *>*)nums;
+
+// 48. Rotate Image   Add to List QuestionEditorial Solution  My Submissions
+// Difficulty: Medium
+// You are given an n x n 2D matrix representing an image.
+// Rotate the image by 90 degrees (clockwise).
+// Follow up:
+// Could you do this in-place?
+
+- (void)rotate:(NSMutableArray<NSMutableArray *> *)matrix;
 
 // 152. Maximum Product Subarray
 // Difficulty: Medium
@@ -346,7 +355,6 @@
 //191. Number of 1 Bits
 
 //Difficulty: Easy
-//Contributors: Admin
 //Write a function that takes an unsigned integer and returns the number of ’1' bits it has (also known as the Hamming weight).
 //
 //For example, the 32-bit integer ’11' has binary representation 00000000000000000000000000001011, so the function should return 3.
@@ -354,7 +362,7 @@
 
 - (NSInteger)sparseVector:(NSArray<NSArray<NSNumber *> *> *)vector dotVector:(NSArray<NSArray<NSNumber *> *> *)vector2;
 
-// 34. Search for a Range   Add to List QuestionEditorial Solution  My Submissions
+// 34. Search for a Range
 
 // Difficulty: Medium
 // Given a sorted array of integers, find the starting and ending position of a given target value.
@@ -403,12 +411,12 @@
 // 217. Contains Duplicate
 // Given an array of integers, find if the array contains any duplicates. 
 // Your function should return true if any value appears at least twice in the array, and it should return false if every element is distinct.
-- (BOOL)containsDuplicate:(NSArray<NSNumber *> *)nums
+- (BOOL)containsDuplicate:(NSArray<NSNumber *> *)nums;
 
 
 // Given an array of integers and an integer k, find out whether there are two distinct indices i and j in the array such that 
 // nums[i] = nums[j] and the difference between i and j is at most k.
-- (BOOL)containsDuplicate2:(NSArray<NSNumber *> *)nums
+- (BOOL)containsDuplicate2:(NSArray<NSNumber *> *)nums;
 
 // 35. Search Insert Position
 // Given a sorted array and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order.
@@ -422,4 +430,127 @@
 
 - (NSInteger)searchInsert:(NSArray<NSNumber *> *)nums target:(NSInteger)target;
 
+//277 Find the Celebrity
+//
+//Suppose you are at a party with n people (labeled from 0 to n - 1) and among them, there may exist one celebrity. The definition of a celebrity is that all the other n - 1 people know him/her but he/she does not know any of them.
+//
+//Now you want to find out who the celebrity is or verify that there is not one. The only thing you are allowed to do is to ask questions like: "Hi, A. Do you know B?" to get information of whether A knows B. You need to find out the celebrity (or verify there is not one) by asking as few questions as possible (in the asymptotic sense).
+//
+//You are given a helper function bool knows(a, b) which tells you whether A knows B. Implement a function int findCelebrity(n), your function should minimize the number of calls to knows.
+//
+//Note: There will be exactly one celebrity if he/she is in the party. Return the celebrity's label if there is a celebrity in the party. If there is no celebrity, return -1.
+
+- (NSInteger)findCelebrity:(NSArray *)nums;
+
+// 280 wiggle sort
+//Given an unsorted array nums, reorder it in-place such that nums[0] <= nums[1] >= nums[2] <= nums[3]....
+//For example, given nums = [3, 5, 2, 1, 6, 4], one possible answer is [1, 6, 2, 5, 3, 4].
+
+- (void)wiggleSort:(NSMutableArray<NSNumber *> *)nums;
+
+// 280 wiggle sort
+//Given an unsorted array nums, reorder it in-place such that nums[0] <= nums[1] >= nums[2] <= nums[3]....
+//For example, given nums = [3, 5, 2, 1, 6, 4], one possible answer is [1, 6, 2, 5, 3, 4].
+
+- (void)wiggleSortII:(NSMutableArray<NSNumber *> *)nums;
+
+// 74. Search a 2D Matrix
+// Write an efficient algorithm that searches for a value in an m x n matrix. This matrix has the following properties:
+
+// Integers in each row are sorted from left to right.
+// The first integer of each row is greater than the last integer of the previous row.
+// For example,
+
+// Consider the following matrix:
+
+// [
+//   [1,   3,  5,  7],
+//   [10, 11, 16, 20],
+//   [23, 30, 34, 50]
+// ]
+// Given target = 3, return true.
+
+- (BOOL)searchMatrix:(NSMutableArray<NSNumber *> *)nums target:(NSInteger)target;
+
+// 268. Missing Number
+// Given an array containing n distinct numbers taken from 0, 1, 2, ..., n, find the one that is missing from the array.
+
+// For example,
+// Given nums = [0, 1, 3] return 2.
+
+// Note:
+// Your algorithm should run in linear runtime complexity. Could you implement it using only constant extra space complexity?
+
+- (NSInteger)missingNumber:(NSArray *)nums;
+
+// 55. Jump Game   
+// Given an array of non-negative integers, you are initially positioned at the first index of the array.
+// Each element in the array represents your maximum jump length at that position.
+// Determine if you are able to reach the last index.
+// For example:
+// A = [2,3,1,1,4], return true.
+// A = [3,2,1,0,4], return false.
+
+- (BOOL)canJump:(NSArray *)nums;
+
+// 45. Jump Game II   Add to List QuestionEditorial Solution  My Submissions
+// Difficulty: Hard
+// Given an array of non-negative integers, you are initially positioned at the first index of the array.
+
+// Each element in the array represents your maximum jump length at that position.
+
+// Your goal is to reach the last index in the minimum number of jumps.
+
+// For example:
+// Given array A = [2,3,1,1,4]
+
+// The minimum number of jumps to reach the last index is 2. (Jump 1 step from index 0 to 1, then 3 steps to the last index.)
+
+- (NSInteger)jump:(NSArray<NSNumber *> *)nums;
+
+
+
 @end
+
+// 303. Range Sum Query - Immutable
+// Difficulty: Easy
+// Contributors: Admin
+// Given an integer array nums, find the sum of the elements between indices i and j (i ≤ j), inclusive.
+
+// Example:
+// Given nums = [-2, 0, 3, -5, 2, -1]
+
+// sumRange(0, 2) -> 1
+// sumRange(2, 5) -> -1
+// sumRange(0, 5) -> -3
+// Note:
+// You may assume that the array does not change.
+// There are many calls to sumRange function.
+
+@interface NumArray : NSObject
+
+- (instancetype)initWithNums:(NSArray<NSNumber *> *)nums;
+- (NSInteger)sumRange:(NSInteger)l r:(NSInteger)r;
+
+@end
+
+@interface NumMatrix : NSObject
+
+- (instancetype)initWithMatrix:(NSArray<NSArray<NSNumber *> *> *)matrix;
+
+- (NSInteger)sumRange:(NSInteger)l1 r:(NSInteger)r1 l2:(NSInteger)l2 r:(NSInteger)r2;
+
+@end
+
+//segmentTree
+
+@interface NumArray2 : NSObject
+
+- (instancetype)initWithNums:(NSArray<NSNumber *> *)nums;
+
+- (NSInteger)sumRange:(NSInteger)l r:(NSInteger)r;
+
+- (void)update:(NSInteger)idx val:(NSInteger)val;
+
+@end
+

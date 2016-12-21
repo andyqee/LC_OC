@@ -32,3 +32,11 @@
 @implementation DoublyLinkedListNode
 
 @end
+
+@implementation SegmentTreeNode
+
+@end
+
+@implementation PriorityQueue
+
+@end

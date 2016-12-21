@@ -620,6 +620,205 @@ BOOL isAalphaNumber(unichar ch)
 //    maxLen = MAX(right - left - 1, maxLen);
 //}
 
+// 这个题目还要再写一遍
+
+- (NSString *)numberToWords:(NSInteger)num
+{
+    NSArray *THOUSANDS = @[@"", @"Thousand", @"Million", @"Billion"];
+
+    if(num == 0){
+        return @"Zero";
+    }
+    NSMutableString *str = [NSMutableString string];
+
+    NSInteger i = 0;
+    while(num != 0){
+        if(num % 1000 != 0){ // 不处理 000 个零结尾的
+            NSString *temp = [self helper:num % 1000];
+            [str insertString:[NSString stringWithFormat:@"%@ %@", temp, THOUSANDS[i]] atIndex:0];
+        }
+        num /= 1000;
+        i++;
+    }
+    return str;
+}
+
+- (NSString *)helper:(NSInteger)num
+{
+    NSArray *LESS_THAN_20 = @[@"", @"One", @"Two", @"Three", @"Four", @"Five", @"Six", @"Seven", @"Eight", @"Nine", @"Ten", @"Eleven", @"Twelve", @"Thirteen", @"Fourteen", @"Fifteen", @"Sixteen", @"Seventeen", @"Eighteen", @"Nineteen"];
+    NSArray *TENS = @[@"", @"Ten", @"Twenty", @"Thirty", @"Forty", @"Fifty", @"Sixty", @"Seventy", @"Eighty", @"Ninety"];
+    
+    if(num == 0){
+        return @"";
+    }
+    if(num < 20){
+        return LESS_THAN_20[num];
+    } else if(num < 100){
+        return [NSString stringWithFormat:@"%@ %@", TENS[num / 10], LESS_THAN_20[num % 10]];  
+    } else {
+        //这里处理100 很巧妙
+        NSMutableString *str = [NSMutableString string];
+        [str appendString: LESS_THAN_20[num / 100]];
+        [str appendString: @" Hundred"];
+        if(num % 100){
+            [str appendString:@" "];
+            [str appendString:[self helper:num % 100]];
+        }
+        return [str copy];
+    }
+}
+
+//127. [M]Word Ladder
+
+// http://bangbingsyb.blogspot.jp/2014/11/leetcode-word-ladder-i-ii.html 分析过程
+
+//LeetCode中为数不多的考图的难题。尽管题目看上去像字符串匹配题，但从“shortest transformation sequence from start to end”还是能透露出一点图论中最短路径题的味道。如何转化？
+//
+//1. 将每个单词看成图的一个节点。
+//2. 当单词s1改变一个字符可以变成存在于字典的单词s2时，则s1与s2之间有连接。
+//3. 给定s1和s2，问题I转化成了求在图中从s1->s2的最短路径长度。而问题II转化为了求所有s1->s2的最短路径。
+//
+//无论是求最短路径长度还是求所有最短路径，都是用BFS。在BFS中有三个关键步骤需要实现:
+//
+//1. 如何找到与当前节点相邻的所有节点。
+//这里可以有两个策略：
+//(1) 遍历整个字典，将其中每个单词与当前单词比较，判断是否只差一个字符。复杂度为：n*w，n为字典中的单词数量，w为单词长度。
+//(2) 遍历当前单词的每个字符x，将其改变成a~z中除x外的任意一个，形成一个新的单词，在字典中判断是否存在。复杂度为：26*w，w为单词长度。
+//这里可以和面试官讨论两种策略的取舍。对于通常的英语单词来说，长度大多小于100，而字典中的单词数则往往是成千上万，所以策略2相对较优。
+//
+//2. 如何标记一个节点已经被访问过，以避免重复访问。
+//可以将访问过的单词从字典中删除。
+//
+//3. 一旦BFS找到目标单词，如何backtracking找回路径？
+
+//me: 这里找到所有的neibor，之后，当再次再找beibor的时候 需要去除重复
+
+// 这里的corner case 比较复杂一些
+// if beginWord == endWord return ?
+// if beginWord 与 endWord 相差一个字符
+
+
+//- (NSInteger)ladderLength:(NSString *)beginWord endWord:(NSString *)endWord set:(NSMutableSet<NSString *> *)wordList
+//{
+//    //corner case
+//    if ((beginWord.length == 0 && endWord.length == 0) || [beginWord isEqualToString:endWord]) {
+//        return 0;
+//    }
+//    
+//    NSMutableSet *visited = [NSMutableSet set];
+//    NSMutableArray *queue = [NSMutableArray array];
+//    [queue addObject:beginWord];
+//    
+//    NSInteger steps = 1;
+//    while ([queue count]) {
+//        NSInteger count = [queue count];
+//        for (NSInteger i = 0; i < count; i++) {
+//            NSString *node = [queue firstObject];
+//            [queue removeObjectAtIndex:0];
+//            [visited addObject:node];
+//            
+//            if([node isEqualToString:endWord]){
+//                return steps;
+//            }
+//            NSSet<NSString *> *neighbors = [self allNeighbours:node]; //利用set，快速查找
+//            if([neighbors containsObject:endWord]){  //这里也可以合并到上面那个逻辑，这样初始化为 steps = 2。现在这种写法可以快速的cut branch
+//                return steps + 1; //已经找到
+//            }
+//            for(NSString *s in neighbors){
+//                if([wordList containsObject:s] && ![visited containsObject:s]){
+//                    [queue addObject:s];
+//                }
+//            }
+//        }
+//        steps++; //下一层 这个framework 和对binary tree 进行按层遍历一个模版
+//    }
+//    return 0; // NSNotFound
+//}
+//
+//// 这里注意的是endWord 不需要在wordList 里面.
+//
+//- (NSSet<NSString *> *)allNeighbours:(NSString *)str
+//{
+//    NSArray *letters = [@"a,b,c,d,e,f,g,h,i,g,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z" componentsSeparatedByString:@","];
+//    
+//    NSMutableSet *neighbours = [NSMutableSet set];
+//    for (NSString *letter in letters) {
+//        for(NSInteger i = 0; i < str.length; i++){
+//            if(![[str substringWithRange:NSMakeRange(i, 1)] isEqualToString:letter]){
+//                NSMutableString *clone = [NSMutableString stringWithString:str];
+//                [clone replaceCharactersInRange:NSMakeRange(i, 1) withString:letter];
+//                [neighbours addObject:clone]; // 不会出现重复
+//            }
+//        }
+//    }
+//    return neighbours;
+//}
+
+// key point:
+// 1. endWord 需要加入到wordlist中
+// 2. wordlist 的更新，在生成一个，就可以删除在wordlist 中对应的元素
+
+- (NSInteger)ladderLength:(NSString *)beginWord endWord:(NSString *)endWord set:(NSMutableSet<NSString *> *)wordList
+{
+    //corner case
+    if ((beginWord.length == 0 && endWord.length == 0) || [beginWord isEqualToString:endWord]) {
+        return 0;
+    }
+
+    NSMutableSet *visited = [NSMutableSet set];
+    NSMutableArray *queue = [NSMutableArray array];
+    [queue addObject:beginWord];
+    [wordList addObject:endWord]; // key point: 添加end进wordlist
+    
+    NSInteger steps = 1;
+    while ([queue count]) {
+        NSInteger count = [queue count];
+        for (NSInteger i = 0; i < count; i++) {
+            NSString *node = [queue firstObject];
+            [queue removeObjectAtIndex:0];
+            [visited addObject:node];
+
+            if([node isEqualToString:endWord]){
+                return steps;
+            }
+            NSSet<NSString *> *neighbors = [self allNeighbours:node set:wordList]; //利用set，快速查找
+//            if([neighbors containsObject:endWord]){  //⚠️ 注意 这里也可以合并到上面那个逻辑，这样初始化为 steps = 2。现在这种写法可以快速的cut branch
+//                return steps + 1; //已经找到。 这三行代码也可以去掉
+//            }
+            for(NSString *s in neighbors){
+                if(![visited containsObject:s]){ //对于访问过的需要去重复
+                    [queue addObject:s];
+                }
+            }
+        }
+        steps++; //下一层 这个framework 和对binary tree 进行按层遍历一个模版
+    }
+    return 0; // NSNotFound
+}
+
+// 这里注意的是endWord 不需要在wordList 里面.
+
+- (NSSet<NSString *> *)allNeighbours:(NSString *)str set:(NSMutableSet<NSString *> *)wordList
+{
+    NSArray *letters = [@"a,b,c,d,e,f,g,h,i,g,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z" componentsSeparatedByString:@","];
+
+    NSMutableSet *neighbours = [NSMutableSet set];
+    for (NSString *letter in letters) {
+        for(NSInteger i = 0; i < str.length; i++){
+            if(![[str substringWithRange:NSMakeRange(i, 1)] isEqualToString:letter]){
+                NSMutableString *clone = [NSMutableString stringWithString:str];
+                [clone replaceCharactersInRange:NSMakeRange(i, 1) withString:letter];
+                
+                if ([wordList containsObject:clone]) { // 用这种办法，需要在开始将end wordList
+                    [neighbours addObject:clone]; // 不会出现重复
+                    [wordList removeObject:clone];
+                }
+            }
+        }
+    }
+    return neighbours;
+}
+
 
 @end
 
@@ -670,7 +869,6 @@ BOOL isAalphaNumber(unichar ch)
 {
     if ([self.nums count] == 3) {
         self.sum -= [self.nums firstObject].integerValue;
-        
         [self.nums removeObjectAtIndex:0];
     }
     [self.nums addObject:@(num)];
