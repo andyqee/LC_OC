@@ -2047,3 +2047,120 @@
 
 @end
 
+@implementation RandomPickIndex
+{
+    NSMutableDictionary<NSNumber *, NSMutableArray *> *_dic;
+}
+
+// 首先发问数组是否已经排好序
+// 首先想到的办法是 存入hash 表中
+
+- (instancetype)initWithNums:(NSArray<NSNumber *> *)nums
+{
+    if(self = [super init]){
+        _dic = [NSMutableDictionary dictionary];
+        for(NSInteger i = 0; i < nums.count; i++){
+            if(_dic[nums[i]]){
+                [_dic[nums[i]] addObject:@(i)];
+            } else {
+                _dic[nums[i]] = [@[@(i)] mutableCopy];
+            }
+        }
+    }
+    return self;
+}
+
+- (NSInteger)pick:(NSInteger)target
+{
+    NSArray<NSNumber *> *indexes = _dic[@(target)];
+    // if(!index){
+    //     return -1;
+    // }
+    NSInteger randomIdex = arc4random_uniform((uint32)indexes.count);// 32位 = 32GB
+    return indexes[randomIdex].integerValue;
+}
+
+//另外一种实现 O(n)
+
+//int pick(int target)
+//{
+//    int count = 0, res = -1;
+//    for (int i = 0; i < n.size(); ++i)
+//    {
+//        if(n[i] != target) continue;
+//        if(++count == 1) res = i;
+//        else
+//            if(!(rand()%count)) res = i;
+//    }
+//    return res;
+//}
+
+@end
+
+// @implementation Vector2D
+// {
+//     NSMutableArray *_array;
+//     NSInteger _currentIndex;
+// }
+// //最简单的办法是初始化转成1维度数组
+
+// - (instancetype)initWithMatrix:(NSArray<NSArray<NSNumber *> *> *)matrix
+// {
+//     if(self = [super init]){
+//         _array = [NSMutableArray array];
+//         for (NSInteger i = 0; i < matrix.count; i++) {
+//             [_array addObjectsFromArray:matrix[i]];
+//         }
+//         _currentIndex = 0;
+//     }
+//     return self;
+// }
+
+// - (NSNumber *)next
+// {
+//     //如果越界需要特殊处理
+//     NSAssert([self hasNext], @"out of range");
+//     return _array[_currentIndex++];
+// }
+
+// - (BOOL)hasNext
+// {
+//     return _currentIndex <= [_array count] - 1;
+// }
+
+// @end
+
+@implementation Vector2D
+{
+    NSEnumerator *_enumerator;
+    NSEnumerator *_subEnumerator;
+}
+
+- (instancetype)initWithMatrix:(NSArray<NSArray<NSNumber *> *> *)matrix
+{
+    NSAssert([matrix count], @"should not be emtpy");
+    
+    if(self = [super init]){
+        _enumerator = [matrix objectEnumerator];
+        _subEnumerator = [[_enumerator nextObject] objectEnumerator];
+    }
+    return self;
+}
+
+- (NSNumber *)next
+{
+    if(![self hasNext]){
+        return nil;
+    }
+    if([_subEnumerator nextObject] == nil){
+        _subEnumerator = [[_enumerator nextObject] objectEnumerator];
+    }
+    return [_subEnumerator nextObject];
+}
+
+- (BOOL)hasNext
+{
+    return [_enumerator nextObject] == nil && [_subEnumerator nextObject] == nil;
+}
+
+@end

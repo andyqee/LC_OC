@@ -29,7 +29,7 @@ int main(int argc, const char * argv[]) {
     @autoreleasepool {
         testTree();
         testString();
-//        testArray();
+        testArray();
 //        testBackTracking();
 //        testList();
 //        testMath();
@@ -122,6 +122,11 @@ void testTree() {
     Solution *s = [Solution new];
     
 //    NSString *str = [s minWindow:@"ADOBECODEBANC" t:@"AB"];
+    NSArray *words =  @[@"hot", @"dot", @"dog", @"lot", @"log"];
+    for (NSInteger i = 0; i < 5; i++) {
+       NSString *item = [[words objectEnumerator] nextObject];
+        NSLog(@"%@", item);
+    }
     NSSet *wordList = [NSMutableSet setWithArray: @[@"hot", @"dot", @"dog", @"lot", @"log"]];
 //    NSInteger steps = [s ladderLength:@"hit" endWord:@"cog" set:wordList];
     NSArray *path = [s ladderLength2:@"hit" endWord:@"cog" set:wordList];
@@ -226,9 +231,12 @@ void testArray()
 //    NSInteger c = [s searchInsert:@[@1,@3,@5,@6] target:0];
     
     
-    NSInteger a = [s maxSubArray:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4]];
-    NSInteger b = [s maxSubArrayM2:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4]];
-
+//    NSInteger a = [s maxSubArray:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4]];
+//    NSInteger b = [s maxSubArrayM2:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4]];
+    RandomPickIndex *pick = [[RandomPickIndex alloc] initWithNums:@[@1,@2,@3,@3,@3]];
+    for (NSInteger i = 0; i < 10; i++) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%ld",[pick pick:3]]);
+    }
 }
 
 void testBackTracking()

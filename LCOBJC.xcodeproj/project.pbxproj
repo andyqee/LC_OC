@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1549CB71E0D0EC9006FCF8D /* LRU.m in Sources */ = {isa = PBXBuildFile; fileRef = A1549CB61E0D0EC9006FCF8D /* LRU.m */; };
 		A1BFBF651DD9F40E0022C1DC /* List.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BFBF641DD9F40E0022C1DC /* List.m */; };
 		A1F2B7DD1DC5ED090023278E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F2B7DC1DC5ED090023278E /* main.m */; };
 		A1F2B7E51DC5ED4F0023278E /* Solution.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F2B7E41DC5ED4F0023278E /* Solution.m */; };
@@ -33,6 +34,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A1549CB51E0D0EC9006FCF8D /* LRU.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LRU.h; sourceTree = "<group>"; };
+		A1549CB61E0D0EC9006FCF8D /* LRU.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LRU.m; sourceTree = "<group>"; };
 		A1BFBF631DD9F40E0022C1DC /* List.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = List.h; sourceTree = "<group>"; };
 		A1BFBF641DD9F40E0022C1DC /* List.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = List.m; sourceTree = "<group>"; };
 		A1F2B7D91DC5ED090023278E /* LCOBJC */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LCOBJC; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -108,6 +111,8 @@
 				D72164AA1DEB12B200B96C69 /* Graph.m */,
 				D7043DDF1E099015002D294D /* SlideWindow.h */,
 				D7043DE01E099015002D294D /* SlideWindow.m */,
+				A1549CB51E0D0EC9006FCF8D /* LRU.h */,
+				A1549CB61E0D0EC9006FCF8D /* LRU.m */,
 			);
 			path = LCOBJC;
 			sourceTree = "<group>";
@@ -172,6 +177,7 @@
 				D7043DE11E099015002D294D /* SlideWindow.m in Sources */,
 				A1BFBF651DD9F40E0022C1DC /* List.m in Sources */,
 				A1F2B7E51DC5ED4F0023278E /* Solution.m in Sources */,
+				A1549CB71E0D0EC9006FCF8D /* LRU.m in Sources */,
 				D757AAD11DD95F6900F5ED1A /* BackTracking.m in Sources */,
 				D71E29931DE5C5CF006C2500 /* DP.m in Sources */,
 				D7165C1C1DE0B48A00F12A47 /* math.m in Sources */,

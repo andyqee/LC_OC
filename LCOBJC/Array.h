@@ -493,22 +493,17 @@
 
 - (BOOL)canJump:(NSArray *)nums;
 
-// 45. Jump Game II   Add to List QuestionEditorial Solution  My Submissions
+// 45. Jump Game II
 // Difficulty: Hard
 // Given an array of non-negative integers, you are initially positioned at the first index of the array.
-
 // Each element in the array represents your maximum jump length at that position.
-
 // Your goal is to reach the last index in the minimum number of jumps.
-
 // For example:
 // Given array A = [2,3,1,1,4]
 
 // The minimum number of jumps to reach the last index is 2. (Jump 1 step from index 0 to 1, then 3 steps to the last index.)
 
 - (NSInteger)jump:(NSArray<NSNumber *> *)nums;
-
-
 
 @end
 
@@ -551,6 +546,38 @@
 - (NSInteger)sumRange:(NSInteger)l r:(NSInteger)r;
 
 - (void)update:(NSInteger)idx val:(NSInteger)val;
+
+@end
+
+// 398. Random Pick Index 
+// Difficulty: Medium
+// Contributors: Admin
+// Given an array of integers with possible duplicates, randomly output the index of a given target number. 
+// You can assume that the given target number must exist in the array.
+// Note:
+// The array size can be very large. Solution that uses too much extra space will not pass the judge.
+
+// Example:
+// int[] nums = new int[] {1,2,3,3,3};
+// Solution solution = new Solution(nums);
+
+// // pick(3) should return either index 2, 3, or 4 randomly. Each index should have equal probability of returning.
+// solution.pick(3);
+
+// // pick(1) should return 0. Since in the array only nums[0] is equal to 1.
+// solution.pick(1);
+
+@interface RandomPickIndex : NSObject
+- (instancetype)initWithNums:(NSArray<NSNumber *> *)nums;
+- (NSInteger)pick:(NSInteger)target;
+
+@end
+
+@interface Vector2D : NSObject
+
+- (instancetype)initWithMatrix:(NSArray<NSArray<NSNumber *> *> *)matrix;
+- (NSNumber *)next;
+- (BOOL)hasNext;
 
 @end
 
