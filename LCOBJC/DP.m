@@ -324,5 +324,53 @@
     return maxSize;
 }
 
+// red, blue or green
+
+#pragma mark - Paint House
+
+- (NSInteger)minCost:(NSArray<NSArray<NSNumber *> *> *)matrix
+{
+    if (matrix.count == 0) {
+        return 0;
+    }
+    NSMutableArray<NSMutableArray<NSNumber *> *> *dp = [NSMutableArray array]; // 这里可以优化成O(k) k is the number of colors
+    for (NSInteger i = 0; i < matrix.count; i++) {
+        [dp addObject:[matrix[i] mutableCopy]];
+    }
+//    可以精简成下面几行代码
+//    for (int j = 0; j < 3; ++j) {
+//        dp[i][j] += min(dp[i - 1][(j + 1) % 3], dp[i - 1][(j + 2) % 3]);
+//    }
+    for (NSInteger i = 1; i < matrix.count; i++) {
+        dp[i][0] = @(MIN(matrix[i-1][1].integerValue, matrix[i-1][2].integerValue) + dp[i][0].integerValue);
+        dp[i][1] = @(MIN(matrix[i-1][0].integerValue, matrix[i-1][2].integerValue) + dp[i][1].integerValue);
+        dp[i][2] = @(MIN(matrix[i-1][1].integerValue, matrix[i-1][0].integerValue) + dp[i][2].integerValue);
+    }
+    return MIN(MIN(dp[matrix.count - 1][0].integerValue, dp[matrix.count - 1][1].integerValue), dp[matrix.count - 1][2].integerValue);
+}
+
+// k 个房子
+// 0..k-1 k 种颜色
+
+// dp[i][j] = dp[i][j]
+
+//- (NSInteger)minCost2:(NSArray<NSArray<NSNumber *> *> *)matrix
+//{
+//    if (matrix.count == 0) {
+//        return 0;
+//    }
+//    
+//}
+
+
+// Paint Fence
+// 这道题目的意思，理解的不准确，是相邻的post 最多不能超过两种颜色
+
+- (NSInteger)numWays:(NSInteger)n color:(NSInteger)k
+{
+    NSInteger nums;
+    
+    return nums;
+}
 
 @end

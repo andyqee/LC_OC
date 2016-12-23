@@ -782,7 +782,7 @@ BOOL isAalphaNumber(unichar ch)
                 return steps;
             }
             NSSet<NSString *> *neighbors = [self allNeighbours:node set:wordList]; //利用set，快速查找
-//            if([neighbors containsObject:endWord]){  //⚠️ 注意 这里也可以合并到上面那个逻辑，这样初始化为 steps = 2。现在这种写法可以快速的cut branch
+//            if([neighbors containsObject:endWord]){  //注意 这里也可以合并到上面那个逻辑，这样初始化为 steps = 2。现在这种写法可以快速的cut branch
 //                return steps + 1; //已经找到。 这三行代码也可以去掉
 //            }
             for(NSString *s in neighbors){
@@ -877,7 +877,7 @@ BOOL isAalphaNumber(unichar ch)
 - (NSString *)sorted
 {
     NSMutableArray *charArray = [NSMutableArray arrayWithCapacity:self.length];
-    for (int i=0; i< self.length; ++i) {
+    for (int i = 0; i < self.length; ++i) {
         NSString *charStr = [self substringWithRange:NSMakeRange(i, 1)];
         [charArray addObject:charStr];
     }
@@ -887,9 +887,70 @@ BOOL isAalphaNumber(unichar ch)
 @end
 
 @implementation Solution (Array)
+// 模拟了白板coding，发现容易出现低级错误，数组的边界
 
+- (NSInteger)hIndex:(NSArray<NSNumber *> *)citations
+{
+    if(citations.count == 0){
+        return 0;
+    }
+    NSInteger count = citations.count;
+    NSMutableArray<NSNumber *> *nums = [NSMutableArray arrayWithCapacity:count + 1];
+    for (NSInteger i = 0; i <= count ; i++) {
+        nums[i] = @0;
+    }
+    for(NSInteger i = 0; i < count; i++){
+        if(citations[i].integerValue >= count){
+            nums[count] = @(nums[count].integerValue + 1);
+        } else {
+            nums[citations[i].integerValue] = @(nums[citations[i].integerValue].integerValue + 1);
+        }
+    }
+    for(NSInteger i = count; i >= 0; i--){
+        if(i < count){
+            nums[i] = @(nums[i].integerValue + nums[i + 1].integerValue);
+        }
+        if(nums[i].integerValue >= i){ //注意这里是 >=
+            return i;
+        }
+    }
+    return 0;
+}
 
-//用queue 来实现
+- (NSInteger)hIndex2:(NSArray<NSNumber *> *)nums
+{
+    NSInteger left = 0;
+    NSInteger right = nums.count - 1;
+    NSInteger mid = 0;
+    while(left < right){
+        mid = (right - left) / 2 + left;
+        if(nums[mid].integerValue >= nums.count - mid){
+            right = mid;
+        } else {
+            left = mid + 1;
+        }
+    }
+    return nums.count - left;
+}
+//上面这种方法更佳精简一些
+
+- (NSInteger)hIndexMethod2:(NSArray<NSNumber *> *)nums
+{
+    NSInteger left = 0;
+    NSInteger right = nums.count - 1;
+    NSInteger mid = 0;
+    while(left < right){
+        mid = (right - left) / 2 + left;
+        if(nums[mid].integerValue == nums.count - mid){
+            return nums.count - left;
+        } else if(nums[mid].integerValue > nums.count - mid){
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+    return nums.count - left;
+}
 
 @end
 

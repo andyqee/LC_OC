@@ -131,6 +131,10 @@ void testTree() {
 //    NSInteger steps = [s ladderLength:@"hit" endWord:@"cog" set:wordList];
     NSArray *path = [s ladderLength2:@"hit" endWord:@"cog" set:wordList];
 
+    NSInteger steps = [s ladderLength:@"hit" endWord:@"cog" set:wordList];
+    
+    NSInteger hidx = [s hIndex:@[@3, @0, @6, @1, @5]];
+    
 //    TreeNode *dll = [s convertBT:node];
 //    NSString *abc = [s longestPalindrome:@"abcdku0839abvvba"];
     // NSArray *p = [s binaryTreePaths:node];
@@ -182,6 +186,7 @@ void testString()
 //        NSInteger maxRetangel3 = [s maximalRectangle:@[ @[@"1", @"0", @"1", @"1", @"1"], @[@"1", @"1", @"1", @"1", @"1"],  @[@"1", @"0", @"0", @"1", @"0"]]];
 //    
 //       NSInteger maxRetangel2 = [s maximalRectangle:@[ @[@"1", @"1", @"1", @"1", @"1"],  @[@"1", @"0", @"0", @"1", @"0"]]];
+    NSInteger minCost = [s minCost:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
     
 }
 
