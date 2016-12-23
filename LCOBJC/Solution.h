@@ -273,6 +273,14 @@
 
 - (NSInteger)ladderLength:(NSString *)beginWord endWord:(NSString *)endWord set:(NSSet<NSString *> *)wordList;
 
+// 126. Word Ladder II QuestionEditorial Solution  My Submissions
+
+// Difficulty: Hard
+// Contributors: Admin
+// Given two words (beginWord and endWord), and a dictionary's word list, find all shortest transformation sequence(s) from beginWord to endWord, such that:
+
+- (NSArray<NSArray<NSString *> *> *)ladderLength2:(NSString *)beginWord endWord:(NSString *)endWord set:(NSSet<NSString *> *)wordList;
+
 @end
 
 @interface Solution (Array)

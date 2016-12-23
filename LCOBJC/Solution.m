@@ -819,6 +819,56 @@ BOOL isAalphaNumber(unichar ch)
     return neighbours;
 }
 
+// find all shortest transformation sequence
+// 试试用回溯方法，那么上面的办法不行了。
+
+- (NSArray<NSArray<NSString *> *> *)ladderLength2:(NSString *)beginWord endWord:(NSString *)endWord set:(NSMutableSet<NSString *> *)wordList
+{
+    NSMutableArray *result = [NSMutableArray array];
+    [wordList addObject:endWord];
+    [self _ladderLength2:beginWord endWord:endWord set:wordList result:result temp:[@[beginWord] mutableCopy]];
+    return result;
+}
+
+- (void)_ladderLength2:(NSString *)beginWord endWord:(NSString *)endWord set:(NSMutableSet<NSString *> *)wordList result:(NSMutableArray<NSArray *> *)result temp:(NSMutableArray *)temp
+{
+    if([wordList count] == 0 || (result.firstObject && [temp count] > result.firstObject.count)){ // 说明已经进入到下一层级的便利
+        return;
+    }
+
+    if([beginWord isEqualToString:endWord]){
+        [result addObject:[temp copy]];
+        return;
+    }
+
+    NSSet<NSString *> *neighbours = [self allNeighbours2:beginWord set:wordList];//
+    for(NSString *neigh in neighbours){
+        [temp addObject:neigh];
+        [wordList removeObject:neigh];
+        [self _ladderLength2:neigh endWord:endWord set:wordList result:result temp:temp];
+        [temp removeLastObject];
+        [wordList addObject:neigh];
+    }
+}
+
+- (NSSet<NSString *> *)allNeighbours2:(NSString *)str set:(NSMutableSet<NSString *> *)wordList
+{
+    NSArray *letters = [@"a,b,c,d,e,f,g,h,i,g,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z" componentsSeparatedByString:@","];
+
+    NSMutableSet *neighbours = [NSMutableSet set];
+    for (NSString *letter in letters) {
+        for(NSInteger i = 0; i < str.length; i++){
+            if(![[str substringWithRange:NSMakeRange(i, 1)] isEqualToString:letter]){
+                NSMutableString *clone = [NSMutableString stringWithString:str];
+                [clone replaceCharactersInRange:NSMakeRange(i, 1) withString:letter];
+                if ([wordList containsObject:clone]) { // 用这种办法，需要在开始将end wordList
+                    [neighbours addObject:clone]; // 不会出现重复
+                }
+            }
+        }
+    }
+    return neighbours;
+}
 
 @end
 

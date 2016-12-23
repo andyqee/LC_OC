@@ -123,7 +123,9 @@ void testTree() {
     
 //    NSString *str = [s minWindow:@"ADOBECODEBANC" t:@"AB"];
     NSSet *wordList = [NSMutableSet setWithArray: @[@"hot", @"dot", @"dog", @"lot", @"log"]];
-    NSInteger steps = [s ladderLength:@"hit" endWord:@"cog" set:wordList];
+//    NSInteger steps = [s ladderLength:@"hit" endWord:@"cog" set:wordList];
+    NSArray *path = [s ladderLength2:@"hit" endWord:@"cog" set:wordList];
+
 //    TreeNode *dll = [s convertBT:node];
 //    NSString *abc = [s longestPalindrome:@"abcdku0839abvvba"];
     // NSArray *p = [s binaryTreePaths:node];
