@@ -15,6 +15,7 @@
 #import "Array.h"
 #import "math.h"
 #import "DP.h"
+#import "Graph.h"
 
 void testTree();
 void testString();
@@ -24,18 +25,27 @@ void testMath();
 
 void testList();
 void testSumRange();
+void testGraph();
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        testTree();
+//        testTree();
         testString();
-        testArray();
+//        testArray();
 //        testBackTracking();
 //        testList();
 //        testMath();
 //        testSumRange();
+//        testGraph();
     }
     return 0;
+}
+
+void testGraph()
+{
+    Graph *g = [Graph new];
+    BOOL canfinish = [g canFinish:@[@[@1, @0]] count:2];
+    
 }
 
 void testSumRange()
@@ -54,7 +64,8 @@ void testMath()
     math *m = [math new];
     double res = [m divide:25 divisor:-5];
     double ress = [m divideMethod2:25 divisor:-5];
-
+    
+    NSString *s = [m convertToTitle:26];
 }
 
 void testList()
@@ -72,13 +83,13 @@ void testList()
     f1.val = 2;
     f1.next = f2;
     
-    f2.val = 2;
+    f2.val = 5;
     f2.next = f3;
     
-    f3.val = 5;
+    f3.val = 2;
     f3.next = f4;
     
-    f4.val = 5;
+    f4.val = 1;
     
     ListNode *new = [list deleteDuplicates:f0];
 //    NSMutableArray *listArray = [NSMutableArray array];
@@ -89,7 +100,7 @@ void testList()
 ////    [list reorderList:f0];
 //    
 //    ListNode *head = [list mergeList:f0 withList:f2];
-    
+    BOOL isPalindrome = [list isPalindrome:f0];
 }
 
 void testTree() {
@@ -180,14 +191,19 @@ void testString()
     
 //    NSInteger i = [s strStr:@"fkdsfsdfskkkk" needle:@"kkk"];
     
-    NSInteger rs = [s maxKilledEnemies:@[@[@"0", @"E", @"0", @"0"], @[@"E", @"0", @"W", @"E"], @[@"0", @"E", @"0", @"0"]]];
+//    NSInteger rs = [s maxKilledEnemies:@[@[@"0", @"E", @"0", @"0"], @[@"E", @"0", @"W", @"E"], @[@"0", @"E", @"0", @"0"]]];
     
-    NSInteger maxRetangel4 = [s maximalRectangle:@[@[@"1", @"0", @"1", @"0", @"0"], @[@"1", @"0", @"1", @"1", @"1"], @[@"1", @"1", @"1", @"1", @"1"],  @[@"1", @"0", @"0", @"1", @"0"]]];
+//    NSInteger maxRetangel4 = [s maximalRectangle:@[@[@"1", @"0", @"1", @"0", @"0"], @[@"1", @"0", @"1", @"1", @"1"], @[@"1", @"1", @"1", @"1", @"1"],  @[@"1", @"0", @"0", @"1", @"0"]]];
 //        NSInteger maxRetangel3 = [s maximalRectangle:@[ @[@"1", @"0", @"1", @"1", @"1"], @[@"1", @"1", @"1", @"1", @"1"],  @[@"1", @"0", @"0", @"1", @"0"]]];
 //    
 //       NSInteger maxRetangel2 = [s maximalRectangle:@[ @[@"1", @"1", @"1", @"1", @"1"],  @[@"1", @"0", @"0", @"1", @"0"]]];
     NSInteger minCost = [s minCost:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
     
+    NSInteger minCost2 = [s minCost2:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
+//    NSInteger minCost22 = [s minCost2_optmize:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
+    NSInteger minCost222 = [s minCost2_optmize2:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
+    
+    NSInteger stock = [s maxProfitCooldown:@[@1, @2, @3, @0, @2]];
 }
 
 void testArray()
@@ -238,10 +254,13 @@ void testArray()
     
 //    NSInteger a = [s maxSubArray:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4]];
 //    NSInteger b = [s maxSubArrayM2:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4]];
-    RandomPickIndex *pick = [[RandomPickIndex alloc] initWithNums:@[@1,@2,@3,@3,@3]];
-    for (NSInteger i = 0; i < 10; i++) {
-        NSLog(@"%@", [NSString stringWithFormat:@"%ld",[pick pick:3]]);
-    }
+//    RandomPickIndex *pick = [[RandomPickIndex alloc] initWithNums:@[@1,@2,@3,@3,@3]];
+//    for (NSInteger i = 0; i < 10; i++) {
+//        NSLog(@"%@", [NSString stringWithFormat:@"%ld",[pick pick:3]]);
+//    }
+    
+    BOOL is = [s increasingTriplet:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4]];
+    BOOL iss = [s increasing:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4] k:3];
 }
 
 void testBackTracking()

@@ -406,30 +406,7 @@
 //{
 //    
 //}
-#pragma mark - strStr
 
-- (NSInteger)strStr:(NSString *)haystack needle:(NSString *)needle
-{
-    //which integer indicate not found index
-    // m * n
-    // 如果俩枚都是空怎么播
-    if (needle.length == 0 || haystack.length == 0) {
-        return - 1;
-    }
-    for (NSInteger i = 0; i <= haystack.length - needle.length; ++i) //这里是 <=
-    {
-        for (NSUInteger j = 0; j < needle.length; ++j)
-        {
-            if (![[haystack substringWithRange:NSMakeRange(i+j, 1)] isEqualToString:[needle substringWithRange:NSMakeRange(j, 1)]]) {
-                break;
-            }
-            if (j == needle.length - 1) {
-                return i;
-            }
-        }
-    }
-    return - 1;
-}
 
 BOOL isAalphaNumber(unichar ch)
 {
@@ -869,6 +846,13 @@ BOOL isAalphaNumber(unichar ch)
     }
     return neighbours;
 }
+
+//google，但是有个人碰到了
+
+//- (NSInteger)longestSubstring:(NSString *)str k:(NSInteger)k
+//{
+//    
+//}
 
 @end
 

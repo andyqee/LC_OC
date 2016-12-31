@@ -104,4 +104,35 @@
     return minLen == NSIntegerMax ? @"" : [str substringWithRange:NSMakeRange(head, minLen)];
 }
 
+//3. Longest Substring Without Repeating Characters [M]
+// pwwkew
+// abcabcbb
+// bacabcd
+
+// j : fast index ，找符合条件的解，并更新
+// i : 当有不符合的时候，开始更新，使得重新 符合条件
+// while 的condition 条件 看是否和 i 和j 都有关， 因为 i 与 j 本身也有制约关系，很有可能是可以压缩成 j < str.length
+
+- (NSInteger)lengthOfLongestSubstring:(NSString *)str
+{
+    NSInteger maxLen = 0;
+    NSMutableSet *set = [NSMutableSet set];
+    NSInteger i = 0;
+    NSInteger j = 0;
+    
+    while (j < str.length) { //这里可以精简掉 j < str.length
+        NSString *ch = [str substringWithRange:NSMakeRange(j, 1)];
+        if(![set containsObject:ch]){
+            [set addObject:ch];
+            j++;
+            maxLen = MAX(maxLen, [set count]); //
+        } else {
+            NSString *prev = [str substringWithRange:NSMakeRange(i, 1)];//
+            [set removeObject:prev];
+            i++;
+        }
+    }
+    return maxLen;
+}
+
 @end

@@ -35,4 +35,21 @@
 
 - (NSInteger)divideMethod2:(NSInteger)dividend divisor:(NSInteger)divisor;
 
+// 168. Excel Sheet Column Title   Add to List QuestionEditorial Solution  My Submissions
+// Difficulty: Easy
+// Contributors: Admin
+// Given a positive integer, return its corresponding column title as appear in an Excel sheet.
+
+// For example:
+
+//     1 -> A
+//     2 -> B
+//     3 -> C
+//     ...
+//     26 -> Z
+//     27 -> AA
+//     28 -> AB 
+
+- (NSString *)convertToTitle:(NSInteger)n;
+
 @end

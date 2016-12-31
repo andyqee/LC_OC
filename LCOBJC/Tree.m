@@ -828,52 +828,6 @@ static TreeNode *prev = nil;
 
 }
 
-//验证all the node reachable
-//no cycle
-//三种解法：
-
-// union found
-
-//vector<int> nodes(n,0);
-//for(int i=0; i<n; i++) nodes[i] = i;
-//for(int i=0; i<edges.size(); i++){
-//    int f = edges[i].first;
-//    int s = edges[i].second;
-//    while(nodes[f]!=f) f = nodes[f];
-//    while(nodes[s]!=s) s = nodes[s];
-//    if(nodes[f] == nodes[s]) return false;
-//    nodes[s] = f;
-//}
-//return edges.size() == n-1;
-
-// http://www.cnblogs.com/grandyang/p/5257919.html
-// https://www.cs.princeton.edu/~rs/AlgsDS07/01UnionFind.pdf
-
-- (BOOL)validTree:(NSInteger)n edges:(NSArray<NSArray<NSNumber *> *> *)edges
-{
-    NSMutableArray<NSNumber *> *root = [NSMutableArray arrayWithCapacity:n];
-    //quick union
-    for(NSInteger i = 0; i < n; i++){
-        [root addObject:@(i)];
-    }
-    
-    for(NSInteger j = 0; j < edges.count; j++){
-        NSNumber *start = [edges[j] firstObject];
-        NSNumber *second = [edges[j] firstObject];
-        
-        //find root
-        while ([start compare: root[start.integerValue]] != NSOrderedSame) {
-            start = root[start.integerValue];
-        }
-        while ([second compare: root[second.integerValue]] != NSOrderedSame) {
-            second = root[second.integerValue];
-        }
-        if([start compare:second] == NSOrderedSame){
-            return NO; //有环
-        }
-    }
-    return edges.count == n -1;
-}
 
 //Verify Preorder Sequence in Binary Search Tree
 

@@ -35,16 +35,36 @@
     return slow;
 }
 
+// 1--> 2 --> 3--->4
+// 简单容易出错的题目
+
 - (ListNode *)reverseList:(ListNode *)head
 {
-    ListNode *newHead;
-    while(head){
-        ListNode *temp = head.next;//change it. 因为要更新，所以先保存
-        head.next = newHead;
-        newHead = head;
-        head = temp;
+    ListNode *prev = nil;
+    while(head){ // 1.循环是框架
+        ListNode *temp = head.next;//2.change it. 因为要更新，所以先保存
+        head.next = prev;
+        prev = head;// track 前面那个, 这里需要newHead，记录head 前面那个，因为while结束之后，就head 就为nil 了
+        head = temp;// 4. 移动到一下步奏
     }
-    return newHead;
+    return prev;
+}
+
+- (ListNode *)reverseListReverse:(ListNode *)head
+{
+    return [self reverseList:head prevHead:nil];
+}
+
+//需要使用两个node，传递下去
+
+- (ListNode *)reverseList:(ListNode *)head prevHead:(ListNode *)prevHead
+{
+    if(head == nil){
+        return prevHead;
+    }
+    ListNode *next = head.next;//保存要被更新的那个
+    head.next = prevHead;
+    return [self reverseList:next prevHead:head];
 }
 
 //如果是偶数个的话 left half 的最后一个 和right half 的最后一个是相同的
@@ -278,6 +298,31 @@
     }
     
     return cloneHead;
+}
+// 1-->2-->2-->1 // middle = 2
+// 1-->2-->1     // middle = 2
+// 1.Find middle
+// move to the next of middle 2, reverse 后半部分!!
+// traverse 两边
+
+- (BOOL)isPalindrome:(ListNode *)node
+{
+    //corner case
+    if(!node || !node.next){
+        return YES;
+    }
+    //
+    ListNode *middle = [self findMidle:node];
+    ListNode *rightHalf = nil;
+    rightHalf = [self reverseList:middle.next];
+    while (rightHalf) {
+        if(rightHalf.val != node.val){
+            return NO;
+        }
+        rightHalf = rightHalf.next;
+        node = node.next;
+    }
+    return YES;
 }
 
 @end

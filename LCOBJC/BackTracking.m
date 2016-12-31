@@ -478,6 +478,14 @@
     }
 }
 
+// previous permutation
+// 高频！
+
+- (void)previousPermutation:(NSMutableArray *)nums
+{
+    
+}
+
 //找到数学规律
 // http://bangbingsyb.blogspot.hk/2014/11/leetcode-permutation-sequence.html
 // 有空写一下
@@ -1204,58 +1212,7 @@
     return count <= 1;
 }
 
-//121. Best Time to Buy and Sell Stock
 
-// Example 1:
-// Input: [7, 1, 5, 3, 6, 4]
-// Output: 5
-
-// max. difference = 6-1 = 5 (not 7-1 = 6, as selling price needs to be larger than buying price)
-// Example 2:
-// Input: [7, 6, 4, 3, 1]
-// Output: 0
-
-- (NSInteger)maxProfit:(NSArray<NSNumber *> *)prices
-{
-//    if([prices count] < 2){
-//        return 0;
-//    }
-    NSAssert([prices count] >= 2, @"");
-    
-    NSInteger maxProfit = 0;
-    NSInteger minPrice = 0;
-
-    for(NSInteger i = 1; i < [prices count]; i++){
-        if([prices[i] compare:prices[i-1]] == NSOrderedDescending){
-            maxProfit = MAX(maxProfit, prices[i].integerValue - minPrice);
-        } else {
-            minPrice = MIN(minPrice, prices[i].integerValue);
-        }
-    }
-    return maxProfit;
-}
-
-//122. Best Time to Buy and Sell Stock
-
-// 这里可以利用一个变量来替换array
-// Second, suppose the first sequence is "a <= b <= c <= d", the profit is "d - a = (b - a) + (c - b) + (d - c)" without a doubt. And suppose another one is "a <= b >= b' <= c <= d", the profit is not difficult to be figured out as "(b - a) + (d - b')". So you just target at monotone sequences.
-
-- (NSInteger)maxProfit_2:(NSArray<NSNumber *> *)prices
-{
-    if([prices count] < 2){
-        return 0;
-    }
-    NSInteger count = prices.count + 1;
-    NSMutableArray<NSNumber *> *dp = [NSMutableArray arrayWithCapacity:count];
-    [dp addObject:@(0)];
-    [dp addObject:@(0)];
-    
-    for(NSInteger i = 2; i <= [prices count]; i++){
-        NSInteger temp = prices[i-1].integerValue - prices[i-2].integerValue;
-        [dp addObject: @(MAX(dp[i].integerValue + temp, dp[i].integerValue))];
-    }
-    return dp[count].integerValue;
-}
 
 //198. House Robber
 //这里也可以将空间O(n) 优化到O（1）
@@ -1460,7 +1417,8 @@
 // 首先这里是否需要 创建一个数组来标记是否已经访问过。 这里有距离的判断，如果重复访问到之前访问过的点的话，steps > 当前值, 
 // 所以其实不需要额外的空间来存储每个点的访问状态
 // how to anlaysis the Time comlexity and space comlexity ?
-// ?? m * n * (numbers of zero) // beacuse it will not revisited in each search progress
+// ?? m * n * (numbers of zero)
+// beacuse it will not revisited in each search progress
 
 - (void)_search:(NSMutableArray<NSMutableArray<NSNumber *> *> *)rooms atRow:(NSInteger)i atCol:(NSInteger)j steps:(NSInteger)steps
 {
@@ -1548,6 +1506,11 @@
             [queue addObject: @[@(row), @(col)]];
         }
     }
+}
+
+- (NSArray<NSArray<NSNumber *> *> *)solveNQueens:(NSInteger)n
+{
+    
 }
 
 @end

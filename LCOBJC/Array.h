@@ -255,18 +255,6 @@
 
 - (void)sortedColors_bs:(NSMutableArray<NSNumber *> *)nums k:(NSInteger)k;
 
-// 75. Sort Colors
-// Difficulty: Medium
-// Contributors: Admin
-// Given an array with n objects colored red, white or blue, sort them so that objects of the same color are adjacent, with the colors in the order red, white and blue.
-
-// Here, we will use the integers 0, 1, and 2 to represent the color red, white, and blue respectively.
-
-// Note:
-// You are not suppose to use the library's sort function for this problem.
-// 根据LC里面的函数定义，没有返回值，是in place modify
-
-- (void)sortedColors:(NSMutableArray *)nums;
 
 // 153. Find Minimum in Rotated Sorted Array
 // Difficulty: Medium
@@ -283,6 +271,7 @@
 - (NSNumber *)findMin2:(NSArray<NSNumber *> *)nums;
 
 // 53. Maximum Subarray
+#pragma mark - 高频
 // Difficulty: Medium
 // Find the contiguous subarray within an array (containing at least one number) which has the largest sum.
 
@@ -376,19 +365,6 @@
 - (NSArray<NSNumber *> *)searchRange:(NSArray<NSNumber *> *)nums target:(NSInteger)target;
 
 - (NSArray<NSNumber *> *)searchRangeMethod2:(NSArray<NSNumber *> *)nums target:(NSInteger)target;
-
-// 42. Trapping Rain Water
-
-// Difficulty: Hard
-// Contributors: Admin
-// Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it is able to trap after raining.
-
-// For example, 
-// Given [0,1,0,2,1,0,1,3,2,1,2,1], return 6.
-
-- (NSInteger)trap:(NSArray<NSNumber *> *)nums;
-
-- (NSInteger)trap_TwoPointers:(NSArray<NSNumber *> *)nums;
 
 //54. Spiral Matrix
 //
@@ -505,6 +481,31 @@
 
 - (NSInteger)jump:(NSArray<NSNumber *> *)nums;
 
+//334. Increasing Triplet Subsequence
+//Difficulty: Medium
+//Contributors: Admin
+//Given an unsorted array return whether an increasing subsequence of length 3 exists or not in the array.
+//
+//Formally the function should:
+//Return true if there exists i, j, k
+//such that arr[i] < arr[j] < arr[k] given 0 ≤ i < j < k ≤ n-1 else return false.
+//Your algorithm should run in O(n) time complexity and O(1) space complexity.
+//
+//Examples:
+//Given [1, 2, 3, 4, 5],
+//return true.
+//
+//Given [5, 4, 3, 2, 1],
+//return false.
+
+- (BOOL)increasingTriplet:(NSArray<NSNumber *> *)nums;
+
+- (BOOL)increasing:(NSArray<NSNumber *> *)nums k:(NSInteger)k;
+
+// todo : implement circular buffer
+
+
+
 @end
 
 // 303. Range Sum Query - Immutable
@@ -574,10 +575,10 @@
 @end
 
 @interface Vector2D : NSObject
-
 - (instancetype)initWithMatrix:(NSArray<NSArray<NSNumber *> *> *)matrix;
 - (NSNumber *)next;
 - (BOOL)hasNext;
 
 @end
+
 

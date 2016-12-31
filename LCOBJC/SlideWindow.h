@@ -36,4 +36,33 @@
 
 - (NSString *)minWindow:(NSString *)str t:(NSString *)t;
 
+//3. Longest Substring Without Repeating Characters[M]
+
+//Difficulty: Medium
+//Contributors: Admin
+//Given a string, find the length of the longest substring without repeating characters.
+//
+//Examples:
+//
+//Given "abcabcbb", the answer is "abc", which the length is 3.
+//
+//Given "bbbbb", the answer is "b", with the length of 1.
+//
+//Given "pwwkew", the answer is "wke", with the length of 3. Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
+
+- (NSInteger)lengthOfLongestSubstring:(NSString *)str;
+
+//80. Remove Duplicates from Sorted Array II   Add to List QuestionEditorial Solution
+//Difficulty: Medium
+//Contributors: Admin
+//Follow up for "Remove Duplicates":
+//What if duplicates are allowed at most twice?
+//
+//For example,
+//Given sorted array nums = [1,1,1,2,2,3],
+//
+//Your function should return length = 5, with the first five elements of nums being 1, 1, 2, 2 and 3. It doesn't matter what you leave beyond the new length.
+
+- (void)removeDuplicates:(NSMutableArray *)nums;
+
 @end

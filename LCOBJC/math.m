@@ -108,4 +108,25 @@
     return res;
 }
 
+//168. Excel Sheet Column Title
+
+- (NSString *)convertToTitle:(NSInteger)n
+{
+    if(n < 1){
+        return nil;
+    }
+    NSArray *map = [@"A B C D E F G H I J K L M N O P Q R S T U V W X Y Z" componentsSeparatedByString:@" "];
+    NSMutableString *str = [NSMutableString string];
+    
+    while(n > 0){
+        n = n - 1; // !!! 因为前面的字符到数字的映射不是从0 开始, 这个是写在里面
+        NSInteger m = n % 26;
+        [str insertString:map[m] atIndex:0];
+//        [str appendString:map[m]]; // 这里高效的办法是 append 最后 返回reverse
+        n = n / 26;
+    }
+
+    return str;
+}
+
 @end
