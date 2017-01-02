@@ -9,10 +9,6 @@
 #import "Array.h"
 #import "TreeNode.h"
 
-#include <queue>
-
-using namespace std;
-
 @interface NSValue (Compare)
 
 - (NSComparisonResult)fbiCompare:(NSValue *)value;
@@ -96,208 +92,6 @@ using namespace std;
         preProduct *= nums[i].integerValue;
     }
     return product;
-}
-
-#pragma mark - 3Sum
-
-// MIT open class has video. 这里面用的双指针法，可以解决 “一道把排好序的数组每个element平方，输出还是排好序的”。 head tail 进行比较
-// follow up : dont sort use HashMap
-
-- (NSArray<NSArray *> *)threeSum_w3:(NSArray<NSNumber *> *)nums
-{
-    NSAssert([nums count] > 3, @"invalid input");
-
-    NSMutableArray *result = [NSMutableArray array];
-    
-    NSArray<NSNumber *> *sortedNums = [nums sortedArrayUsingSelector:@selector(compare:)];
-    for(NSInteger i = 0; i < nums.count - 2; i++) {
-        if (i > 0 && [nums[i] compare:nums[i-1]] == NSOrderedSame) {
-            continue; //skipe duplicate
-        }
-        NSInteger start = i + 1;
-        NSInteger end = nums.count - 1;
-        
-        while(start < end){
-            NSInteger sum = sortedNums[i].integerValue + sortedNums[start].integerValue + sortedNums[end].integerValue;
-            if (sum == 0) {
-                [result addObject:@[sortedNums[i], sortedNums[start], sortedNums[end]]];
-                start++;
-                end--;
-                while (start < end && sortedNums[start].integerValue == sortedNums[start-1].integerValue) {//这里是和i-1比较
-                    start++;
-                }
-                while (start < end && sortedNums[end].integerValue == sortedNums[end+1].integerValue) { //这里和后面一个进行比较
-                    end--;
-                }
-            } else if(sum < 0){
-                start++;
-            } else {
-                end--;
-            }
-        }
-    }
-    return result;
-}
-
-- (NSInteger)threeSumCloset:(NSArray<NSNumber *> *)nums target:(NSInteger)target; // 3sum
-{
-    //sort array
-    NSAssert([nums count] >= 3 , @"");
-    NSArray<NSNumber *> *sortedNums = [nums sortedArrayUsingSelector:@selector(compare:)];
-    
-    NSInteger result = NSIntegerMax;
-    for(NSUInteger i = 0; i < [nums count] - 2; i++) {
-        if(i > 0 && sortedNums[i] == sortedNums[i-1]) {
-            continue;
-        }
-        NSUInteger left = i + 1;
-        NSUInteger right = [nums count] - 1;
-        NSInteger sum = target - sortedNums[i].integerValue;
-        while(left < right) {
-            NSInteger diff = (sum - sortedNums[left].integerValue - sortedNums[right].integerValue);
-            if(diff == 0) {
-                return 0;
-            } else
-                if(diff < 0) {
-                    result = MIN(labs(diff), result);
-                    left++;
-                } else {
-                    result = MIN(labs(diff), result);
-                    right--;
-                }
-                //这里不需要
-            while(left < right && sortedNums[left] == sortedNums[left + 1]) {
-                left++;
-            }
-            while(left < right && sortedNums[right] == sortedNums[right - 1]) {
-                right--;
-            }
-        }
-    }
-    return result;
-}
-
-//下面这个版本好
-- (NSInteger)threeSumCloset_w2:(NSArray *)nums target:(NSInteger)target
-{
-    NSAssert([nums count] >= 3, @"invalid input");
-    
-    NSArray<NSNumber *> *sortedNums = [nums sortedArrayUsingSelector:@selector(compare:)];
-    NSInteger result = NSIntegerMax;
-
-    for(NSInteger i = 0; i < nums.count - 2; i++) {
-        NSInteger start = i + 1;
-        NSInteger end = nums.count - 1;
-        
-        while(start < end){
-            NSInteger sum = sortedNums[i].integerValue + sortedNums[start].integerValue + sortedNums[end].integerValue;
-            NSInteger diff = (sum - target);
-            if(ABS(result) < ABS(diff)) {
-                result = diff;
-            }
-            if (diff > 0) {
-                end--;
-            } else if(diff < 0){
-                start++;
-            } else {
-                return 0;
-            }
-        }
-    }
-    return result + target;// 返回的不是diff，而是和
-}
-
-// - (NSInteger)3sumSmaller
-// {
-
-// }
-
-#pragma mark - 2 sum
-
-- (NSArray *)twoSum:(NSArray<NSNumber *> *)nums target:(NSInteger)target
-{
-    // can we assume the length of nums larger than 1
-    if(nums.count < 2) {
-        return @[];
-    }
-    NSMutableDictionary<NSNumber *, NSNumber *> *map = [NSMutableDictionary dictionary];
-    for(NSUInteger idx = 0; idx < nums.count; idx++) {
-        NSNumber *prevIdx = map[@(target - nums[idx].integerValue)]; //不能有重复元素
-        if(prevIdx) {
-            return @[prevIdx, @(idx)];
-        } else {
-            map[@(idx)] = @(idx); //
-        }
-    }
-    return @[];
-}
-
-- (NSArray *)twosumSortedArray:(NSArray<NSNumber *> *)nums target:(NSInteger)target
-{
-    // can we assume the length of nums larger than 1
-    if(nums.count < 2) {
-        return @[];
-    }
-    
-    //idx Two pointer
-    NSUInteger l = 0;
-    NSUInteger h = nums.count - 1;
-    
-    while(l < h) {
-        NSInteger res = nums[l].integerValue + nums[h].integerValue;
-        if(res == target) {
-            break;
-        } else if(res < target) {
-            l++;
-        } else {
-            h--;
-        }
-    }
-    return @[@(l + 1), @(h + 1)];
-}
-
-#pragma mark - 4sum 4 sum
-
-- (NSArray *)fourSum:(NSArray<NSNumber *> *)nums
-{
-    NSAssert([nums count] >= 3 , @"");
-    
-    NSMutableArray *result = [NSMutableArray array];
-    NSArray<NSNumber *> *sortedNums = [nums sortedArrayUsingSelector:@selector(compare:)];
-    
-    for (NSInteger k = 0; k < nums.count - 3; k++) {
-        if (k > 0 && [nums[k] compare:nums[k-1]] == NSOrderedSame) {
-            continue; //skipe duplicate
-        }
-        for(NSInteger i = k + 1; i < nums.count - 2; i++) { // 这里细心点 start form k + 1
-            if (i > 0 && [nums[i] compare:nums[i-1]] == NSOrderedSame) {
-                continue; //skipe duplicate
-            }
-            
-            NSInteger start = i + 1;
-            NSInteger end = nums.count - 1;
-            
-            while(start < end){
-                NSInteger sum = sortedNums[k].integerValue + sortedNums[i].integerValue + sortedNums[start].integerValue + sortedNums[end].integerValue;
-                if (sum == 0) {
-                    [result addObject:@[sortedNums[k], sortedNums[i], sortedNums[start], sortedNums[end]]];
-                    start++;
-                    end--;
-                    while (start < end && sortedNums[start].integerValue == sortedNums[start-1].integerValue) {//这里是和i-1比较
-                        start++;
-                    }
-                    while (start < end && sortedNums[end].integerValue == sortedNums[end+1].integerValue) { //这里和后面一个进行比较
-                        end--;
-                    }
-                } else if(sum < 0){
-                    start++;
-                } else {
-                    end--;
-                }
-            }
-        }
-    }
-    return result;
 }
 
 // k the max number 题型。
@@ -1927,6 +1721,15 @@ using namespace std;
     }
     return NO;
 }
+
+// 457. Circular Array Loop
+
+//- (BOOL)circularArrayLoop:(NSArray<NSNumber *> *)nums
+//{
+//
+//}
+
+
 
 @end
 

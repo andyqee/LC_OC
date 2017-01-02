@@ -7,8 +7,94 @@
 //
 
 #import "BackTracking.h"
+#import "Tree.h"
 
 @implementation BackTracking
+
+//对题目的意思
+// Space = O(nlgn)
+// TODO: 这个问题的时间复杂度的分析 T =
+// my solution
+// 这里需要注意的 “->” 写的顺序
+// 这种枚举的题目,也可以用 backtracking 的方法
+
+- (NSArray<NSString *> *)binaryTreePaths:(TreeNode *)node
+{
+    if(node == nil) {
+        return nil; // 这里是直接返回 nil，还是空数组，需要确认下
+    }
+    NSMutableArray *rest = [NSMutableArray array];
+    
+    if(node.left != nil) {
+        NSArray *leftSubRes = [self binaryTreePaths:node.left];
+        for (NSString *subRes in leftSubRes) {
+            [rest addObject: [NSString stringWithFormat:@"%ld->%@", (long)node.val, subRes]];
+        }
+    }
+    if(node.right != nil) {
+        NSArray *rightSubRes = [self binaryTreePaths:node.right];
+        for (NSString *subRes in rightSubRes) {
+            [rest addObject: [NSString stringWithFormat:@"%ld->%@", (long)node.val, subRes]];
+        }
+    }
+    if(node.right == nil && node.left == nil) {
+        [rest addObject: [NSString stringWithFormat:@"%ld", (long)node.val]];
+    }
+    return rest;
+}
+
+// From web
+- (NSArray<NSString *> *)binaryTreePaths_LJSolution:(TreeNode *)node
+{
+    if(!node) {
+        return nil;
+    }
+    NSMutableArray *rest = [NSMutableArray array];
+    [self binaryTreePath:node prefixStr:[@"" mutableCopy] array:rest];
+    return rest;
+}
+
+//T = O(n) 多少种情况
+// backtracking;
+
+- (void)binaryTreePathOld:(TreeNode *)node prefixStr:(NSMutableString *)prefixStr array:(NSMutableArray *)array
+{
+    if(!node.left && !node.right) { // 1: backtracking 枚举的终止条件
+        [prefixStr appendString:[NSString stringWithFormat:@"%ld", (long)node.val]];
+        [array addObject:prefixStr];
+    }
+    if(node.left) {
+        NSMutableString *temp = [prefixStr mutableCopy]; //option 1: 这里可以优化成
+        [temp appendString:[NSString stringWithFormat:@"%ld->", (long)node.val]];
+        [self binaryTreePathOld:node.left prefixStr:temp array:array];
+    }
+    if(node.right) {
+        NSMutableString *temp = [prefixStr mutableCopy]; //option 2:
+        [temp appendString:[NSString stringWithFormat:@"%ld->", (long)node.val]];
+        [self binaryTreePathOld:node.right prefixStr:temp array:array];
+    }
+}
+
+- (void)binaryTreePath:(TreeNode *)node prefixStr:(NSMutableArray *)prefixStr array:(NSMutableArray *)array
+{
+    if(!node.left && !node.right) { // 1: backtracking 枚举的终止条件
+        // [prefixStr appendString:[NSString stringWithFormat:@"%ld", (long)node.val]];
+        [prefixStr addObject: @(node.val)];
+        [array addObject: [prefixStr componentsJoinedByString:@"->"]];
+        [prefixStr removeLastObject];
+        return;
+    }
+    if(node.left) {
+        [prefixStr addObject:@(node.val)];
+        [self binaryTreePath:node.left prefixStr:prefixStr array:array];
+        [prefixStr removeLastObject];
+    }
+    if(node.right) {
+        [prefixStr addObject:@(node.val)];
+        [self binaryTreePath:node.right prefixStr:prefixStr array:array];
+        [prefixStr removeLastObject];
+    }
+}
 
 - (BOOL)existWithBorad:(NSArray<NSArray *> *)board word:(NSString *)word
 {
@@ -1510,7 +1596,59 @@
 
 - (NSArray<NSArray<NSNumber *> *> *)solveNQueens:(NSInteger)n
 {
+    NSMutableArray *result = [NSMutableArray array];
+    NSMutableArray *temp = [NSMutableArray array];
+    [self solve:n index:temp result:result];
+    return result;
+}
+// 这里需要注意的 对角线也是invalid
+// 这里，我是在travers 的过程中就进行 chess 的绘制，带来一些无效的计算，可以在最后成功的时候再进行绘制
+
+- (void)solve:(NSInteger)n index:(NSMutableArray *)cols result:(NSMutableArray *)result
+{
+    if([cols count] == n){
+        [result addObject:[self buildChessString:cols]];
+        return;
+    }
     
+    for(NSInteger i = 0; i < n; i++){
+        if([self isTriagnleSafe:cols n:n index:i]){
+            [cols addObject:@(i)];
+            [self solve:n index:cols result:result];
+            [cols removeLastObject];
+        }
+    }
+}
+
+- (BOOL)isTriagnleSafe:(NSArray<NSNumber *> *)cols n:(NSInteger)n index:(NSInteger)idx
+{
+    NSInteger row = [cols count];
+    NSInteger r = 0;
+    for (NSNumber *col in cols) {
+        if(col.integerValue == idx || ABS(col.integerValue - idx) == ABS(row - r)) {
+            return NO;
+        }
+        r++;
+    }
+    return YES;
+}
+
+- (NSNumber *)buildChessString:(NSArray<NSNumber *> *)arr
+{
+    NSMutableArray *temp = [NSMutableArray array];
+    
+    for (NSNumber *col in arr) {
+        NSMutableString *str = [NSMutableString string];
+        for (NSInteger j = 0; j < arr.count; j++) {
+            if(j == col.integerValue){
+                [str appendString:@"Q"];
+            } else {
+                [str appendString:@"."];
+            }
+        }
+        [temp addObject:[str copy]];//
+    }
+    return [temp copy];
 }
 
 @end

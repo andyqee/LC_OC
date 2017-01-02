@@ -135,4 +135,65 @@
     return maxLen;
 }
 
+// in place
+// i 用来track 左边已经处理好的数组， j 用来traversal the array,
+// compare nums[j] with nums[i] , if equal , j++ else , exchange nums[i] with nums[j]
+// 对于 1 2 3 这种没有重复的，其实是和自己 交换
+
+// 容易出错的 !!! 就是返回值 返回 i + 1 ， not i,
+// 容易忘记更新 j 是一直更新
+// 如果要进一步减少写的次数 可以把 [nums exchangeObjectAtIndex:i withObjectAtIndex:j] 优化成 nums[i] = nums[j]
+//
+
+- (NSInteger)removeDuplicates:(NSMutableArray *)nums
+{
+    if(nums.count <= 1){
+        return nums.count;
+    }
+    
+    NSInteger i = 0;
+    NSInteger j = 1;
+    
+    while (j < nums.count) {
+        if([nums[j] compare:nums[i]] != NSOrderedSame){
+            i++;
+            [nums exchangeObjectAtIndex:i withObjectAtIndex:j];
+        }
+        j++;
+    }
+    return i + 1;
+}
+
+//Given sorted array nums = [1,1,1,2,2,3],
+
+// @1,@1,@1,@2,@2,@2,@3,@3,@4
+//
+// 需要再复习下
+- (NSInteger)removeDuplicates2:(NSMutableArray *)nums
+{
+    if(nums.count <= 1){
+        return nums.count;
+    }
+    
+    NSInteger i = 0;
+    NSInteger j = 1;
+    NSInteger count = 1;
+    
+    while (j < nums.count) {
+        if([nums[j] compare:nums[j-1]] != NSOrderedSame){
+            count = 1;
+            i++;
+            nums[i] = nums[j];
+        } else {
+            if(count < 2){
+                count++;
+                i++;
+                nums[i] = nums[j];
+            }
+        }
+        j++;
+    }
+    return i + 1;
+}
+
 @end

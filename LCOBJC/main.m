@@ -16,6 +16,8 @@
 #import "math.h"
 #import "DP.h"
 #import "Graph.h"
+#import "TwoPointers.h"
+#import "SlideWindow.h"
 
 void testTree();
 void testString();
@@ -26,19 +28,41 @@ void testMath();
 void testList();
 void testSumRange();
 void testGraph();
+void testTwoPointer();
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
+        
+        NSInteger i = 0;
+        NSMutableArray *s = [NSMutableArray array];
+        @autoreleasepool {
+            while (i < 10) {
+                NSUUID *uuid = [NSUUID UUID];
+                [s addObject:uuid];
+                i++;
+            }
+        }
 //        testTree();
         testString();
 //        testArray();
-//        testBackTracking();
+        testBackTracking();
 //        testList();
 //        testMath();
 //        testSumRange();
 //        testGraph();
+        testTwoPointer();
     }
     return 0;
+}
+
+void testTwoPointer()
+{
+//    TwoPointers *t = [TwoPointers new];
+//    [t ]
+    SlideWindow *sl = [SlideWindow new];
+    NSInteger s1 = [sl removeDuplicates: [@[@1,@1,@1,@2,@2,@2,@3,@3,@4] mutableCopy]];
+
+    NSInteger s = [sl removeDuplicates2: [@[@1,@1,@1,@2,@2,@2,@3,@3,@4] mutableCopy]];
 }
 
 void testGraph()
@@ -140,11 +164,11 @@ void testTree() {
     }
     NSSet *wordList = [NSMutableSet setWithArray: @[@"hot", @"dot", @"dog", @"lot", @"log"]];
 //    NSInteger steps = [s ladderLength:@"hit" endWord:@"cog" set:wordList];
-    NSArray *path = [s ladderLength2:@"hit" endWord:@"cog" set:wordList];
+    __unused NSArray *path = [s ladderLength2:@"hit" endWord:@"cog" set:wordList];
 
-    NSInteger steps = [s ladderLength:@"hit" endWord:@"cog" set:wordList];
+    __unused NSInteger steps = [s ladderLength:@"hit" endWord:@"cog" set:wordList];
     
-    NSInteger hidx = [s hIndex:@[@3, @0, @6, @1, @5]];
+    __unused NSInteger hidx = [s hIndex:@[@3, @0, @6, @1, @5]];
     
 //    TreeNode *dll = [s convertBT:node];
 //    NSString *abc = [s longestPalindrome:@"abcdku0839abvvba"];
@@ -197,13 +221,13 @@ void testString()
 //        NSInteger maxRetangel3 = [s maximalRectangle:@[ @[@"1", @"0", @"1", @"1", @"1"], @[@"1", @"1", @"1", @"1", @"1"],  @[@"1", @"0", @"0", @"1", @"0"]]];
 //    
 //       NSInteger maxRetangel2 = [s maximalRectangle:@[ @[@"1", @"1", @"1", @"1", @"1"],  @[@"1", @"0", @"0", @"1", @"0"]]];
-    NSInteger minCost = [s minCost:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
+    __unused NSInteger minCost = [s minCost:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
     
-    NSInteger minCost2 = [s minCost2:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
+    __unused NSInteger minCost2 = [s minCost2:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
 //    NSInteger minCost22 = [s minCost2_optmize:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
-    NSInteger minCost222 = [s minCost2_optmize2:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
+    __unused NSInteger minCost222 = [s minCost2_optmize2:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
     
-    NSInteger stock = [s maxProfitCooldown:@[@1, @2, @3, @0, @2]];
+    __unused NSInteger stock = [s maxProfitCooldown:@[@1, @2, @3, @0, @2]];
 }
 
 void testArray()
@@ -259,8 +283,8 @@ void testArray()
 //        NSLog(@"%@", [NSString stringWithFormat:@"%ld",[pick pick:3]]);
 //    }
     
-    BOOL is = [s increasingTriplet:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4]];
-    BOOL iss = [s increasing:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4] k:3];
+    __unused BOOL is = [s increasingTriplet:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4]];
+    __unused BOOL iss = [s increasing:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4] k:3];
 }
 
 void testBackTracking()
@@ -309,6 +333,8 @@ void testBackTracking()
 //    BOOL d = [b isOneEditDistance:@"abc" withStr:@"ac"];
 //    BOOL dd = [b isOneEditDistance:@"abcc" withStr:@"ac"];
     
-    BOOL is = [b isMatch:@"abc" withPatten:@"*abc"];
-
+    __unused BOOL is = [b isMatch:@"abc" withPatten:@"*abc"];
+    
+    __unused NSArray *res = [b solveNQueens:13];
+    
 }

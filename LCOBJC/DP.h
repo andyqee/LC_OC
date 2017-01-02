@@ -58,8 +58,6 @@
 
 - (NSInteger)maxKilledEnemies:(NSArray<NSArray<NSNumber *> *> *)matrix;
 
-
-
 //85. Maximal Rectangle   Add to List QuestionEditorial Solution
 
 //Difficulty: Hard

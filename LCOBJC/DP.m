@@ -116,13 +116,7 @@
     return result;
 }
 
-//76. Minimum Window Substring
-
-//- (BOOL)isMatchString:(NSString *)str patten:(NSString *)p
-//{
-//
-//}
-
+// Boom Enemy 炸弹人
 
 - (NSInteger)maxKilledEnemies:(NSArray<NSArray *> *)matrix
 {
@@ -684,6 +678,10 @@
 //
 //Since states of day i relies only on i-1 and i-2 we can reduce the O(n) space to O(1). And here we are at our final solution:
 
+#pragma mark - Fellow up
+
+// Fellow up: out put transaction
+
 - (NSInteger)maxProfitCooldown:(NSArray<NSNumber *> *)prices
 {
     NSMutableArray<NSNumber *> *buy = [NSMutableArray array];
@@ -776,17 +774,17 @@
 // 第一遍没什么思路
 // 没在题库里面看到
 
-- (NSInteger)maxProfit_3:(NSArray<NSNumber *> *)prices
-{
-    
-}
-
-//188. Best Time to Buy and Sell Stock IV
-
-- (NSInteger)maxProfit:(NSArray<NSNumber *> *)prices k:(NSInteger)k
-{
-
-}
+//- (NSInteger)maxProfit_3:(NSArray<NSNumber *> *)prices
+//{
+//    
+//}
+//
+////188. Best Time to Buy and Sell Stock IV
+//
+//- (NSInteger)maxProfit:(NSArray<NSNumber *> *)prices k:(NSInteger)k
+//{
+//
+//}
 
 #pragma mark -
 #pragma mark - 300. Longest Increasing Subsequence [M]

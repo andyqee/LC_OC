@@ -10,69 +10,6 @@
 
 @implementation Solution (Tree)
 
-//对题目的意思
-// Space = O(nlgn)
-// TODO: 这个问题的时间复杂度的分析 T =
-// my solution
-// 这里需要注意的 “->” 写的顺序
-// 这种枚举的题目,也可以用 backtracking 的方法
-
-- (NSArray<NSString *> *)binaryTreePaths:(TreeNode *)node
-{
-    if(node == nil) {
-        return nil; // 这里是直接返回 nil，还是空数组，需要确认下
-    }
-    NSMutableArray *rest = [NSMutableArray array];
-    
-    if(node.left != nil) {
-        NSArray *leftSubRes = [self binaryTreePaths:node.left];
-        for (NSString *subRes in leftSubRes) {
-            [rest addObject: [NSString stringWithFormat:@"%ld->%@", (long)node.val, subRes]];
-        }
-    }
-    if(node.right != nil) {
-        NSArray *rightSubRes = [self binaryTreePaths:node.right];
-        for (NSString *subRes in rightSubRes) {
-            [rest addObject: [NSString stringWithFormat:@"%ld->%@", (long)node.val, subRes]];
-        }
-    }
-    if(node.right == nil && node.left == nil) {
-        [rest addObject: [NSString stringWithFormat:@"%ld", (long)node.val]];
-    }
-    return rest;
-}
-
-// From web
-- (NSArray<NSString *> *)binaryTreePaths_LJSolution:(TreeNode *)node
-{
-    if(!node) {
-        return nil;
-    }
-    NSMutableArray *rest = [NSMutableArray array];
-    [self binaryTreePath:node prefixStr:[@"" mutableCopy] array:rest];
-    return rest;
-}
-
-//T = O(n) 多少种情况
-
-- (void)binaryTreePath:(TreeNode *)node prefixStr:(NSMutableString *)prefixStr array:(NSMutableArray *)array
-{
-    if(!node.left && !node.right) { // 1: backtracking 枚举的终止条件
-        [prefixStr appendString:[NSString stringWithFormat:@"%ld", (long)node.val]];
-        [array addObject:prefixStr];
-    }
-    if(node.left) {
-        NSMutableString *temp = [prefixStr mutableCopy]; //option 1: 这里可以优化成
-        [temp appendString:[NSString stringWithFormat:@"%ld->", (long)node.val]];
-        [self binaryTreePath:node.left prefixStr:temp array:array];
-    }
-    if(node.right) {
-        NSMutableString *temp = [prefixStr mutableCopy]; //option 2:
-        [temp appendString:[NSString stringWithFormat:@"%ld->", (long)node.val]];
-        [self binaryTreePath:node.right prefixStr:temp array:array];
-    }
-}
-
 //103. Binary Tree Zigzag Level Order Traversal   QuestionEditorial Solution  My Submissions
 //Difficulty: Medium
 //Given a binary tree, return the zigzag level order traversal of its nodes' values. (ie, from left to right, then right to left for the next level and alternate between).
@@ -243,16 +180,17 @@
 //    }
 //}
 
+// 关键： tailNode 刚开始传 nil
 - (TreeNode *)sortedListToBST:(ListNode *)listNode
 {
-    if(listNode == nil) {
-        return nil;
-    }
-    return [self doSortedListToBST:listNode andTailNode:nil];
+    // if(listNode == nil) {  // 这个corner case 可以忽略
+    //     return nil;
+    // }
+    return [self doSortedListToBST:listNode andTailNode:nil]; 
 }
 
 // S: log(n) T : nlong(n)
-// dived and conquer
+// dived and conquer, 快慢指针
 
 - (TreeNode *)doSortedListToBST:(ListNode *)prev andTailNode:(ListNode *)tailNode
 {
@@ -261,9 +199,9 @@
     }
     
     ListNode *slow = prev;
-    ListNode *fast = prev;
+    ListNode *fast = prev.next;
     
-    while (fast.next && fast.next.next) {
+    while (fast && fast.next) {
         slow = slow.next;
         fast = fast.next.next;
     }
@@ -278,6 +216,8 @@
     return root;
 }
 
+#pragma mark - sortedArrayToBST
+
 - (TreeNode *)sortedArrayToBST:(NSArray *)nodes
 {
     if(nodes == nil) {
@@ -288,7 +228,7 @@
 
 - (TreeNode *)sortedArrayToBST:(NSArray<NSNumber *> *)nodes withLeftIndex:(NSUInteger)leftIdx andRightIndex:(NSUInteger)rightIdx
 {
-    if (leftIdx > rightIdx) {
+    if (leftIdx > rightIdx) { //这里没有 =
         return nil;
     }
     
@@ -302,6 +242,13 @@
     return node;
 }
 
+#pragma mark - sortedArrayToBST [R]
+
+//关键:使用额外的stack记录这个node所需要的array的index。需要学会这种技巧
+//需要push to stack with left index and right index
+//inorder过程中, 判断left mid - 1 以及 right 和 mid + 1 的关系，因为这个是新的sub 区间
+//最小宽度是1
+
 - (TreeNode *)sortedArrayToBST_i:(NSArray<NSNumber *> *)nodes
 {
     if (!nodes.count) {
@@ -313,9 +260,8 @@
     NSMutableArray<TreeNode *> *stack = [NSMutableArray array];
     [stack addObject:node];
     
-    NSMutableArray<NSNumber *> *leftIndexStack = [NSMutableArray array];
+    NSMutableArray<NSNumber *> *leftIndexStack = [NSMutableArray array]; 
     [leftIndexStack addObject:@0];
-    
     NSMutableArray<NSNumber *> *rightIndexStack = [NSMutableArray array];
     [rightIndexStack addObject:@(nodes.count -1)];
     
@@ -335,18 +281,19 @@
             node.left = [TreeNode new];
             [stack addObject:node.left];
             [leftIndexStack addObject:@(left)];
-            [leftIndexStack addObject:@(mid - 1)];
+            [rightIndexStack addObject:@(mid - 1)];
         }
         if(right >= mid + 1){
             node.right = [TreeNode new];
             [stack addObject:node.right];
             [leftIndexStack addObject:@(mid + 1)];
-            [leftIndexStack addObject:@(right)];
+            [rightIndexStack addObject:@(right)];
         }
     }
     return node;
 }
 
+#pragma mark - VerticalOrderTraversal [R]
 //第一次
 - (NSArray<NSArray<NSNumber *> *> *)binaryTreeVerticalOrderTraversal:(TreeNode *)treeNode
 {
@@ -421,7 +368,7 @@
 
         if(!dic[@(currentDegree)]) {
             NSMutableArray *array = [NSMutableArray array];
-            [array addObject:@(rootNode.val)];  // 这里不能直接加到 dictionary 里面，因为这个方法返回为nil，不要烦这种低级错误
+            [array addObject:@(rootNode.val)];  // 这里不能直接加到 dictionary 里面，因为这个方法返回为nil，不要fan这种低级错误
             dic[@(currentDegree)] = array;
         } else {
             [dic[@(currentDegree)] addObject:@(rootNode.val)];
@@ -760,7 +707,7 @@
         
         if(prev != nil && p.val <= prev.val){  //task部分
             return NO;
-        }   
+        }
         prev = p; //update prev;
         //3.右边处理是关键
         p = p.right; //
@@ -1004,6 +951,76 @@ static TreeNode *prev = nil;
     }
     return node;
 }
+
+
+// iterative
+// 这道题也可以bfs ，也可以dfs
+// 这里使用使用 fbs ，正好就可以 level 来计算权值，安层遍历的套路也可以用在这个地方
+// 这道题目，需要注意的是 queue 的首次add 到queue 是把 nesteList还是将其元素压入， 对应的level 的初始值不同
+
+- (NSInteger)depthSumI:(NSArray *)nestedList
+{
+    NSInteger sum = 0;
+    NSMutableArray<NSArray *> *queue = [NSMutableArray array];
+    NSInteger level = 0; //
+    [queue addObject:nestedList];
+    
+    while([queue count]){
+        NSInteger count = [queue count];
+        level++;
+        for(NSInteger i = 0; i < count; i++){
+            NSArray *nList = [queue firstObject];
+            [queue removeObjectAtIndex:0];
+            
+            for(NSArray *item in nList){ //网上还有另外一种形式的bfs，取决于首次add 到queueu里面的是啥
+                if([item isKindOfClass:[NSNumber class]]){
+                    sum += ((NSNumber *)item).integerValue * level;
+                } else {
+                    [queue addObject:item];
+                }
+            }
+        }
+    }
+    
+    return sum;
+}
+
+- (NSInteger)depthSumR:(NSArray *)nestedList depth:(NSInteger)depth
+{
+    NSInteger sum = 0;
+    if([nestedList count] == 0){
+        return sum;
+    }
+    for(NSArray *item in nestedList){
+        if([item isKindOfClass:[NSNumber class]]){
+            sum += ((NSNumber *)item).integerValue * depth;
+        } else {
+            sum += [self depthSumR:item depth:depth + 1];
+        }
+    }
+    return sum;
+}
+
+- (NSInteger)height:(NSArray *)nestedList
+{
+    NSInteger height = 1;
+    for(NSArray *item in nestedList){
+        if([item isKindOfClass:[NSNumber class]]){
+
+        } else {
+            height = MAX(height, 1 + [self height:item]);
+        }
+    }
+    return height;
+}
+
+// 解法：1. 获取总的深度，然后用解决上面第一题的方式，只是在算权重的时候 用height - level
+// 解法：2. DFS，首先计算出高度，然后用第一题的方式，只是在传递weight 的时候 改成 weight - 1
+
+//- (NSInteger)depthSum2:(NSArray *)nestedList
+//{
+//
+//}
 
 @end
 

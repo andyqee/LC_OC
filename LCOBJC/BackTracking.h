@@ -7,8 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Tree.h"
 
 @interface BackTracking : NSObject
+
+- (NSArray<NSString *> *)binaryTreePaths:(TreeNode *)node;
+- (NSArray<NSString *> *)binaryTreePaths_LJSolution:(TreeNode *)node;
 
 // 79. Word Search
 // Difficulty: Medium
@@ -404,14 +408,11 @@
 
 - (void)wallsAndGates:(NSMutableArray *)rooms;
 
-//51. N-Queens   Add to List QuestionEditorial Solution  My Submissions
-//Total Accepted: 69109
-//Total Submissions: 239330
+//51. N-Queens
+
 //Difficulty: Hard
 //Contributors: Admin
 //The n-queens puzzle is the problem of placing n queens on an n×n chessboard such that no two queens attack each other.
-//
-//
 //
 //Given an integer n, return all distinct solutions to the n-queens puzzle.
 //
@@ -434,7 +435,6 @@
 //
 
 - (NSArray<NSArray<NSNumber *> *> *)solveNQueens:(NSInteger)n;
-
 
 @end
 
