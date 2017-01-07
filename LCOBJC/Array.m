@@ -712,6 +712,8 @@
 }
 
 #pragma mark - Interval
+//有可能是这种时间结构的 ["Apr 2010 - Dec 2010", "Aug 2010 - Dec 2010", "Jan 2011 - Mar 2011"]
+//写解析函数
 
 - (NSArray<Interval *> *)mergeIntervals:(NSArray<Interval *> *)intervals
 {
@@ -1037,24 +1039,6 @@
         j++;
     }
     return [result copy];
-}
-
-//191. Number of 1 Bits
-
-// 这里还有个更佳简介的 直接和 & 1 相yu
-
-- (NSInteger)hammingWeight:(NSInteger)n
-{
-    NSInteger count = 0;
-    NSInteger b = 0;
-    while (n != 0) {
-        b = n >> 1;
-        if(n != b << 1){
-            count++;
-        }
-        n = b;
-    }
-    return count;
 }
 
 - (double)power:(NSInteger)n k:(NSInteger)k
@@ -1729,7 +1713,77 @@
 //
 //}
 
+#pragma mark - 73. Set Matrix Zeroes [R] 
 
+- (void)setMatrixZero:(NSMutableArray<NSMutableArray<NSNumber *> *> *)matrix
+{
+    NSMutableSet<NSNumber *> *rows = [NSMutableSet set];// 去除重复的行
+    NSMutableSet<NSNumber *> *cols = [NSMutableSet set];
+
+    for(NSInteger i = 0; i < matrix.count; i++){
+        for(NSInteger j = 0; j < matrix.firstObject.count; j++){
+            if(matrix[i][j].integerValue == 0){
+                [rows addObject:@(i)];
+                [cols addObject:@(j)];
+            }
+        }
+    }
+
+    // for(NSNumber *idx in rows){
+    //     for(NSInteger j = 0; j < matrix.firstObject.count; j++){
+    //         matrix[idx.integerValue][j] = @(0);
+    //     }
+    // }
+
+    // for(NSNumber *idx in cols){
+    //     for(NSInteger j = 0; j < matrix.count; j++){
+    //         matrix[j][idx.integerValue] = @(0);
+    //     }
+    // }
+    //下面这种方式比上面这个两个循环的 性能优化的一倍
+    for(NSInteger i = 0; i < matrix.count; i++){
+        for(NSInteger j = 0; j < matrix.firstObject.count; j++){
+            if([rows containsObject:@(i)] || [cols containsObject:@(j)]){
+                matrix[i][j] = @(0);
+            }
+        }
+    }
+}
+
+//扫描 遇到0 把这一行 一列 非0 的替换成 特殊字符，其他不变
+//最后把 特殊字符换成 0
+//TODO: constant space, 还是有一定的技巧性的
+//关键: matrix[0][0] 这个位置需要特殊处理
+
+- (void)setMatrixZeroOptimize:(NSMutableArray<NSMutableArray<NSNumber *> *> *)matrix
+{
+    NSInteger rows = matrix.count;
+    NSInteger cols = matrix.firstObject.count;
+    NSInteger col0 = 1;//FIXME: not really fixme just for pay attention 存储的 第一列的状态 为了避免和 martix[0][0] 重叠，matrix[0][0]存储的是第一行的
+
+    for(NSInteger i = 0; i < rows; i++){
+        if(matrix[i][0].integerValue == 0) {
+            col0 = 0;
+        }
+        for(NSInteger j = 1; j < cols; j++){
+            if(matrix[i][j].integerValue == 0){
+                matrix[i][0] = @0;
+                matrix[0][j] = @0;
+            }
+        }
+    }
+    //为了保存头部 和左边的信息，right--> left 以及 bottom -> up 按这个顺序scan
+    for(NSInteger i = rows - 1; i >= 0; i--){
+        for(NSInteger j = cols - 1; j >= 1; j--){
+            if(matrix[i][0].integerValue == 0 || matrix[0][j].integerValue == 0){
+                matrix[i][j] = @0;
+            }
+        }
+        if(col0 == 0){
+            matrix[i][0] = @0;
+        }
+    }    
+}
 
 @end
 

@@ -18,6 +18,7 @@
 		D71E29931DE5C5CF006C2500 /* DP.m in Sources */ = {isa = PBXBuildFile; fileRef = D71E29921DE5C5CF006C2500 /* DP.m */; };
 		D72164AB1DEB12B200B96C69 /* Graph.m in Sources */ = {isa = PBXBuildFile; fileRef = D72164AA1DEB12B200B96C69 /* Graph.m */; };
 		D757AAD11DD95F6900F5ED1A /* BackTracking.m in Sources */ = {isa = PBXBuildFile; fileRef = D757AAD01DD95F6900F5ED1A /* BackTracking.m */; };
+		D7A502411E20879900E8A84B /* Palindrome.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A502401E20879900E8A84B /* Palindrome.m */; };
 		D7C008C61E1757CB003F9161 /* TwoPointers.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C008C51E1757CB003F9161 /* TwoPointers.m */; };
 		D7CBAFBB1DE8958F00612214 /* Array.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CBAFBA1DE8958E00612214 /* Array.m */; };
 		D7DB081B1DE3EB3E001888B3 /* Tree.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DB081A1DE3EB3E001888B3 /* Tree.m */; };
@@ -59,6 +60,8 @@
 		D72164AA1DEB12B200B96C69 /* Graph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Graph.m; sourceTree = "<group>"; };
 		D757AACF1DD95F6900F5ED1A /* BackTracking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackTracking.h; sourceTree = "<group>"; };
 		D757AAD01DD95F6900F5ED1A /* BackTracking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackTracking.m; sourceTree = "<group>"; };
+		D7A5023F1E20879900E8A84B /* Palindrome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Palindrome.h; sourceTree = "<group>"; };
+		D7A502401E20879900E8A84B /* Palindrome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Palindrome.m; sourceTree = "<group>"; };
 		D7C008C41E1757CB003F9161 /* TwoPointers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwoPointers.h; sourceTree = "<group>"; };
 		D7C008C51E1757CB003F9161 /* TwoPointers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwoPointers.m; sourceTree = "<group>"; };
 		D7CBAFB91DE8958E00612214 /* Array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Array.h; sourceTree = "<group>"; };
@@ -105,6 +108,8 @@
 				A1549CB61E0D0EC9006FCF8D /* LRU.m */,
 				D7C008C41E1757CB003F9161 /* TwoPointers.h */,
 				D7C008C51E1757CB003F9161 /* TwoPointers.m */,
+				D7A5023F1E20879900E8A84B /* Palindrome.h */,
+				D7A502401E20879900E8A84B /* Palindrome.m */,
 			);
 			name = fb;
 			sourceTree = "<group>";
@@ -207,6 +212,7 @@
 				A1BFBF651DD9F40E0022C1DC /* List.m in Sources */,
 				A1F2B7E51DC5ED4F0023278E /* Solution.m in Sources */,
 				A1549CB71E0D0EC9006FCF8D /* LRU.m in Sources */,
+				D7A502411E20879900E8A84B /* Palindrome.m in Sources */,
 				D757AAD11DD95F6900F5ED1A /* BackTracking.m in Sources */,
 				D71E29931DE5C5CF006C2500 /* DP.m in Sources */,
 				D7165C1C1DE0B48A00F12A47 /* math.m in Sources */,

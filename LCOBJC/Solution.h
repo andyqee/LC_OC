@@ -15,6 +15,9 @@
 
 @interface Solution (String)
 
+- (void)testFuntionRef:(TreeNode *)tree;
+- (void)testFuntionReff:(TreeNode **)tree;
+
 //13. Roman to Integer
 //Difficulty: Easy
 //Contributors: Admin
@@ -118,6 +121,7 @@
 - (NSInteger)numDecodings:(NSString *)s;
 - (NSInteger)numDecodings_optimizeSpace:(NSString *)s;
 - (NSInteger)numDecodingsMethod2:(NSString *)s;
+- (NSInteger)numDecodingsMethod3:(NSString *)s;
 
 // 43. Multiply Strings   
 // Difficulty: Medium

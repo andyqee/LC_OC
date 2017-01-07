@@ -506,53 +506,54 @@
     }
 }
 
-//31. Next Permutation
+#pragma mark - 31. Next Permutation [R] Need 默
+
 // 这个题目的技巧性略强
 // permutation 序列中比这个大的元素中的最小的一个
-
+//
 //https://discuss.leetcode.com/topic/15216/a-simple-algorithm-from-wikipedia-with-c-implementation-can-be-used-in-permutations-and-permutations-ii/2
 
-- (void)nexetPermutation:(NSMutableArray *)nums
-{
-    // 1) scan from right to left, find the first element that is less than its previous one
+// 1) scan from right to left, find the first element that is less than its previous one
 //    4 5 6 3 2 1
 //      |
 //      p
-    // 2)scan from right to left, find the first element that is greater than p.
+// 2)scan from right to left, find the first element that is greater than p.
 //    4 5 6 3 2 1
 //        |
 //        q
-    // swap p and q
+// swap p and q
 //    4 5 6 3 2 1
 //    swap
 //    4 6 5 3 2 1
-    // 4) reverse elements [p+1, nums.length]
+// 4) reverse elements [p+1, nums.length]
 //  4 6 1 2 3 5
-    
+
+- (void)nextPermutation:(NSMutableArray *)nums
+{
     if (nums == nil || [nums count] < 2) {
         return;
     }
-    NSInteger t = - 1;
-    for (NSInteger i = nums.count - 2; i > 0; i--) {
+    NSInteger p = - 1;
+    for (NSInteger i = nums.count - 2; i >= 0; i--) {
         if (nums[i] < nums[i+1]) {
-            t = i;
+            p = i;
             break;
         }
     }
-    if (t == -1) {
+    if (p == -1) {
         [self _reverse:nums low:0 high:nums.count-1];
         return;
     }
     NSInteger s = -1;
-    for (NSInteger i = nums.count - 1; i > t; i--) {
-        if (nums[i] > nums[t]) {
+    for (NSInteger i = nums.count - 1; i > p; i--) {
+        if (nums[i] > nums[p]) {
             s = i;
             break;
         }
     }
-    [nums exchangeObjectAtIndex:t withObjectAtIndex:s];
+    [nums exchangeObjectAtIndex:p withObjectAtIndex:s];
     
-    [self _reverse:nums low:t + 1 high:nums.count-1];
+    [self _reverse:nums low:p + 1 high:nums.count-1];
 }
 
 - (void)_reverse:(NSMutableArray *)array low:(NSInteger)low high:(NSInteger)high
@@ -565,11 +566,41 @@
 }
 
 // previous permutation
-// 高频！
+// FIXME: 高频!!  区别正好是 前面两个循环的判断条件 相反
+
+//1. Find largest index i such that str[i – 1] > str[i].
+//2. Find largest index j such that j >= i and str[j] < str[i - 1].
+//3. Swap str[j] and str[i - 1].
+//4. Reverse the sub-array starting at str[i].
 
 - (void)previousPermutation:(NSMutableArray *)nums
 {
+    if (nums == nil || [nums count] < 2) {
+        return;
+    }
+    NSInteger p = - 1;
+    for(NSInteger i = nums.count - 2; i >= 0; i--){
+        if(nums[i] > nums[i + 1]){
+            p = i;
+            break;
+        }
+    }
+    // FIXME: 如果一开始是升序列，那么他的previous 可以是最大的那个组合，这里要和面试官确认
+    if(p == -1){
+        [self _reverse:nums low:0 high:nums.count-1];
+        return;
+    }
     
+    NSInteger q = -1;
+    for (NSInteger i = nums.count - 1; i >= p; i--) {
+        if(nums[i] < nums[p]){
+            q = i;
+            break;
+        }
+    }
+    [nums exchangeObjectAtIndex:p withObjectAtIndex:q];
+    [self _reverse:nums low:p + 1 high:nums.count-1];
+
 }
 
 //找到数学规律
@@ -1167,7 +1198,8 @@
     [self _subSetsWithDup:nums start:start + 1 set:set];
 }
 
-// O (m *n) 
+// O (m *n)
+// TODO: Fellow up： 最大的island 的面积
 - (NSInteger)numIslands:(NSMutableArray<NSMutableArray<NSNumber *> *> *)grid
 {
     NSInteger num = 0;

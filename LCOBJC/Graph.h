@@ -55,4 +55,6 @@
 //210. Course Schedule II
 - (NSArray *)findOrder:(NSArray<NSArray<NSNumber *> *> *)edges count:(NSInteger)numCourses;
 
+// 判断一个图是否是Bipartite
+
 @end

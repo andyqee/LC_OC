@@ -129,4 +129,56 @@
     return str;
 }
 
+// 通过统计1的个数, 下面有三种方法
+
+- (BOOL)isPowerOfTwo:(NSInteger)n
+{
+    if(n <= 0){
+        return NO;
+    }
+    // count 1
+    NSInteger numberOfOne = 0;
+    while (n && numberOfOne <= 1) {
+        if((n & 1) == 1){
+            numberOfOne++;
+        }
+        n = n >> 1;
+    }
+    return numberOfOne == 1;
+}
+
+// 下面这个方法也很巧妙
+// 10种个数 http://www.exploringbinary.com/ten-ways-to-check-if-an-integer-is-a-power-of-two-in-c/ 
+//int isPowerOfTwo (unsigned int x)
+//{
+//    return ((x != 0) && !(x & (x - 1)));
+//}
+
+//int isPowerOfTwo (unsigned int x)
+//{
+//    while (((x % 2) == 0) && x > 1) /* While x is even and > 1 */
+//        x /= 2;
+//    return (x == 1);
+//}
+
+//191. Number of 1 Bits
+
+// 这里还有个更佳直接的 直接和 & 1 相yu
+// TODO: 这个可以和上面的用同样的方法，统计1的个数
+
+- (NSInteger)hammingWeight:(NSInteger)n
+{
+    NSInteger count = 0;
+    NSInteger b = 0;
+    while (n != 0) {
+        b = n >> 1;
+        if(n != b << 1){
+            count++;
+        }
+        n = b;
+    }
+    return count;
+}
+
+
 @end

@@ -86,6 +86,7 @@
 // ]
 
 - (NSArray<NSArray<NSNumber *> *> *)binaryTreeVerticalOrderTraversal:(TreeNode *)treeNode;
+
 - (NSArray<NSArray<NSNumber *> *> *)binaryTreeVerticalOrderTraversal_BFS:(TreeNode *)treeNode;
 
 
@@ -112,6 +113,18 @@
 - (NSString *)serialize_R:(TreeNode *)treeNode;
 
 - (TreeNode *)deserialize_I:(NSString *)string;
+
+// 106. Construct Binary Tree from Inorder and Postorder Traversal
+//Given inorder and postorder traversal of a tree, construct the binary tree.
+//
+//Note:
+//You may assume that duplicates do not exist in the tree.
+
+- (TreeNode *)buildTree:(NSArray<NSNumber *> *)inorder postorder:(NSArray<NSNumber *> *)postorder;
+
+// 105. Construct Binary Tree from Preorder and Inorder Traversal
+
+- (TreeNode *)buildTree:(NSArray<NSNumber *> *)preorder inorder:(NSArray<NSNumber *> *)inorder;
 
 // 236. Lowest Common Ancestor of a Binary Tree
 // Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.
@@ -237,6 +250,7 @@
 - (TreeNode *)convertBT:(TreeNode *)node;
 
 // Nested List Weight Sum 嵌套链表权重和
+
 //Given a nested list of integers, return the sum of all integers in the list weighted by their depth.
 //
 //Each element is either an integer, or a list -- whose elements may also be integers or other lists.
@@ -265,6 +279,65 @@
 
 - (NSInteger)depthSum2:(NSArray *)nestedList;
 
+//TODO: check if a binary tree is mirrored，就是与根节点镜像对称
+
+// symmetric tree
+
+- (BOOL)isSymmetric:(TreeNode *)treeNode;
+
+#pragma mark - 下面是非fb面筋 但是加锁的
+
+// 366 Find Leaves of Binary Tree
+
+- (NSArray<NSArray<NSNumber *> *> *)findLeaves:(TreeNode *)node;
+
+//Given a binary tree, find the largest subtree which is a Binary Search Tree (BST), where largest means subtree with largest number of nodes in it.
+//
+//Note:
+//A subtree must include all of its descendants.
+//Here's an example:
+//10
+/// \
+//5  15
+/// \   \
+//1   8   7
+//The Largest BST Subtree in this case is the highlighted one.
+//The return value is the subtree's size, which is 3.
+
+- (NSInteger)largestBST:(TreeNode *)node;
+
+//Given a binary tree, find the length of the longest consecutive sequence path.
+//
+//
+//
+// The path refers to any sequence of nodes from some starting node to any node in the tree along the parent-child connections.
+// The longest consecutive path need to be from parent to child (cannot be the reverse).
+//
+//For example,
+//
+//1
+// \
+//  3
+// / \
+//2   4
+//     \
+//      5
+//Longest consecutive sequence path is 3-4-5, so return 3.
+//
+//     2
+//      \
+//       3
+//      /
+//     2
+//    /
+//   1
+//Longest consecutive sequence path is 2-3,not3-2-1, so return 2.
+
+- (NSInteger)longestConsecutive:(TreeNode *)treeNode;
+
+// TODO: MJ
+// 给出两棵树的前序遍历，寻找第一个值不同的叶节点
+
 @end
 
 // Implement an iterator over a binary search tree (BST). Your iterator will be initialized with the root node of a BST.
@@ -273,9 +346,40 @@
 
 @interface BSTIterator : NSObject
 
+- (instancetype)initWithTreeNode:(TreeNode *)treeNode;
+
 - (BOOL)hasNext;
 
 - (NSInteger)next;
 
 @end
 
+//341. Flatten Nested List Iterator
+
+//Difficulty: Medium
+//Contributors: Admin
+//Given a nested list of integers, implement an iterator to flatten it.
+//
+//Each element is either an integer, or a list -- whose elements may also be integers or other lists.
+//
+//Example 1:
+//Given the list [[1,1],2,[1,1]],
+//
+//By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,1,2,1,1].
+//
+//Example 2:
+//Given the list [1,[4,[6]]],
+//
+//By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,4,6].
+
+//
+
+@interface NestedIterator : NSObject
+
+- (instancetype)initWithListNode:(NestedListNode *)treeNode;
+
+- (BOOL)hasNext;
+
+- (NSInteger)next;
+
+@end

@@ -16,6 +16,10 @@
 
 @end
 
+@implementation NestedListNode
+
+@end
+
 @implementation RandomListNode
 
 @end

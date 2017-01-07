@@ -42,7 +42,7 @@ int main(int argc, const char * argv[]) {
                 i++;
             }
         }
-//        testTree();
+        testTree();
         testString();
 //        testArray();
         testBackTracking();
@@ -60,9 +60,9 @@ void testTwoPointer()
 //    TwoPointers *t = [TwoPointers new];
 //    [t ]
     SlideWindow *sl = [SlideWindow new];
-    NSInteger s1 = [sl removeDuplicates: [@[@1,@1,@1,@2,@2,@2,@3,@3,@4] mutableCopy]];
-
-    NSInteger s = [sl removeDuplicates2: [@[@1,@1,@1,@2,@2,@2,@3,@3,@4] mutableCopy]];
+//    NSInteger s1 = [sl removeDuplicates: [@[@1,@1,@1,@2,@2,@2,@3,@3,@4] mutableCopy]];
+//
+//    NSInteger s = [sl removeDuplicates2: [@[@1,@1,@1,@2,@2,@2,@3,@3,@4] mutableCopy]];
 }
 
 void testGraph()
@@ -188,15 +188,40 @@ void testTree() {
 //    TreeNode *des_r = [s deserialize_I:seriaze_r];
 //    BOOL r = [s isValidBST:node];
 //    BOOL rr = [s isValidBST_r:node];
-
+    
+    
+    NestedListNode *list1 = [NestedListNode new];
+    NestedListNode *list2 = [NestedListNode new];
+    list2.data = @(2);
+    list1.data = @(1);
+    list1.next = list2;
+    
+    NestedListNode *list = [NestedListNode new];
+    list.data = list1;
+    
+    NestedListNode *list3 = [NestedListNode new];
+    list3.data = @(3);
+    list.next = list3;
+    
+    NestedIterator *iter = [[NestedIterator alloc] initWithListNode:list];
+    
+    while ([iter hasNext]) {
+        NSInteger ab = [iter next];
+    }
 }
 
 void testString()
 {
-    DP *s = [DP new];
+    Solution *s = [Solution new];
+    TreeNode *test = [TreeNode new];
+    [s testFuntionRef:test];
+    [s testFuntionReff:&test];
+
 //    NSInteger b = [s numDecodings:@"26782011"];
-//    NSInteger bo = [s numDecodings_optimizeSpace:@"26782011"];
-//    NSInteger bob = [s numDecodingsMethod2:@"26782011"];
+    NSInteger bo = [s numDecodings_optimizeSpace:@"26782011"];
+    NSInteger bob = [s numDecodingsMethod2:@"26782011"];
+    NSInteger bobb = [s numDecodingsMethod3:@"26782011"];
+
 //    NSString *b = [s multiplyStr:@"123" andStr:@"123"];
 //    NSInteger re = [s compareVersion:@"11." str:@"0.7"];
 //    NSString *pp = [s simplifyPath:@"/"];
@@ -221,13 +246,13 @@ void testString()
 //        NSInteger maxRetangel3 = [s maximalRectangle:@[ @[@"1", @"0", @"1", @"1", @"1"], @[@"1", @"1", @"1", @"1", @"1"],  @[@"1", @"0", @"0", @"1", @"0"]]];
 //    
 //       NSInteger maxRetangel2 = [s maximalRectangle:@[ @[@"1", @"1", @"1", @"1", @"1"],  @[@"1", @"0", @"0", @"1", @"0"]]];
-    __unused NSInteger minCost = [s minCost:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
-    
-    __unused NSInteger minCost2 = [s minCost2:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
-//    NSInteger minCost22 = [s minCost2_optmize:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
-    __unused NSInteger minCost222 = [s minCost2_optmize2:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
-    
-    __unused NSInteger stock = [s maxProfitCooldown:@[@1, @2, @3, @0, @2]];
+//    __unused NSInteger minCost = [s minCost:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
+//    
+//    __unused NSInteger minCost2 = [s minCost2:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
+////    NSInteger minCost22 = [s minCost2_optmize:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
+//    __unused NSInteger minCost222 = [s minCost2_optmize2:@[@[@1, @2, @3], @[@1, @2, @3], @[@1, @2, @3]]];
+//    
+//    __unused NSInteger stock = [s maxProfitCooldown:@[@1, @2, @3, @0, @2]];
 }
 
 void testArray()
@@ -283,14 +308,16 @@ void testArray()
 //        NSLog(@"%@", [NSString stringWithFormat:@"%ld",[pick pick:3]]);
 //    }
     
-    __unused BOOL is = [s increasingTriplet:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4]];
-    __unused BOOL iss = [s increasing:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4] k:3];
+//    __unused BOOL is = [s increasingTriplet:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4]];
+//    __unused BOOL iss = [s increasing:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4] k:3];
 }
 
 void testBackTracking()
 {
     BackTracking *b = [BackTracking new];
-
+    NSMutableArray *sequence = [@[@1, @2, @3] mutableCopy];
+    [b nextPermutation: sequence];
+    [b previousPermutation: sequence];
 //    NSArray *tem =  [b combinationSum_3:16 count:3];
 
 //    NSArray *res = [b permut:@[@(1), @(2), @(3)]];

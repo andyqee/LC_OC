@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface TreeNode : NSObject
+@interface TreeNode : NSObject<NSCopying, NSCoding>
 
 @property (nonatomic, strong) TreeNode *left;
 @property (nonatomic, strong) TreeNode *right;
@@ -19,6 +19,13 @@
 @interface ListNode : NSObject
 @property (nonatomic, assign) NSInteger val;
 @property (nonatomic, strong) ListNode *next;
+
+@end
+
+@interface NestedListNode : NSObject<NSCopying, NSCoding>
+
+@property (nonatomic, strong) id data;
+@property (nonatomic, strong) NestedListNode *next;
 
 @end
 

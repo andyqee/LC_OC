@@ -291,14 +291,6 @@
 
 - (NSArray *)cooldown:(NSArray *)tasks;
 
-//191. Number of 1 Bits
-
-//Difficulty: Easy
-//Write a function that takes an unsigned integer and returns the number of ’1' bits it has (also known as the Hamming weight).
-//
-//For example, the 32-bit integer ’11' has binary representation 00000000000000000000000000001011, so the function should return 3.
-- (NSInteger)hammingWeight:(NSInteger)n;
-
 - (NSInteger)sparseVector:(NSArray<NSArray<NSNumber *> *> *)vector dotVector:(NSArray<NSArray<NSNumber *> *> *)vector2;
 
 // 34. Search for a Range
@@ -467,6 +459,26 @@
 
 - (BOOL)circularArrayLoop:(NSArray<NSNumber *> *)nums;
 
+//73. Set Matrix Zeroes
+
+//Difficulty: Medium
+//Contributors: Admin
+//Given a m x n matrix, if an element is 0, set its entire row and column to 0. Do it in place.
+//
+//click to show follow up.
+//
+//Follow up:
+//Did you use extra space?
+//A straight forward solution using O(mn) space is probably a bad idea.
+//A simple improvement uses O(m + n) space, but still not the best solution.
+//Could you devise a constant space solution?
+
+- (void)setMatrixZero:(NSMutableArray<NSMutableArray<NSNumber *> *> *)matrix;
+
+// TODO:
+// Task schedule with cool down time
+// 第二轮，老外面试官，给一个String, 如AABACCDCD, 插入'_'使同一个字母间隔为k: 如果k=3: A___AB__AC___CD__CD, 一开始理解有误，认为是要先shuffle字母顺序然后插入'_'，花了不少时间，然后面试官提示字母顺序不变，写出来，然后直接run出来有bug，在coderpad上调了一会才通过。。。. Fr
+// 给一个数组，每个元素有一个概率，写一个函数按照每个元素的概率每次返回一个元素。比如1：0.2，2：0.3，3：0.5    返回1的概率是0.2，返回3的概率是0.5
 @end
 
 // 303. Range Sum Query - Immutable

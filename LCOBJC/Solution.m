@@ -22,6 +22,21 @@
 
 @implementation Solution (String)
 
+- (void)testFuntionRef:(TreeNode *)tree
+{
+    TreeNode *l = [TreeNode new];
+    l.val = 10000;
+    
+    tree.left = l;
+}
+
+- (void)testFuntionReff:(TreeNode **)tree
+{
+    *tree = [TreeNode new];
+    (*tree).val = 10000;
+    (*tree).right = [TreeNode new];
+}
+
 - (NSInteger)romanToInt:(NSString *)str
 {
     NSDictionary<NSString *, NSNumber *> *dic = @{@"I" : @1,
@@ -182,11 +197,13 @@
 #pragma mark - decode way
 
 // 数子字符串,
+
 // 这题目的关键是对不同数字 0，1，2，6，对应着不同的组合情况，其中0的处理尤其特别
 // 注意: 如果第一个字符是0，直接返回0
 // FB 重点
 // O(n)
 // 字符串转换的一定要考虑有哪些 invalid case
+// TODO: FB follow up
 
 - (NSInteger)numDecodings_optimizeSpace:(NSString *)str
 {
@@ -239,6 +256,12 @@
 #pragma mark - decode way prefer way
 
 //九章的解法，更简洁,巧妙些
+// DP
+// corner case : 字符串为空，第一个字符是0
+// general case : 分别判断oneDigit 和 twoDigit
+
+// Fellow up : 如果不用dp 怎么做？ dived - conquer ?
+
 - (NSInteger)numDecodingsMethod2:(NSString *)str
 {
     if ([str length] == 0) {
@@ -265,6 +288,37 @@
         }
     }
     return dp[str.length].integerValue;
+}
+
+- (NSInteger)numDecodingsMethod3:(NSString *)str
+{
+    if ([str length] == 0) {
+        return 0;
+    }
+    // invalid case
+    NSString *ch = [str substringWithRange:NSMakeRange(0, 1)];
+    if([ch isEqualToString:@"0"]){
+        return 0;
+    }
+    
+//    NSMutableArray<NSNumber *> *dp = [NSMutableArray arrayWithCapacity:str.length + 1];
+//    for(NSInteger i = 0; i <= str.length; i++){
+//        [dp addObject:@1];//这里初始化应该是1
+//    }
+    NSInteger cur = 1;  //
+    NSInteger prev = 1; // base case 1
+    
+    for (NSInteger i = 2; i <= str.length; i++) {
+        NSString *oneDigit = [str substringWithRange:NSMakeRange(i - 1, 1)];
+        cur = oneDigit.integerValue != 0 ? cur : 0; //如果不为数字字符，这里应该是0
+        
+        NSString *twoDigit = [str substringWithRange:NSMakeRange(i - 2, 2)];
+        if (twoDigit.integerValue >= 10 && twoDigit.integerValue <= 26) {
+            cur = cur + prev;
+        }
+        prev = cur;
+    }
+    return cur;
 }
 
 // Read N Characters Given Read4

@@ -149,7 +149,9 @@
 //3,2,1 → 1,2,3
 //1,1,5 → 1,5,1
 
-- (void)nexetPermutation:(NSMutableArray *)nums;
+- (void)nextPermutation:(NSMutableArray *)nums;
+
+- (void)previousPermutation:(NSMutableArray *)nums;
 
 //131. Palindrome Partitioning
 //Difficulty: Medium
@@ -435,6 +437,13 @@
 //
 
 - (NSArray<NSArray<NSNumber *> *> *)solveNQueens:(NSInteger)n;
+
+// TODO: 面筋新题
+// http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=218509&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3046%5D%5Bvalue%5D%3D2%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+//一个m x n 的 array 只有 0 和 1  给一个 int k
+//需要把 小于 k 数量 连续的 1 变成 0.1point3acres缃�
+//连续： 上下左右和四个斜线方向
+//面试官是个中国女孩
 
 @end
 
