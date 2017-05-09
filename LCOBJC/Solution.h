@@ -153,11 +153,6 @@
 
 - (NSArray<NSNumber *> *)palindromePairs:(NSArray<NSString *> *)strs;
 
-// 28. Implement strStr()
-// Returns the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.
-
-- (NSInteger)strStr:(NSString *)haystack needle:(NSString *)needle;
-
 // 125. Valid Palindrome   
 // Difficulty: Easy
 // Contributors: Admin
@@ -173,28 +168,6 @@
 // For the purpose of this problem, we define empty string as valid palindrome.
 
 - (BOOL)isPalindrome:(NSString *)str;
-
-// 68. Text Justification   // Difficulty: Hard
-// Given an array of words and a length L, format the text such that each line has exactly L characters and is fully (left and right) justified.
-// You should pack your words in a greedy approach; that is, pack as many words as you can in each line. Pad extra spaces ' ' 
-// when necessary so that each line has exactly L characters.
-// Extra spaces between words should be distributed as evenly as possible. 
-// If the number of spaces on a line do not divide evenly between words, the empty slots on the left will be assigned more spaces than the slots on the right.
-// For the last line of text, it should be left justified and no extra space is inserted between words.
-
-// For example,
-// words: ["This", "is", "an", "example", "of", "text", "justification."]
-// L: 16.
-
-// Return the formatted lines as:
-// [
-//    "This    is    an",
-//    "example  of text",
-//    "justification.  "
-// ]
-// Note: Each word is guaranteed not to exceed L in length.
-
-- (NSArray<NSString *> *)fullJustify:(NSArray<NSString *> *)str;
 
 // The count-and-say sequence is the sequence of integers beginning as follows:
 // 1, 11, 21, 1211, 111221, ...
@@ -279,6 +252,15 @@
 // Given two words (beginWord and endWord), and a dictionary's word list, find all shortest transformation sequence(s) from beginWord to endWord, such that:
 
 - (NSArray<NSArray<NSString *> *> *)ladderLength2:(NSString *)beginWord endWord:(NSString *)endWord set:(NSSet<NSString *> *)wordList;
+
+// 340 Longest Substring with At Most K Distinct Characters
+//Given a string, find the length of the longest substring T that contains at most k distinct characters.
+//
+//For example, Given s = “eceba” and k = 2,
+//
+//T is "ece" which its length is 3
+
+- (NSInteger)longestSubstring:(NSString *)str k:(NSInteger)k;
 
 @end
 

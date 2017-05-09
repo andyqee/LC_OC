@@ -9,6 +9,10 @@
 #import "Array.h"
 #import "TreeNode.h"
 
+#include <queue>
+
+using namespace std;
+
 @interface NSValue (Compare)
 
 - (NSComparisonResult)fbiCompare:(NSValue *)value;
@@ -37,20 +41,24 @@
 
 #pragma mark - Array
 
-///128
+#pragma mark - 128 Longest Consecutive Sequence
+
 //methon1: 排序后再遍历，但是比较慢
 //是否有重复的元素
+
 //methos2: 技巧性很强, 遇到数组，如果O（n）的算法复杂度要求，思考下hashtable的作用
 //Fellow up 如果数组很大，dic 放不下怎么办？
 
-// 九章的版本
+// 九章的版本，
+// 技巧: 1. build set 2. 左右traversal
+
 - (NSInteger)longestConsecutive:(NSArray<NSNumber *> *)nums
 {
     NSInteger res = 0;
-    NSMutableSet *set = [NSMutableSet setWithArray:nums];
+    NSMutableSet *set = [NSMutableSet setWithArray:nums]; // step 1: build set from array
 
     for(NSInteger i = 0; i < nums.count; i++){
-        NSNumber *down = @(nums[i].integerValue - 1);
+        NSNumber *down = @(nums[i].integerValue - 1); // ⚠️ 这里的关键点先剪 后判断，这题很巧妙的地方就在于这个！！！！
         while([set containsObject:down]){
             [set removeObject:down]; //避免重复
             down = @(down.integerValue - 1);
@@ -66,7 +74,7 @@
 }
 
 // method 1. 用product of all elements dived by each element
-// method 2
+// method 2.
 // first scan form right to left calculate the product of all elements in the left side of a[i] excluding a[i]
 
 // scan form left to right
@@ -297,6 +305,7 @@
 // 1. sort
 // 2. heap
 // 3  ...... 上面两种不满足 O(n) 的复杂度要求
+// 这道题目和triple sequence 很像
 
 - (NSInteger)thirdMax:(NSArray<NSNumber *> *)nums
 {
@@ -681,68 +690,6 @@
     NSSet *set2 = [NSSet setWithArray:array2];
     [set intersectSet:set2];
     return [set allObjects];
-}
-
-#pragma mark - sorted colors
-// fellow up 写一个stable color color，相同的key 保持原来的顺序
-
-- (void)sortedColorsBucketSort:(NSMutableArray<NSNumber *> *)nums k:(NSInteger)k
-{
-    NSMutableDictionary<NSNumber*, NSNumber*> *dic = [NSMutableDictionary dictionary];
-    for(NSNumber *num in nums){
-        if(dic[num]){
-            dic[num] = @(dic[num].integerValue + 1);
-        } else {
-            dic[num] = @(1);
-        }
-    }
-
-    NSInteger j = 0;
-    for(NSInteger i = 0; i < k; i++){
-        if(dic[@(i)]){
-            NSInteger count = dic[@(i)].integerValue;
-            while(count > 0){
-                nums[j] = @(i);
-                j++;
-                count--;
-            }
-        }
-    }
-}
-
-//统计个数0 1 2，然后rewrite 的array。 Two pass algorithm
-
-// 没有实现
-
-// 记住这几个 index 的位置 九章算法版本
-// 0......0   1......1  x1 x2 .... xm   2.....2
-//            |         |           |
-//           left      cur        right
-
-//Fellow up 如果是sorted K，可以使用桶排序
-
-// 顺序是：
-
-- (void)sortedColors:(NSMutableArray<NSNumber *> *)nums
-{
-    if([nums count] <= 1) {
-        return;
-    }
-    NSInteger left = 0;
-    NSInteger right = [nums count] - 1;
-    NSInteger cur = 0;
-    while(cur <= right) {
-        if(nums[cur].integerValue == 0) {
-            [nums exchangeObjectAtIndex:cur withObjectAtIndex:left];
-            cur++; //因为要append sorted part
-            left++;
-        } else if(nums[cur].integerValue == 1) {
-            cur++;
-        } else {
-            [nums exchangeObjectAtIndex:cur withObjectAtIndex:right];
-            right--;
-        }
-    }
 }
 
 #pragma mark -
@@ -1153,10 +1100,78 @@
 //    return heap.size();
 //}
 
-//- (NSArray *)mergeKSortedArray:(NSArray *)array
-//{
-//    
-//}
+//merge two sorted array
+
+- (NSArray *)mergeTwoSortedArray:(NSArray *)array1 array:(NSArray *)array2
+{
+    if (!array1) {
+        return array2;
+    }
+    if(!array2){
+        return array1;
+    }
+    NSInteger i = 0;
+    NSInteger j = 0;
+    NSMutableArray *merged = [NSMutableArray arrayWithCapacity:[array1 count] + [array2 count]];
+    
+    while (i < [array1 count] && j < [array2 count]) {
+        if(array1[i] < array2[j]){
+            [merged addObject:array1[i]];
+            i++;
+        } else {
+            [merged addObject:array2[j]];
+            j++;
+        }
+    }
+//    if (i < [array1 count]) {
+//        [merged addObjectsFromArray:[array1 subarrayWithRange:NSMakeRange(i, [array1 count] - i)]];
+//    }
+    while (i < [array1 count]) {
+        [merged addObject:array1[i]];
+        i++;
+    }
+    while (j < [array2 count]) {
+        [merged addObject:array2[j]];
+        j++;
+    }
+    return [merged copy];
+}
+
+#pragma mark - mergeKSortedArray priority queue
+
+// 这题目的方法上就思考错误了
+// native 办法就是创建一个新的数组，然后排序，千万不要忘记暴力法
+// needs clarify 1. is all the sub array have the same count
+// 2. contains emtpy subArray
+// need creat a wapper class
+
+- (NSArray *)mergeKSortedArray:(NSArray<NSArray *> *)array
+{
+    if([array count] <= 1){
+        return [array firstObject];
+    }
+    NSMutableArray *output = [NSMutableArray array];
+    
+    PriorityQueue *queue = [PriorityQueue new];
+    for(NSInteger i = 0; i < [array count]; i++){
+        PriorityNode *node = [[PriorityNode alloc] init];
+        node.value = array[i].firstObject;
+        node.row = i;
+        node.index = 0;
+        [queue addObject:node];//
+    }
+    
+    while ([queue count]) {
+        PriorityNode *wapper = [queue poll];
+        [output addObject:wapper.value];
+        
+        if(wapper.index < array.firstObject.count - 1){
+            [queue addObject:array[wapper.row][wapper.index + 1]];
+        }
+    }
+    
+    return [output copy];
+}
 
 // All elements before the slow pointer (lastNonZeroFoundAt) are non-zeroes.
 // All elements between the current and slow pointer are zeroes
@@ -1454,74 +1469,6 @@
     return left;
 }
 
-// 很难想
-// 想到用stack, 但是这里面有很多状态，这里为了计算宽度需要把index存起来
-// 这里的关键还是状态控制 stack 为空，bottom 状态的变化
-
-// 方法1 stack
-// T: O(n) Space: worst case : O(n)
-
-- (NSInteger)trap:(NSArray<NSNumber *> *)nums
-{
-    NSInteger result = 0;
-    NSMutableArray<NSNumber *> *stack = [NSMutableArray array];
-    NSInteger bottom = 0;//底部
-    
-    NSInteger idx = 0;
-    while (idx < nums.count) {
-        if([stack count] == 0 || nums[idx].integerValue <= nums[[stack lastObject].integerValue].integerValue){ //这里需要注意的是stack为空
-            [stack addObject:@(idx)];
-            idx++;
-        } else {
-            bottom = nums[[stack lastObject].integerValue].integerValue;
-            [stack removeLastObject];
-            
-            if([stack count]){
-                NSInteger height = MIN(nums[idx].integerValue, nums[[stack lastObject].integerValue].integerValue) - bottom;
-                result += height * (idx - [stack lastObject].integerValue - 1);
-            }
-        }
-    }
-    
-    return result;
-}
-
-//方法二 Two pointers
-// https://discuss.leetcode.com/topic/3016/share-my-short-solution
-// 这种方法不太好想，需要对照着图，大脑演示一遍.
-// Search from left to right and maintain a max height of left and right separately, which is like a one-side wall of partial container. Fix the higher one and flow water from the lower part. For example, if current height of left is lower, we fill water in the left bin. Until left meets right, we filled the whole container.
-
-// 除此之外有第三种方法： https://discuss.leetcode.com/topic/40609/c-time-o-n-space-o-1-no-stack-no-two-pointers
-
-- (NSInteger)trap_TwoPointers:(NSArray<NSNumber *> *)nums
-{
-    NSInteger left = 0;
-    NSInteger right = nums.count - 1;
-    NSInteger result = 0;
-    
-    NSInteger maxLeft = 0;
-    NSInteger maxRight = 0;
-
-    while (left < right) {
-        if(nums[left].integerValue <= nums[right].integerValue){  //说明比maxLeft 矮的肯定可以容下水
-            if(maxLeft < nums[left].integerValue){
-                maxLeft = nums[left].integerValue;
-            } else { // max > nums[left] && nums[left].integerValue <= nums[right].integerValue
-                result += maxLeft - nums[left].integerValue;
-            }
-            left++;
-        } else {
-            if(maxRight < nums[right].integerValue){ //说明比maxRight 矮的肯定可以容下水
-                maxRight = nums[right].integerValue;
-            } else {
-                result += maxRight - nums[right].integerValue;
-            }
-            right--;
-        }
-    }
-    
-    return result;
-}
 
 // 54. Spiral Matrix
 // 四个方向的遍历，还有一个关键是去除重复，因为头有重叠,以及什么终止
@@ -1895,6 +1842,91 @@
 //  }
 
 
+//such that arr[i] < arr[j] < arr[k] given 0 ≤ i < j < k ≤ n-1 else return false.
+//这种题目技巧性有点强, 看了答案
+
+// [M]334. Increasing Triplet Subsequence
+//1. 首先提到的是暴力法子 O(n^2)
+
+- (BOOL)increasingTripletBF:(NSArray<NSNumber *> *)nums
+{
+    if(nums.count < 3){
+        return NO;
+    }
+    for (NSInteger i = 0; i < nums.count - 2; i++) {
+        NSInteger second = i + 1;
+        NSInteger last = second + 1;
+        while (second < nums.count - 1 && last < nums.count) {
+            while(nums[second].integerValue <= nums[i].integerValue && second < nums.count - 1){
+                second++;
+            }
+            last = second + 1;
+            while (nums[last].integerValue <= nums[second].integerValue && last < nums.count) {
+                last++;
+            }
+            if(last < nums.count || second < nums.count - 1){
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+
+// This problem can be converted to be finding if there is a sequence such that
+// the_smallest_so_far < the_second_smallest_so_far < current. We use x, y and z to denote the 3 number respectively.
+
+// 和third3 max 模版很类似
+// 如果tript 扩展到k 如何处理，
+// 记录最小值和次小值法
+
+- (BOOL)increasingTriplet:(NSArray<NSNumber *> *)nums
+{
+    if(nums.count < 3){
+        return NO;
+    }
+    NSInteger smallest = NSIntegerMax;
+    NSInteger secondS = NSIntegerMax;
+    for(NSNumber *num in nums){
+        if(num.integerValue <= smallest){ //注意！！！这里容易出错的地方是 忘记写 =
+            smallest = num.integerValue;
+        } else if (num.integerValue <= secondS){
+            secondS = num.integerValue;
+        } else {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+// 扩展到K 如何处理
+
+- (BOOL)increasing:(NSArray<NSNumber *> *)nums k:(NSInteger)k
+{
+    if(nums.count < k){
+        return NO;
+    }
+    
+    NSMutableArray<NSNumber *> *dp = [NSMutableArray arrayWithCapacity:k];
+    for (NSInteger j = 0; j < k; j++) {
+        [dp addObject:@(NSIntegerMax)];
+    }
+    
+    for(NSNumber *num in nums){  //O(n * k)
+        for (NSInteger j = 0; j < k; j++) {
+            if(num.integerValue <= dp[j].integerValue){
+                dp[j] = num;
+                if(j == k - 1){ //这个地方一开始没有写。
+                    return YES;
+                }
+                break;
+            }
+            if(j == k - 1){
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
 
 @end
 
@@ -2097,70 +2129,72 @@
 
 @end
 
-// @implementation Vector2D
-// {
-//     NSMutableArray *_array;
-//     NSInteger _currentIndex;
-// }
-// //最简单的办法是初始化转成1维度数组
+ @implementation Vector2D
+ {
+     NSMutableArray *_array;
+     NSInteger _currentIndex;
+ }
+ //最简单的办法是初始化转成1维度数组
 
-// - (instancetype)initWithMatrix:(NSArray<NSArray<NSNumber *> *> *)matrix
-// {
-//     if(self = [super init]){
-//         _array = [NSMutableArray array];
-//         for (NSInteger i = 0; i < matrix.count; i++) {
-//             [_array addObjectsFromArray:matrix[i]];
-//         }
-//         _currentIndex = 0;
-//     }
-//     return self;
-// }
+ - (instancetype)initWithMatrix:(NSArray<NSArray<NSNumber *> *> *)matrix
+ {
+     if(self = [super init]){
+         _array = [NSMutableArray array];
+         for (NSInteger i = 0; i < matrix.count; i++) {
+             [_array addObjectsFromArray:matrix[i]];
+         }
+         _currentIndex = 0;
+     }
+     return self;
+ }
 
-// - (NSNumber *)next
-// {
-//     //如果越界需要特殊处理
-//     NSAssert([self hasNext], @"out of range");
-//     return _array[_currentIndex++];
-// }
+ - (NSNumber *)next
+ {
+     //如果越界需要特殊处理
+     NSAssert([self hasNext], @"out of range");
+     return _array[_currentIndex++];
+ }
 
-// - (BOOL)hasNext
-// {
-//     return _currentIndex <= [_array count] - 1;
-// }
+ - (BOOL)hasNext
+ {
+     return _currentIndex <= [_array count] - 1;
+ }
 
-// @end
+ @end
 
-@implementation Vector2D
-{
-    NSEnumerator *_enumerator;
-    NSEnumerator *_subEnumerator;
-}
 
-- (instancetype)initWithMatrix:(NSArray<NSArray<NSNumber *> *> *)matrix
-{
-    NSAssert([matrix count], @"should not be emtpy");
-    
-    if(self = [super init]){
-        _enumerator = [matrix objectEnumerator];
-        _subEnumerator = [[_enumerator nextObject] objectEnumerator];
-    }
-    return self;
-}
-
-- (NSNumber *)next
-{
-    if(![self hasNext]){
-        return nil;
-    }
-    if([_subEnumerator nextObject] == nil){
-        _subEnumerator = [[_enumerator nextObject] objectEnumerator];
-    }
-    return [_subEnumerator nextObject];
-}
-
-- (BOOL)hasNext
-{
-    return [_enumerator nextObject] == nil && [_subEnumerator nextObject] == nil;
-}
-
-@end
+//@implementation Vector2D
+//{
+//    NSEnumerator *_enumerator;
+//    NSEnumerator *_subEnumerator;
+//}
+//
+//- (instancetype)initWithMatrix:(NSArray<NSArray<NSNumber *> *> *)matrix
+//{
+//    NSAssert([matrix count], @"should not be emtpy");
+//    
+//    if(self = [super init]){
+//        _enumerator = [matrix objectEnumerator];
+//        _subEnumerator = [[_enumerator nextObject] objectEnumerator];
+//    }
+//    return self;
+//}
+//
+//- (NSNumber *)next
+//{
+//    if(![self hasNext]){
+//        return nil;
+//    }
+//    if([_subEnumerator nextObject] == nil){
+//        _subEnumerator = [[_enumerator nextObject] objectEnumerator];
+//    }
+//    return [_subEnumerator nextObject];
+//}
+//
+////这种实现是有问题的，因为调用一次 nextObject 之后，index 的位置就变了
+//- (BOOL)hasNext
+//{
+//    return !([_enumerator nextObject] == nil && [_subEnumerator nextObject] == nil);
+//}
+//
+//@end

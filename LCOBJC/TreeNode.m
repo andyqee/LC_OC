@@ -40,3 +40,7 @@
 @implementation PriorityQueue
 
 @end
+
+@implementation PriorityNode
+
+@end

@@ -341,33 +341,6 @@
 //DP 161 One Edit Distance
 - (BOOL)isOneEditDistance:(NSString *)str withStr:(NSString *)str2;
 
-// 121. Best Time to Buy and Sell Stock
-// Contributors: Admin
-// Say you have an array for which the ith element is the price of a given stock on day i.
-// If you were only permitted to complete at most one transaction (ie, buy one and sell one share of the stock), design an algorithm to find the maximum profit.
-
-// Example 1:
-// Input: [7, 1, 5, 3, 6, 4]
-// Output: 5
-
-// max. difference = 6-1 = 5 (not 7-1 = 6, as selling price needs to be larger than buying price)
-// Example 2:
-// Input: [7, 6, 4, 3, 1]
-// Output: 0
-
-- (NSInteger)maxProfit:(NSArray<NSNumber *> *)prices;
-
-// 122. Best Time to Buy and Sell Stock II
-// Difficulty: Medium
-// Contributors: Admin
-// Say you have an array for which the ith element is the price of a given stock on day i.
-
-// Design an algorithm to find the maximum profit. 
-// You may complete as many transactions as you like (ie, buy one and sell one share of the stock multiple times). 
-// However, you may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
-
-- (NSInteger)maxProfit_2:(NSArray<NSNumber *> *)prices;
-
 //198. House Robber
 // TAG: DP
 //Difficulty: Easy
@@ -408,7 +381,6 @@
 
 - (NSArray<NSNumber *> *)getSkyline:(NSArray<NSArray<NSNumber *> *> *)nums;
 
-
 //[LOCK]Walls and Gates
 
 //You are given a m x n 2D grid initialized with these three possible values.
@@ -431,6 +403,38 @@
 //0  -1   3   4
 
 - (void)wallsAndGates:(NSMutableArray *)rooms;
+
+//51. N-Queens   Add to List QuestionEditorial Solution  My Submissions
+//Total Accepted: 69109
+//Total Submissions: 239330
+//Difficulty: Hard
+//Contributors: Admin
+//The n-queens puzzle is the problem of placing n queens on an n×n chessboard such that no two queens attack each other.
+//
+//
+//
+//Given an integer n, return all distinct solutions to the n-queens puzzle.
+//
+//Each solution contains a distinct board configuration of the n-queens' placement, where 'Q' and '.' both indicate a queen and an empty space respectively.
+//
+//For example,
+//There exist two distinct solutions to the 4-queens puzzle:
+//
+//[
+// [".Q..",  // Solution 1
+//  "...Q",
+//  "Q...",
+//  "..Q."],
+// 
+// ["..Q.",  // Solution 2
+//  "Q...",
+//  "...Q",
+//  ".Q.."]
+// ]
+//
+
+- (NSArray<NSArray<NSNumber *> *> *)solveNQueens:(NSInteger)n;
+
 
 @end
 

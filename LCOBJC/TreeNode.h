@@ -75,6 +75,23 @@
 
 @end
 
+@protocol QYCompareable <NSObject>
+
+
+@end
+
 @interface PriorityQueue : NSObject
+
+- (void)addObject:(id<QYCompareable>)object;
+- (id<QYCompareable>)poll;
+- (NSInteger)count;
+
+@end
+
+
+@interface PriorityNode : NSObject<QYCompareable>
+@property (nonatomic, strong) NSNumber *value;
+@property (nonatomic) NSInteger row;//
+@property (nonatomic) NSInteger index;// current index
 
 @end

@@ -213,9 +213,6 @@
 - (BOOL)isValidBST:(TreeNode *)root;
 - (BOOL)isValidBST_r:(TreeNode *)root;
 
-// 261. Graph Valid Tree
-- (BOOL)validTree:(NSInteger)n edges:(NSArray<NSArray<NSNumber *> *> *)edges;
-
 // Verify Preorder Sequence in Binary Search Tree 验证二叉搜索树的先序序列
 //Given an array of numbers, verify whether it is the correct preorder traversal sequence of a binary search tree.
 //
