@@ -27,7 +27,7 @@
     } else if(d > b){
         return NSOrderedDescending;
     } else {
-        return NSOrderedAscending;
+        return NSOrderedAscending; 
     }
 }
 

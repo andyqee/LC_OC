@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1198B701EAC3FC60080DEF4 /* 388_Longest_Absolute_File_Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1198B6F1EAC3FC60080DEF4 /* 388_Longest_Absolute_File_Path.swift */; };
 		A1549CB71E0D0EC9006FCF8D /* LRU.m in Sources */ = {isa = PBXBuildFile; fileRef = A1549CB61E0D0EC9006FCF8D /* LRU.m */; };
 		A1BFBF651DD9F40E0022C1DC /* List.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BFBF641DD9F40E0022C1DC /* List.m */; };
 		A1F2B7DD1DC5ED090023278E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F2B7DC1DC5ED090023278E /* main.m */; };
@@ -34,6 +35,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A1198B6D1EAC3F1C0080DEF4 /* googleIndex.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = googleIndex.txt; sourceTree = "<group>"; };
+		A1198B6E1EAC3FC60080DEF4 /* LCOBJC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LCOBJC-Bridging-Header.h"; sourceTree = "<group>"; };
+		A1198B6F1EAC3FC60080DEF4 /* 388_Longest_Absolute_File_Path.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = 388_Longest_Absolute_File_Path.swift; sourceTree = "<group>"; };
 		A1549CB51E0D0EC9006FCF8D /* LRU.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LRU.h; sourceTree = "<group>"; };
 		A1549CB61E0D0EC9006FCF8D /* LRU.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LRU.m; sourceTree = "<group>"; };
 		A1BFBF631DD9F40E0022C1DC /* List.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = List.h; sourceTree = "<group>"; };
@@ -71,26 +75,9 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A1F2B7D01DC5ED090023278E = {
+		A1198B6B1EAC3ECB0080DEF4 /* fb */ = {
 			isa = PBXGroup;
 			children = (
-				A1F2B7DB1DC5ED090023278E /* LCOBJC */,
-				A1F2B7DA1DC5ED090023278E /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		A1F2B7DA1DC5ED090023278E /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				A1F2B7D91DC5ED090023278E /* LCOBJC */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		A1F2B7DB1DC5ED090023278E /* LCOBJC */ = {
-			isa = PBXGroup;
-			children = (
-				A1F2B7DC1DC5ED090023278E /* main.m */,
 				A1F2B7E31DC5ED4F0023278E /* Solution.h */,
 				A1F2B7E41DC5ED4F0023278E /* Solution.m */,
 				A1F2B7E61DC5EEE70023278E /* TreeNode.h */,
@@ -113,6 +100,42 @@
 				D7043DE01E099015002D294D /* SlideWindow.m */,
 				A1549CB51E0D0EC9006FCF8D /* LRU.h */,
 				A1549CB61E0D0EC9006FCF8D /* LRU.m */,
+			);
+			name = fb;
+			sourceTree = "<group>";
+		};
+		A1198B6C1EAC3EDF0080DEF4 /* google */ = {
+			isa = PBXGroup;
+			children = (
+				A1198B6D1EAC3F1C0080DEF4 /* googleIndex.txt */,
+				A1198B6F1EAC3FC60080DEF4 /* 388_Longest_Absolute_File_Path.swift */,
+				A1198B6E1EAC3FC60080DEF4 /* LCOBJC-Bridging-Header.h */,
+			);
+			name = google;
+			sourceTree = "<group>";
+		};
+		A1F2B7D01DC5ED090023278E = {
+			isa = PBXGroup;
+			children = (
+				A1F2B7DB1DC5ED090023278E /* LCOBJC */,
+				A1F2B7DA1DC5ED090023278E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A1F2B7DA1DC5ED090023278E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1F2B7D91DC5ED090023278E /* LCOBJC */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A1F2B7DB1DC5ED090023278E /* LCOBJC */ = {
+			isa = PBXGroup;
+			children = (
+				A1198B6C1EAC3EDF0080DEF4 /* google */,
+				A1F2B7DC1DC5ED090023278E /* main.m */,
+				A1198B6B1EAC3ECB0080DEF4 /* fb */,
 			);
 			path = LCOBJC;
 			sourceTree = "<group>";
@@ -148,6 +171,7 @@
 				TargetAttributes = {
 					A1F2B7D81DC5ED090023278E = {
 						CreatedOnToolsVersion = 8.1;
+						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -181,6 +205,7 @@
 				D757AAD11DD95F6900F5ED1A /* BackTracking.m in Sources */,
 				D71E29931DE5C5CF006C2500 /* DP.m in Sources */,
 				D7165C1C1DE0B48A00F12A47 /* math.m in Sources */,
+				A1198B701EAC3FC60080DEF4 /* 388_Longest_Absolute_File_Path.swift in Sources */,
 				A1F2B7DD1DC5ED090023278E /* main.m in Sources */,
 				D7CBAFBB1DE8958F00612214 /* Array.m in Sources */,
 				A1F2B7E81DC5EEE70023278E /* TreeNode.m in Sources */,
@@ -282,14 +307,23 @@
 		A1F2B7E11DC5ED090023278E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "LCOBJC/LCOBJC-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
 		A1F2B7E21DC5ED090023278E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "LCOBJC/LCOBJC-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

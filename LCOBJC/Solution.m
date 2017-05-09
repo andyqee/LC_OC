@@ -881,7 +881,8 @@ BOOL isAalphaNumber(unichar ch)
         NSString *charStr = [self substringWithRange:NSMakeRange(i, 1)];
         [charArray addObject:charStr];
     }
-    return [[charArray sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] componentsJoinedByString:@""];
+    return [[[[charArray sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] reverseObjectEnumerator] allObjects]
+            componentsJoinedByString:@""];
 }
 
 @end
