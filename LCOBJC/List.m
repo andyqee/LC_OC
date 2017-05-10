@@ -7,6 +7,7 @@
 //
 
 #import "List.h"
+#import "TreeNode.h"
 
 @implementation List
 
@@ -18,8 +19,8 @@
     }
     // step 1 find mid node of linkedlist
     ListNode *midNode = [self findMidle:head];
-    // step 2 reverse right half list 
-    ListNode *reversedList = [self reverseList:midNode.next]; //传入的是mid 后面那个
+    // step 2 reverse right half list // 1--> 2 --> 3--->4
+    ListNode *reversedList = [self reverseList:midNode.next]; //传入的是mid 后面那个， 也就是3， 因为mid是2的那个node
 
     [self mergeList:head rightHalf:reversedList];
 }
@@ -37,6 +38,7 @@
 
 // 1--> 2 --> 3--->4
 // 简单容易出错的题目
+// 以其中的普通点作为切入点
 
 - (ListNode *)reverseList:(ListNode *)head
 {
@@ -59,7 +61,7 @@
 
 - (ListNode *)reverseList:(ListNode *)head prevHead:(ListNode *)prevHead
 {
-    if(head == nil){
+    if(head == nil){//TODO: 注意recursive 的break 条件
         return prevHead;
     }
     ListNode *next = head.next;//保存要被更新的那个
@@ -82,7 +84,7 @@
     }
 }
 
-// dived and conquer heap 
+// divide and conquer heap
 // 有点合并排序的感觉
 // solution A: K > 1
 // solution A: 使用priority queue. 但是OC 没有priority queue 不太好实现
@@ -90,7 +92,30 @@
 // http://bangbingsyb.blogspot.jp/2014/11/leetcode-merge-k-sorted-lists.html
 // http://www.jiuzhang.com/solutions/merge-k-sorted-lists/
 
-// 
+- (ListNode *)mergeKList_PQ:(NSArray<ListNode *> *)listNodeArray
+{
+    if([listNodeArray count]){
+        return nil;
+    }
+    
+    PriorityQueue *pq = [PriorityQueue new];
+    for (ListNode *node in listNodeArray) { // length
+        [pq addObject:node];
+    }
+    ListNode *dummy = [ListNode new];
+    ListNode *head = dummy;
+    
+    while (pq.count) { // log(length) * number of node
+        head.next = [pq poll];
+        head = head.next;
+        
+        if(head.next){
+            [pq addObject:head.next];
+        }
+    }
+    return dummy.next;
+}
+
 - (ListNode *)mergeKList:(NSArray<ListNode *> *)listNodeArray
 {
     if([listNodeArray count] == 0){
@@ -112,9 +137,11 @@
     NSInteger mid = (right - left) / 2 + left;
     
     ListNode *mergeNode1 = [self mergeList_recurisive:listNodeArray left:left right:mid];
-    ListNode *mergeNode2 = [self mergeList_recurisive:listNodeArray left:mid+1 right:right];
+    ListNode *mergeNode2 = [self mergeList_recurisive:listNodeArray left:mid + 1 right:right];
     return [self mergeList:mergeNode1 withList:mergeNode2];// T(k) = 2 * T(k/2) + 2n * k/2  = nk log(k)
 }
+
+// merge two by two
 
 - (ListNode *)mergeList_I:(NSMutableArray<ListNode *> *)listNodeArray
 {
@@ -132,28 +159,25 @@
 }
 
 //merge sorted array
+// 技巧：构建一个tail 指针用来track 前面那个拍好序的tail 结点，然后把 当前比较得到的小的node，和前面那个拼接起来
 
 - (ListNode *)mergeList:(ListNode *)node1 withList:(ListNode *)node2
 {
-    ListNode *newHead = nil;
-    ListNode *tail = [ListNode new];
+    ListNode *dummy = [ListNode new];
+    ListNode *tail = dummy;
 
     while(node1 && node2){
         if(node1.val < node2.val){
             tail.next = node1;
-            node1 = node1.next;
+            node1 = node1.next;// move the small forward
         } else if(node1.val >= node2.val){
             tail.next = node2;
             node2 = node2.next;
         }
-        if(!newHead){
-            newHead = tail.next;
-        }
-        tail = tail.next;
+        tail = tail.next; //这里避免在上面两个if 分支写两遍的情况
     }
-    tail.next = node1 ?: node2;
-
-    return newHead;
+    tail.next = node1 ?: node2;//这里也非常关键，要不然就会剩下没有拼接的部分了。
+    return dummy.next;
 }
 
 //without using extra space
@@ -174,28 +198,32 @@
     }
     return NO;
 }
-//
 
+//
 - (ListNode *)detectNode:(ListNode *)node
 {
     ListNode *slow = node;
     ListNode *fast = node.next;
     ListNode *entry = node;
     
-    while(fast && fast.next){
+    while(fast != slow){
+        if(fast == nil || fast.next ==  nil){
+            return nil;
+        }
         fast = fast.next.next;
         slow = slow.next;
         
-        while(entry != slow){
-            entry = entry.next;
-            slow = slow.next;
-        }
-        return entry;
     }
-    return nil;
+    
+    while(entry != slow){
+        entry = entry.next;
+        slow = slow.next;
+    }
+    return entry;
 }
 
 // 删除重复节点. 两种方法，这里面竟然可以递归
+// 如何返回删除后的头结点呢？
 
 - (ListNode *)deleteDuplicates:(ListNode *)listNode
 {
@@ -207,8 +235,10 @@
             curr = curr.next;
         }
     }
-    return curr;
+    return listNode;
 }
+
+// 递归版本
 
 - (ListNode *)deleteDuplicates_r:(ListNode *)listNode
 {
@@ -220,8 +250,8 @@
 }
 
 //方法1: Hash Map
-// loop 1. copy all the nodes
-// loop 2. assign next and random pointers 
+// loop 1. copy all the nodes ，1.先创建
+// loop 2. assign next and random pointers 2. 然后再进行关系assgin value
 
 - (RandomListNode *)copyRandomList:(RandomListNode *)head
 {
@@ -256,31 +286,39 @@
     return [self splitList:head];
 }
 
+// First round: make copy of each node,
+// and link them together side-by-side in a single list.
+// step 1: 1   ->   1'   ->   2   ->   2' 插入clone node
+// Create the copy of node 1 and insert it between node 1 & node 2 in original Linked List, create the copy of 2 and insert it between 2 & 3.. Continue in this fashion, add the copy of N afte the Nth node
+
+- (void)copyNext:(RandomListNode *)head
+{
+    RandomListNode *p = head;
+    RandomListNode *next = head;
+    
+    while(p){
+        next = p.next;
+        
+        RandomListNode *node = [RandomListNode new];
+        p.next = node;
+        node.next = next;
+        
+        p = next;
+    }
+}
+
 // assign random pointer for the copy nodes
+
+// original->next->arbitrary = original->arbitrary->next;
 
 - (void)copyRandom:(RandomListNode *)head
 {
     RandomListNode *p = head;
     while(p){
-        if(p.next.random){
+        if(p.random){
             p.next.random = p.random.next;
         }
         head = p.next.next;
-    }
-}
-
-// make copy of each node
-- (void)copyNext:(RandomListNode *)head
-{
-    RandomListNode *p = head;
-    RandomListNode *next = head;
-
-    while(p){
-        next = p.next;
-        RandomListNode *node = [RandomListNode new];
-        p.next = node;
-        node.next = next;
-        p = next;
     }
 }
 
@@ -298,31 +336,6 @@
     }
     
     return cloneHead;
-}
-// 1-->2-->2-->1 // middle = 2
-// 1-->2-->1     // middle = 2
-// 1.Find middle
-// move to the next of middle 2, reverse 后半部分!!
-// traverse 两边
-
-- (BOOL)isPalindrome:(ListNode *)node
-{
-    //corner case
-    if(!node || !node.next){
-        return YES;
-    }
-    //
-    ListNode *middle = [self findMidle:node];
-    ListNode *rightHalf = nil;
-    rightHalf = [self reverseList:middle.next];
-    while (rightHalf) {
-        if(rightHalf.val != node.val){
-            return NO;
-        }
-        rightHalf = rightHalf.next;
-        node = node.next;
-    }
-    return YES;
 }
 
 #pragma mark - Two pointers

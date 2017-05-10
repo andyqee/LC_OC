@@ -34,8 +34,8 @@
 
 - (ListNode *)mergeList:(ListNode *)node1 withList:(ListNode *)node2;
 
-//141. Linked List Cycle   QuestionEditorial Solution  My Submissions
-//Difficulty: Easy
+//141. Linked List Cycle
+
 //Contributors: Admin
 //Given a linked list, determine if it has a cycle in it.
 //
@@ -44,19 +44,17 @@
 
 - (BOOL)hasCycle:(ListNode *)node;
 
-//142. Linked List Cycle II   QuestionEditorial Solution  My Submissions
+//142. Linked List Cycle II
 
 //Difficulty: Medium
 //Given a linked list, return the node where the cycle begins. If there is no cycle, return null.
-//
 //Note: Do not modify the linked list.
-//
 //Follow up:
 //Can you solve it without using extra space?
 
 - (ListNode *)detectNode;
 
-//83. Remove Duplicates from Sorted List   QuestionEditorial Solution  My Submissions
+//83. Remove Duplicates from Sorted List
 //Difficulty: Easy
 //Contributors: Admin
 //Given a sorted linked list, delete all duplicates such that each element appear only once.
@@ -67,7 +65,7 @@
 
 - (ListNode *)deleteDuplicates:(ListNode *)listNode;
 
-// // 138. Copy List with Random Pointer   QuestionEditorial Solution  My Submissions
+// // 138. Copy List with Random Pointer
 
 // // Difficulty: Hard
 // // Contributors: Admin
@@ -78,16 +76,7 @@
  - (RandomListNode *)copyRandomList:(RandomListNode *)head;
 // https://leetcode.com/discuss/questions/oj/copy-list-with-random-pointer
 
-//234. Palindrome Linked List   
-//Contributors: Admin
-//Given a singly linked list, determine if it is a palindrome.
-//
-//Follow up:
-//Could you do it in O(n) time and O(1) space?
-
-- (BOOL)isPalindrome:(ListNode *)node;
-
-//19. Remove Nth Node From End of List   Add to List QuestionEditorial Solution  My Submissions
+//19. Remove Nth Node From End of List
 
 //Difficulty: Easy
 //Contributors: Admin

@@ -18,6 +18,8 @@
 @interface NSString (FBSort)
 
 - (NSString *)sorted;
+- (NSUInteger)fbi_hash;
+
 @end
 
 @implementation Solution (String)
@@ -37,26 +39,6 @@
     (*tree).right = [TreeNode new];
 }
 
-- (NSInteger)romanToInt:(NSString *)str
-{
-    NSDictionary<NSString *, NSNumber *> *dic = @{@"I" : @1,
-                          @"V" : @5,
-                          @"X" : @10,
-                          @"L" : @50,
-                          @"C" : @100,
-                          @"D" : @500,
-                          @"M" : @1000};
-    NSInteger result = 0;
-    for (NSInteger i = 0; i < str.length; i++) {
-        NSString *ch = [str substringWithRange:NSMakeRange(i, 1)];
-        result += dic[ch].integerValue;
-        
-        if (i > 0 && dic[[str substringWithRange:NSMakeRange(i, 1)]].integerValue >  dic[[str substringWithRange:NSMakeRange(i-1, 1)]].integerValue) {
-            result += [str substringWithRange:NSMakeRange(i, 1)].integerValue - 2 * [str substringWithRange:NSMakeRange(i-1, 1)].integerValue; // 需要减2倍
-        }
-    }
-    return result;
-}
 
 - (NSInteger)compareVersion:(NSString *)str1 str:(NSString *)str2
 {
@@ -74,10 +56,41 @@
     }
 }
 
+#pragma mark - Read N Characters Given Read4
+
+// 返回真实的读取的字符，read data from file and store it in buffer
+// 思路: while 利用len 标记真实读入的长度，当len < count 或者 endOfFile 还没有结束就一直循环
+// 当最终len > count 的时候 就把超出的部分 截断。
+
+// mock read4
+- (NSInteger)read4:(NSMutableString *)str
+{
+    [str appendString:@"1234"];
+    return 4;
+}
+
+- (NSInteger)readFromString:(NSMutableString *)buffer count:(NSInteger)count
+{
+    NSInteger len = 0;
+    BOOL endOfFile = NO;
+    while(len < count || !endOfFile){
+        NSInteger num = [self read4:buffer];
+        len += num;
+        if(num < 4){
+            endOfFile = YES;
+        }
+    }
+    while(len > count){
+        [buffer deleteCharactersInRange:NSMakeRange(count, len - count)];
+    }
+    return buffer.length;
+}
+
 #pragma mark - Simplify Path
 
 //各种corner case
-//关键: 是处理 .. 需要pop
+// TODO: 关键: 1. 是处理 .. 需要pop
+//      2.skip 掉 “.” and "/"
 
 - (NSString *)simplifyPath:(NSString *)path
 {
@@ -89,16 +102,19 @@
     NSMutableArray *res = [NSMutableArray array];
     
     for(NSString *p in paths){
-        if(!([p isEqualToString:@"."] || [p isEqualToString:@""])){
-            [res addObject:p];
-        } else if([p isEqualToString:@".."]){
-            if ([res count] > 0) {
+        if([p isEqualToString:@"."] || [p isEqualToString:@""]){
+            continue;
+        }
+        if([p isEqualToString:@".."]){
+            if([res count] > 0){
                 [res removeLastObject];
             }
+        } else {
+            [res addObject:p];
         }
     }
     NSString *sp = [res componentsJoinedByString:@"/"]; //"res 是空数组，这里是返回nil
-    return [NSString stringWithFormat:@"/%@",sp];
+    return sp.length == 0 ? @"/" : [NSString stringWithFormat:@"/%@",sp]; //这里如果sp 是nil，显示的时候可能是null
 }
 
 // 这种方法估计面试官不同意
@@ -111,31 +127,55 @@
 // A sequence of non-space characters constitutes a word.
 // Could the input string contain leading or trailing spaces?
 // Yes. However, your reversed string should not contain leading or trailing spaces.
+
 // How about multiple spaces between two words?
 // Reduce them to a single space in the reversed string.
 
-- (void)reverseWords:(NSMutableString *)str
+// 这道题目的挑战在于 inplace
+
+// 如果有一个字母咋办
+
+// 方法就是1. reverse the string
+//        2.  reverse word
+
+// FIXME: Fucking boring shit
+
+// @" " 是否返回 @“”
+
+- (NSString *)reverseWordsNotInplace:(NSMutableString *)str
 {
     if ([str length] == 0) {
-        return;
+        return nil;
     }
-    
+    //step 1
     [str stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    NSArray *temp = [str componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSMutableString *mStr = [NSMutableString string];
+    NSArray<NSString *> *strs = [str componentsSeparatedByString:@" "];
     
-    NSMutableString *new = [NSMutableString string];
-    for (NSInteger i = [temp count] -1 ; i >= 0; i--) {
-        if (![temp[i] isEqualToString:@" "]) {
-            if (i >= 0) {
-                [new appendString:temp[i]];
-            }
-            [new appendString:@" "];
+    for (NSString *s in [[strs reverseObjectEnumerator] allObjects]) {
+        if(![s isEqualToString:@""]){
+            [mStr appendString:s];
+            [mStr appendString:@" "];//这里不能忘记！
         }
     }
-    str = new;
+    [mStr deleteCharactersInRange:NSMakeRange(mStr.length - 1, 1)]; //remove the last str
+    return [mStr copy];
 }
 
+// Given s = "the sky is blue",
+// return "blue is sky the".
+
+//- (void)reverseWords:(NSMutableString *)str
+//{
+//    if ([str length] == 0) {
+//        return;
+//    }
+//    //step 1
+//    
+//}
+
 //Furthermore, you may assume that the original data does not contain any digits and that digits are only for those repeat numbers, k. For example, there won't be input like 3a or 2[4].
+
 // 上面这句话是要问面试官的
 // 异常case 1 “” 2 [] 等, 比如[] 结构是否对成，另外就是有没有 空格 里面有没有数字，考虑各种异常case的
 // 1[] 应该返回什么？
@@ -154,27 +194,33 @@
 //      s = re.sub(r'(\d+)\[([a-z]*)\]', lambda m: int(m.group(1)) * m.group(2), s)
 // return s
 
+// 思路: google 非fb
+
+// 2[abc]3[cd]ef
+// count = 2 numStack strStack
+
 - (NSString *)decodeString:(NSString *)str
 {
     if(str.length < 4) {
         return str;
     }
         
-    NSMutableArray<NSNumber *> *numStack = [NSMutableArray array];
+    NSMutableArray<NSNumber *> *numStack = [NSMutableArray array]; 
     NSMutableArray<NSString *> *strStack = [NSMutableArray array];
+    
     NSMutableString *currStr = [NSMutableString string];
 
     NSInteger count = 0;
     for(NSUInteger idx = 0; idx < str.length; idx++) {
         NSString *sub = [str substringWithRange:NSMakeRange(idx, 1)];
-        if(sub.integerValue != 0) {
+        if(sub.integerValue != 0) { // step1: 如果为数字，解析数字
             count = count * 10 + sub.integerValue;
-        } else if ([sub isEqual:@"["]) {
+        } else if ([sub isEqual:@"["]) { //step 2: 后面还有需要处理的，所以将数字入stack， 并且将之前拼接好的入stack,create 之后重新设置 currStr ,reset cout
             [numStack addObject:@(count)];
             [strStack addObject:[currStr copy]];
             currStr = [NSMutableString string];
             count = 0;
-        } else if ([sub isEqual:@"]"]) {
+        } else if ([sub isEqual:@"]"]) { //step 3: 拼接repeat 的字符, 括号作用于结束，pop the previous state
             NSUInteger repeatingCount = [numStack lastObject].integerValue;
             [numStack removeLastObject];
 
@@ -205,61 +251,13 @@
 // 字符串转换的一定要考虑有哪些 invalid case
 // TODO: FB follow up
 
-- (NSInteger)numDecodings_optimizeSpace:(NSString *)str
-{
-    if ([str length] == 0) {
-        return 0;
-    }
-    //check if the first ch is 0
-    if ([str hasPrefix:@"0"]) {
-        return 0;
-    } //用这个就可以不用写下面这种呕心的饭食
-//    NSString *ch = [str substringWithRange:NSMakeRange(0, 1)];
-//    if([ch isEqualToString:@"0"]){
-//        return 0;
-//    }
-    
-    NSInteger fn = 1;
-    NSInteger fn_1 = 1;
-    NSInteger fn_2 = 1;
-
-    for (NSInteger i = 1; i < str.length; i++) {
-        NSString *ch = [str substringWithRange:NSMakeRange(i, 1)];
-        NSString *prev = [str substringWithRange:NSMakeRange(i - 1, 1)];
-        
-        if(ch.integerValue > 6){
-            if(prev.integerValue == 1){
-                fn = fn_1 + fn_2;
-            } else {
-                fn = fn_1;
-            }
-        } else if(ch.integerValue > 0){
-            if(prev.integerValue == 1 || prev.integerValue == 2){
-                fn = fn_1 + fn_2;
-            } else {
-                fn = fn_1;
-            }
-        } else { //0
-            if (prev.integerValue == 1 || prev.integerValue == 2) {
-                fn = fn_2; //这里是fn_2
-            } else {
-                return 0;
-            }
-        }
-        //update
-        fn_2 = fn_1;
-        fn_1 = fn;
-    }
-    return fn_1;
-}
-
 #pragma mark - decode way prefer way
 
 //九章的解法，更简洁,巧妙些
 // DP
 // corner case : 字符串为空，第一个字符是0
 // general case : 分别判断oneDigit 和 twoDigit
-
+// 初始化为1 , idx start from 2
 // Fellow up : 如果不用dp 怎么做？ dived - conquer ?
 
 - (NSInteger)numDecodingsMethod2:(NSString *)str
@@ -300,11 +298,6 @@
     if([ch isEqualToString:@"0"]){
         return 0;
     }
-    
-//    NSMutableArray<NSNumber *> *dp = [NSMutableArray arrayWithCapacity:str.length + 1];
-//    for(NSInteger i = 0; i <= str.length; i++){
-//        [dp addObject:@1];//这里初始化应该是1
-//    }
     NSInteger cur = 1;  //
     NSInteger prev = 1; // base case 1
     
@@ -321,178 +314,14 @@
     return cur;
 }
 
-// Read N Characters Given Read4
+// all the result
 
-//- (NSInteger)readFromString:(NSMutableString *)buffer count:(NSInteger)count
-//{
-//    NSInteger len = 0;
-//    BOOL endOfFile = NO;
-//    while(len < count || !endOfFile){
-//        NSInteger num = [self read:buffer];
-//        len += num;
-//        if(num < 4){
-//            endOfFile = YES;
-//        }
-//    }
-//    while(len > count){
-//        [buffer deleteCharactersInRange:NSMakeRange(count, len - count)];
-//    }
-//    return buffer.length;
-//}
-
-//属于比较繁琐的问题，主要是耐心和细心
-
-// https://discuss.leetcode.com/topic/30508/easiest-java-solution-with-graph-explanation/2
-#pragma mark - Multiply Strings
-
-- (NSString *)multiplyStr:(NSString *)str1 andStr:(NSString *)str2
+- (void)decodeway:(NSString *)str
 {
-    if (str1.length == 0 || str2.length == 0)
-    {
-        return nil;
-    }
-    NSInteger m = str1.length;
-    NSInteger n = str2.length;
-    
-    //even 99 * 99 < 10000, so maximaly 4 digitis
-    NSMutableArray<NSNumber *> *res = [NSMutableArray arrayWithCapacity: m + n];
-    NSInteger i = m + n;
-    while (i > 0) {
-        [res addObject:@(0)];
-        i--;
-    }
-    
-    NSInteger product = 0;
 
-    for(NSInteger i = m - 1; i >= 0; i--) {
-        NSString *m = [str1 substringWithRange:NSMakeRange(i, 1)];
-        NSInteger mInt = m.integerValue;
-
-        for(NSInteger j = n - 1; j >= 0; j--) {
-            NSString *n = [str2 substringWithRange:NSMakeRange(j, 1)];
-            NSInteger nInt = n.integerValue;
-
-            product = res[i + j + 1].integerValue + mInt * nInt; // 这里的index关系是解体的关键
-            res[i + j + 1] = @(product % 10);
-            res[i + j] = @(product / 10);
-        }
-    }
-    NSMutableString *resStr = [@"" mutableCopy];
-    for (NSInteger i = 0; i < [res count]; ++i)
-    {
-        //trime starting zeros
-        if(!(resStr.length == 0 && res[i].integerValue == 0)) {
-            [resStr appendString:[res[i] description]];
-        }
-    }
-    return (resStr.length == 0) ? @"0" : [resStr copy];
-}
-
-// 还有一种解法也非常巧妙
-
-// public String multiply(String num1, String num2) {
-//     num1 = new StringBuilder(num1).reverse().toString();
-//     num2 = new StringBuilder(num2).reverse().toString();
-//     // even 99 * 99 is < 10000, so maximaly 4 digits
-//     int[] d = new int[num1.length() + num2.length()];
-//     for (int i = 0; i < num1.length(); i++) {
-//         int a = num1.charAt(i) - '0';
-//         for (int j = 0; j < num2.length(); j++) {
-//             int b = num2.charAt(j) - '0';
-//             d[i + j] += a * b;
-//         }
-//     }
-//     StringBuilder sb = new StringBuilder();
-//     for (int i = 0; i < d.length; i++) {
-//         int digit = d[i] % 10;
-//         int carry = d[i] / 10;
-//         sb.insert(0, digit);
-//         if (i < d.length - 1)
-//             d[i + 1] += carry;
-//     }
-//     //trim starting zeros
-//     while (sb.length() > 0 && sb.charAt(0) == '0') {
-//         sb.deleteCharAt(0);
-//     }
-//     return sb.length() == 0 ? "0" : sb.toString();
-// }
-
-// 关键是 carry, 还有头部清零
-
-- (NSString *)addBinary:(NSString *)str1 andStr:(NSString *)str2
-{
-    if (str1.length == 0 || str2.length == 0) // return "" emtpy string and nil
-    {
-        return nil;
-    }
-
-    NSMutableString *sum = [NSMutableString string];
-
-    NSInteger carry = 0;
-    NSInteger i = str1.length - 1;
-    NSInteger j = str2.length - 1;
-
-    while(j >= 0|| i >= 0 || carry > 0) {
-        NSInteger p = (i >= 0) ? [str1 substringWithRange:NSMakeRange(i, 1)].integerValue : 0;
-        NSInteger q = (j >= 0) ? [str2 substringWithRange:NSMakeRange(j, 1)].integerValue : 0;
-
-        NSInteger curr = (p + q + carry) % 2;
-        carry = (p + q + carry) / 2;
-        [sum appendString:[NSString stringWithFormat:@"%ld", (long)curr]];
-        i--;
-        j--;
-    }
-    //这里可以check 下 是否对00 这样的输出结果，直接输出还是trim the zero
-    
-    NSMutableString *reversed = [NSMutableString string];
-    for (NSInteger i = sum.length - 1; i >= 0; i--) {
-        NSString *ch = [sum substringWithRange:NSMakeRange(i, 1)];
-        if (![ch isEqualToString:@"0"]) {
-            [reversed appendString:ch];
-        }
-    }
-
-    return [reversed length] == 0 ? @"0" : [reversed copy];
 }
 
 //method1: backtracking
-//- (NSArray<NSNumber *> *)palindromePairs:(NSArray<NSString *> *)strs
-//{
-//    
-//}
-
-
-BOOL isAalphaNumber(unichar ch)
-{
-    NSCharacterSet *alphanumericCharacterSet = [NSCharacterSet alphanumericCharacterSet];
-    return [alphanumericCharacterSet characterIsMember:ch];
-}
-
-//头尾双指针，可以和快速排序对比下
-- (BOOL)isPalindrome:(NSString *)str
-{
-    if(str.length <= 1) {
-        return YES;
-    }
-
-    NSInteger start = 0;
-    NSInteger end = str.length - 1;
-
-    while(start < end) {
-        while(!isAalphaNumber([str characterAtIndex:start]) && start < end) {
-            start++;
-        }
-        while(!isAalphaNumber([str characterAtIndex:end]) && start < end) {
-            end--;
-        }
-        if([[str substringWithRange:NSMakeRange(start, 1)] caseInsensitiveCompare:[str substringWithRange:NSMakeRange(end, 1)]] != NSOrderedSame) {
-            return NO;
-        }
-        start++;
-        end--;
-    }
-    return YES;
-}
 
 // start from 1 ,这中写法容易TLE 果然是指数级别的,当把n=500 的时候, 内存和cpu都爆了，并且运算了好久。内存一直在涨，说明stack一直在涨
 
@@ -525,6 +354,8 @@ BOOL isAalphaNumber(unichar ch)
 }
 
 // 这里在和前面元素进行比较的时候，也可以通过 i-1 index 进行比较
+// 注意: 这里拼接的shi count + char
+
 - (NSString *)countAndSay_iterative:(NSInteger)n
 {
     if(n <= 0) {
@@ -565,7 +396,7 @@ BOOL isAalphaNumber(unichar ch)
 
     NSMutableDictionary<NSString *, NSMutableArray *> *dic = [NSMutableDictionary dictionary];
     for(NSString *str in strs) {
-        NSString *key = [str sorted];// 如果不排序,可以用prime计算hash
+        NSString *key = [str sorted];// 如果不排序,可以用prime计算hash, 用计算后的 hash 值作为key
         if(dic[key]) {
             [dic[key] addObject:str];
         } else {
@@ -575,87 +406,45 @@ BOOL isAalphaNumber(unichar ch)
     return [dic allValues];
 }
 
-#pragma mark - 5. Longest Palindromic Substring
-
-// ....abcd.....
-//  i - j < 2    ji  这种和dp[i][j] 和 dp[j+1][i-1] 没有关系
-// time n^2 space n^2
-
-- (NSString *)longestPalindrome:(NSString *)str
+- (NSArray<NSArray<NSString *> *> *)groupAnagramsHash:(NSArray<NSString *> *)strs
 {
-    if (str.length < 2) {
-        return str;
+    if(strs == nil) {
+        return nil;
     }
-    NSInteger m = str.length;
-    //dp[i][j] used to indicate if the substring with the range [j, i] is a substring
-    NSMutableArray<NSMutableArray<NSNumber *> *> *map = [NSMutableArray array];
-    for(NSInteger i = 0; i <= m; i++){
-        NSMutableArray<NSNumber *> *sub = [NSMutableArray array];
-        for(NSInteger j = 0; j <= m; j++){
-            [sub addObject:@(i == j)]; //if it's one single char, set YES
-        }
-        [map addObject:sub];
+    if([strs count] <= 1) {
+        return @[strs];
     }
-
-    NSInteger start = 0;
-    NSInteger end = 0;
-    //base case
     
-    //事实上这里上面 i=j 的判断也可以合并到下面来
-    for(NSInteger i = 2; i <= m; i++){ //
-        for(NSInteger j = i - 1; j > 0; j--){
-            NSString *p = [str substringWithRange:NSMakeRange(i - 1, 1)];
-            NSString *q = [str substringWithRange:NSMakeRange(j - 1, 1)];
-            if((i - j < 2) || map[i - 1][j + 1].boolValue){
-                map[i][j] = @([p isEqualToString:q]);
-                if(map[i][j].boolValue && i - j > end - start){
-                    end = i;
-                    start = j;
-                }
-            }
+    NSMutableDictionary<NSNumber *, NSMutableArray *> *dic = [NSMutableDictionary dictionary];
+    for(NSString *str in strs) {
+        NSNumber *key = @([str fbi_hash]);// 如果不排序,可以用prime计算hash, 用计算后的 hash 值作为key
+        if(dic[key]) {
+            [dic[key] addObject:str];
+        } else {
+            dic[key] = [@[str] mutableCopy];
         }
     }
-    return [str substringWithRange:NSMakeRange(start - 1, end - start + 1)];//注意这里是 start - 1
+    return [dic allValues];
 }
-
-
-//半径法
-//- (NSString *)longestPalindromeMethod2:(NSString *)str
-//{
-//    if (str.length < 2) {
-//        return str;
-//    }
-//    //odd and even len of string should be processed seperately
-//    
-//    
-//    for (NSInteger i = 0; i < str.length - 1; i++) {
-//        [self scanString:str startAtIndex:i withIndex:i];
-//        [self scanString:str startAtIndex:i withIndex:i + 1];
-//        
-//    }
-//    return substring
-//}
-
-// 这里如果改写下，也可以变成获取palindrome的数目
-
-//- (void)scanString:(NSString *)str startAtIndex:(NSInteger)left withIndex:(NSInteger)right
-//{
-//    while(left >= 0 && right < str.length){
-//        NSString *l = [str substringWithRange:NSMakeRange(left, 1)];
-//        NSString *r = [str substringWithRange:NSMakeRange(right, 1)];
-//        if([l isEqualToString:r]){
-//            left--;
-//            right++;
-//        }
-//    }
-//    maxLen = MAX(right - left - 1, maxLen);
-//}
 
 // 这个题目还要再写一遍
 
+#pragma mark -  273. Integer to English Words [H][R] 需要背
+// 技巧性比较强
+// 思路: 对英文进行分类 1. <= 20 2. Tens 。3.THOUSANDS
+// 如何巧妙的进行状态的转移呢
+// 在分析讲解的时候，根据不同的范围进行分析
+
+// analisis : 1. we can analysis the problem start from the number which is small than 1000, we build a helper function to parse it .
+//                 and in detial , handle serversal cases for number < 20 , < 100  > 100
+//            2. for number large than 1000 we can divide by 1000 and we get the mode which is the lowest 3 digits. and we can handle the model with previous help funtion
+//            3. for the we update num = num / 1000 to , and we keep this process iteratively. Here we need to use a count to indicate weather is K 还百万
+//
+//  注意这个是 先处理最低的三位，然后处理剩下的，每次都是把 值插在最前面
+
 - (NSString *)numberToWords:(NSInteger)num
 {
-    NSArray *THOUSANDS = @[@"", @"Thousand", @"Million", @"Billion"];
+    NSArray *THOUSANDS = @[@"", @"Thousand", @"Million", @"Billion"];// 这里的0占位也狠巧妙
 
     if(num == 0){
         return @"Zero";
@@ -663,7 +452,7 @@ BOOL isAalphaNumber(unichar ch)
     NSMutableString *str = [NSMutableString string];
 
     NSInteger i = 0;
-    while(num != 0){
+    while(num != 0){ // 这个循环对 num 以 1000 为背数 进行 降低
         if(num % 1000 != 0){ // 不处理 000 个零结尾的
             NSString *temp = [self helper:num % 1000];
             [str insertString:[NSString stringWithFormat:@"%@ %@", temp, THOUSANDS[i]] atIndex:0];
@@ -673,6 +462,8 @@ BOOL isAalphaNumber(unichar ch)
     }
     return str;
 }
+
+// 构建一个helper 来处理1000 一下的
 
 - (NSString *)helper:(NSInteger)num
 {
@@ -686,7 +477,7 @@ BOOL isAalphaNumber(unichar ch)
         return LESS_THAN_20[num];
     } else if(num < 100){
         return [NSString stringWithFormat:@"%@ %@", TENS[num / 10], LESS_THAN_20[num % 10]];  
-    } else {
+    } else { //对100 以上的进行特殊递归处理 逻辑和 上面对 1000 的处理有些类似
         //这里处理100 很巧妙
         NSMutableString *str = [NSMutableString string];
         [str appendString: LESS_THAN_20[num / 100]];
@@ -728,63 +519,6 @@ BOOL isAalphaNumber(unichar ch)
 // if beginWord == endWord return ?
 // if beginWord 与 endWord 相差一个字符
 
-
-//- (NSInteger)ladderLength:(NSString *)beginWord endWord:(NSString *)endWord set:(NSMutableSet<NSString *> *)wordList
-//{
-//    //corner case
-//    if ((beginWord.length == 0 && endWord.length == 0) || [beginWord isEqualToString:endWord]) {
-//        return 0;
-//    }
-//    
-//    NSMutableSet *visited = [NSMutableSet set];
-//    NSMutableArray *queue = [NSMutableArray array];
-//    [queue addObject:beginWord];
-//    
-//    NSInteger steps = 1;
-//    while ([queue count]) {
-//        NSInteger count = [queue count];
-//        for (NSInteger i = 0; i < count; i++) {
-//            NSString *node = [queue firstObject];
-//            [queue removeObjectAtIndex:0];
-//            [visited addObject:node];
-//            
-//            if([node isEqualToString:endWord]){
-//                return steps;
-//            }
-//            NSSet<NSString *> *neighbors = [self allNeighbours:node]; //利用set，快速查找
-//            if([neighbors containsObject:endWord]){  //这里也可以合并到上面那个逻辑，这样初始化为 steps = 2。现在这种写法可以快速的cut branch
-//                return steps + 1; //已经找到
-//            }
-//            for(NSString *s in neighbors){
-//                if([wordList containsObject:s] && ![visited containsObject:s]){
-//                    [queue addObject:s];
-//                }
-//            }
-//        }
-//        steps++; //下一层 这个framework 和对binary tree 进行按层遍历一个模版
-//    }
-//    return 0; // NSNotFound
-//}
-//
-//// 这里注意的是endWord 不需要在wordList 里面.
-//
-//- (NSSet<NSString *> *)allNeighbours:(NSString *)str
-//{
-//    NSArray *letters = [@"a,b,c,d,e,f,g,h,i,g,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z" componentsSeparatedByString:@","];
-//    
-//    NSMutableSet *neighbours = [NSMutableSet set];
-//    for (NSString *letter in letters) {
-//        for(NSInteger i = 0; i < str.length; i++){
-//            if(![[str substringWithRange:NSMakeRange(i, 1)] isEqualToString:letter]){
-//                NSMutableString *clone = [NSMutableString stringWithString:str];
-//                [clone replaceCharactersInRange:NSMakeRange(i, 1) withString:letter];
-//                [neighbours addObject:clone]; // 不会出现重复
-//            }
-//        }
-//    }
-//    return neighbours;
-//}
-
 // key point:
 // 1. endWord 需要加入到wordlist中
 // 2. wordlist 的更新，在生成一个，就可以删除在wordlist 中对应的元素
@@ -801,21 +535,19 @@ BOOL isAalphaNumber(unichar ch)
     [queue addObject:beginWord];
     [wordList addObject:endWord]; // key point: 添加end进wordlist
     
-    NSInteger steps = 1;
+    NSInteger steps = 2;
     while ([queue count]) {
         NSInteger count = [queue count];
         for (NSInteger i = 0; i < count; i++) {
             NSString *node = [queue firstObject];
             [queue removeObjectAtIndex:0];
             [visited addObject:node];
-
+            
             if([node isEqualToString:endWord]){
                 return steps;
             }
             NSSet<NSString *> *neighbors = [self allNeighbours:node set:wordList]; //利用set，快速查找
-//            if([neighbors containsObject:endWord]){  //注意 这里也可以合并到上面那个逻辑，这样初始化为 steps = 2。现在这种写法可以快速的cut branch
-//                return steps + 1; //已经找到。 这三行代码也可以去掉
-//            }
+
             for(NSString *s in neighbors){
                 if(![visited containsObject:s]){ //对于访问过的需要去重复
                     [queue addObject:s];
@@ -851,7 +583,7 @@ BOOL isAalphaNumber(unichar ch)
 }
 
 // find all shortest transformation sequence
-// 试试用回溯方法，那么上面的办法不行了。
+// DFS 试试用回溯方法，那么上面的办法不行了。
 
 - (NSArray<NSArray<NSString *> *> *)ladderLength2:(NSString *)beginWord endWord:(NSString *)endWord set:(NSMutableSet<NSString *> *)wordList
 {
@@ -901,12 +633,38 @@ BOOL isAalphaNumber(unichar ch)
     return neighbours;
 }
 
-//google，但是有个人碰到了
+//MJ Remove Comments
 
-//- (NSInteger)longestSubstring:(NSString *)str k:(NSInteger)k
-//{
-//    
-//}
+/**
+ 
+*/
+
+// what is the type of input parameter, can we assume it's a nsstring instance with UTF-8 encoding?
+
+- (NSString *)removeComments:(NSString *)token
+{
+    if(token.length == 0){
+        return token;
+    }
+    
+    NSMutableString *str = [NSMutableString string];
+    __block BOOL isComment = NO;
+    
+    [token enumerateLinesUsingBlock:^(NSString * _Nonnull line, BOOL * _Nonnull stop) {
+        NSString *trimedLine = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        if([trimedLine hasPrefix:@"/*"]){
+            isComment = YES;
+        }
+        if(!isComment || ![trimedLine hasPrefix:@"//"]){
+            [str appendString:line];
+        }
+        
+        if([line hasPrefix:@"*/"]){
+            isComment = NO;
+        }
+    }];
+    return [str copy];
+}
 
 @end
 
@@ -921,6 +679,16 @@ BOOL isAalphaNumber(unichar ch)
     }
     return [[[[charArray sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] reverseObjectEnumerator] allObjects]
             componentsJoinedByString:@""];
+}
+
+- (NSUInteger)fbi_hash
+{
+    NSUInteger hash = [@"" hash];
+    for (int i = 0; i < self.length; ++i) {
+        NSString *charStr = [self substringWithRange:NSMakeRange(i, 1)];
+        hash = hash ^ [charStr hash];
+    }
+    return hash;
 }
 
 @end
@@ -1027,3 +795,19 @@ BOOL isAalphaNumber(unichar ch)
 }
 
 @end
+
+@interface NSMutableString (FBI)
+
+- (void)reverseWithRange:(NSRange *)range;
+
+@end
+
+@implementation NSMutableString (FBI)
+
+- (void)reverseWithRange:(NSRange *)range
+{
+
+}
+
+@end
+

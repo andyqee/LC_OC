@@ -10,6 +10,41 @@
 
 @implementation TwoPointers
 
+BOOL isAalphaNumber(unichar ch)
+{
+    NSCharacterSet *alphanumericCharacterSet = [NSCharacterSet alphanumericCharacterSet];
+    return [alphanumericCharacterSet characterIsMember:ch];
+}
+
+//头尾双指针，可以和快速排序对比下
+
+- (BOOL)isPalindrome:(NSString *)str
+{
+    if(str.length <= 1) {
+        return YES;
+    }
+    
+    NSInteger start = 0;
+    NSInteger end = str.length - 1;
+    
+    while(start < end) { //这里也可以用if else 的写法
+        while(!isAalphaNumber([str characterAtIndex:start]) && start < end) {
+            start++;
+        }
+        while(!isAalphaNumber([str characterAtIndex:end]) && start < end) {
+            end--;
+        }
+        if (start < end) {// 这里不加这个判断条件也可以了也可以，正好是  i == j ,
+            if([[str substringWithRange:NSMakeRange(start, 1)] caseInsensitiveCompare:[str substringWithRange:NSMakeRange(end, 1)]] != NSOrderedSame) {
+                return NO;
+            }
+            start++;
+            end--;
+        }
+    }
+    return YES;
+}
+
 #pragma mark - 第1类 从左往右，包含slide window
 
 #pragma mark - strStr [E]
@@ -37,7 +72,7 @@
             }
         }
     }
-    return - 1;
+    return NSNotFound;
 }
 
 #pragma mark - Trapping Rain Water [H] 难题实现方法还要再研究下
@@ -100,6 +135,7 @@
 //方法二 Two pointers
 // https://discuss.leetcode.com/topic/3016/share-my-short-solution
 // 这种方法不太好想，需要对照着图，大脑演示一遍.
+
 // Search from left to right and maintain a max height of left and right separately, which is like a one-side wall of partial container.
 // Fix the higher one and flow water from the lower part.
 // For example, if current height of left is lower, we fill water in the left bin. Until left meets right, we filled the whole container.
@@ -137,6 +173,7 @@
 }
 
 #pragma mark - sorted colors[M]
+
 // fellow up 写一个stable color color，相同的key 保持原来的顺序
 
 - (void)sortedColorsBucketSort:(NSMutableArray<NSNumber *> *)nums k:(NSInteger)k
@@ -162,6 +199,30 @@
         }
     }
 }
+
+//public class Solution {
+//    public void sortColors(int[] nums) {
+//        if (nums == null || nums.length <= 1) {
+//            return;
+//        }
+//        int[] count = new int[3];
+//        int[] temp = new int[nums.length];
+//        for (int i : nums) {
+//            count[i]++;
+//        }
+//        for (int i = 1; i < 3; i++) {
+//            count[i] += count[i - 1];//calculate the starting index of inserting, of each kinds of colors
+//        }
+//        for (int i = nums.length - 1; i >= 0; i--) { // 这里的顺序是一致的,就是保存通排序的顺序，这里需要逆向遍历
+//            int color = nums[i];
+//            int pos = --count[color];
+//            temp[pos] = color;
+//        }
+//        for (int i = 0; i < nums.length; i++) {
+//            nums[i] = temp[i];
+//        }
+//    }
+//}
 
 //统计个数0 1 2，然后rewrite 的array。 Two pass algorithm
 // 没有实现
@@ -193,6 +254,61 @@
         }
     }
 }
+
+// 逐步夹逼
+
+////int getCategory(int n), outputs the category(1 to k) of given n
+////sort k categories in descending order
+//public void sortKColors(int[] nums, int k) {//we assume input left is 0 and right is nums.length - 1
+//    if (nums == null || nums.length <= 1 || k <= 1) {
+//        return;
+//    }
+//    int left = 0;
+//    int right = nums.length - 1;
+//    int min = 1;
+//    int max = k;
+//    while (left < right) {
+//        int i = left;
+//        while (i <= right) {
+//            if (getCategory(nums[i]) == min) {
+//                swap(nums, i, left);
+//                left++;
+//                i++;
+//            } else if (getCategory(nums[i]) > min && getCategory(nums[i]) < max) {
+//                i++;
+//            } else {
+//                swap(nums, i, right);
+//                right--;
+//            }
+//        }
+//        min++;
+//        max--;
+//    }
+//}
+
+
+////http://www.1point3acres.com/bbs/thread-209155-1-1.html
+//public class Solution {
+//    //given three functions: isHigh(), isMid(), isLow()
+//    //sort 3 categories in descending order
+//    public void sortColors(int[] nums, int left, int right) {//we assume input left is 0 and right is nums.length - 1
+//        if (nums == null || nums.length <= 1) {
+//            return;
+//        }
+//        int i = left;
+//        while (i <= right) {//should be i <= right, not i < nums.length !!!eg.[2, 2]; not i < right !!!eg.[1,0];
+//            if (isLow(nums[i])) {
+//                swap(nums, i, left);
+//                left++;//left side of left pointer are all 0, between left & i are all 1
+//                i++;//i++ cuz we know what we swap from left pointer is either 0 or 1, i's left side are all 0 and 1
+//            } else if (isMid(nums[i])) {
+//                i++;
+//            } else {//isHigh(nums[i])
+//                swap(nums, i, right);
+//                right--;//we can't i++ cuz we don't know what we swapped from right pointer, so we still need to check later
+//            }
+//        }
+//    }
 
 #pragma mark - 3 Sum 系列 左右两个指针往中间跑
 
@@ -321,7 +437,7 @@
         if(prevIdx) {
             return @[prevIdx, @(idx)];
         } else {
-            map[@(idx)] = @(idx); //
+            map[nums[idx]] = @(idx); //
         }
     }
     return @[];
@@ -361,11 +477,11 @@
     NSArray<NSNumber *> *sortedNums = [nums sortedArrayUsingSelector:@selector(compare:)];
     
     for (NSInteger k = 0; k < nums.count - 3; k++) {
-        if (k > 0 && [nums[k] compare:nums[k-1]] == NSOrderedSame) {
+        if (k > 0 && [nums[k] compare:nums[k - 1]] == NSOrderedSame) {
             continue; //skipe duplicate
         }
         for(NSInteger i = k + 1; i < nums.count - 2; i++) { // 这里细心点 start form k + 1
-            if (i > 0 && [nums[i] compare:nums[i-1]] == NSOrderedSame) {
+            if (i > 0 && [nums[i] compare:nums[i - 1]] == NSOrderedSame) {
                 continue; //skipe duplicate
             }
             

@@ -51,7 +51,7 @@
 // Although the above answer is in lexicographical order, your answer could be in any order you want.
 
 - (NSArray<NSString *> *)letterCombinations:(NSString *)digits;
-- (NSArray<NSString *> *)letterCombinations_recursive:(NSString *)digits;
+- (NSArray<NSString *> *)letterCombinations_dfs:(NSString *)digits;
 
 //39
 // Combination Sum I
@@ -120,7 +120,6 @@
 - (NSArray<NSArray *> *)permut2:(NSArray<NSNumber *> *)nums;
 
 // 60. Permutation Sequence
-
 //The set [1,2,3,…,n] contains a total of n! unique permutations.
 //
 //By listing and labeling all of the permutations in order,
@@ -167,7 +166,6 @@
 
 - (NSArray<NSArray<NSString *> *> *)partition:(NSString *)str;
 
-
 // 77. Combinations
 // Given two integers n and k, return all possible combinations of k numbers out of 1 ... n.
 // For example,
@@ -207,29 +205,6 @@
 // isMatch("aab", "c*a*b") → true
 
 - (BOOL)isMatch:(NSString *)str withPatten:(NSString *)p;
-
-// 44. Wildcard Matching
-// Difficulty: Hard
-// Implement wildcard pattern matching with support for '?' and '*'.
-
-// '?' Matches any single character.
-// '*' Matches any sequence of characters (including the empty sequence).
-
-// The matching should cover the entire input string (not partial).
-
-// The function prototype should be:
-// bool isMatch(const char *s, const char *p)
-
-// Some examples:
-// isMatch("aa","a") → false
-// isMatch("aa","aa") → true
-// isMatch("aaa","aa") → false
-// isMatch("aa", "*") → true
-// isMatch("aa", "a*") → true
-// isMatch("ab", "?*") → true
-// isMatch("aab", "c*a*b") → false
-- (BOOL)isMatchWildcard:(NSString *)str withPatten:(NSString *)p;
-
 
 // 301. Remove Invalid Parentheses
 // Remove the minimum number of invalid parentheses in order to make the input string valid. Return all possible results.
@@ -271,10 +246,7 @@
 
 - (NSArray<NSArray *> *)subSets_iterate:(NSArray *)nums;
 
-
 //90. Subsets II
-//Total Accepted: 88078
-//Total Submissions: 264717
 //Difficulty: Medium
 //Contributors: Admin
 //Given a collection of integers that might contain duplicates, nums, return all possible subsets.
@@ -317,7 +289,14 @@
 // 00011
 // Answer: 3
 
-- (NSInteger)numIslands:(NSArray<NSNumber *> *)grid;
+- (NSInteger)numIslands:(NSMutableArray<NSMutableArray<NSNumber *> *> *)grid;
+
+// Fellow up: max size of largest Island
+- (NSInteger)maxSizeIslands:(NSMutableArray<NSMutableArray<NSNumber *> *> *)grid;
+
+// Fellow up 2: remove Island that less than k size
+
+- (void)removeIslands:(NSMutableArray<NSMutableArray<NSNumber *> *> *)grid k:(NSInteger)k;
 
 // 22. Generate Parentheses
 // Difficulty: Medium
@@ -335,38 +314,9 @@
 
 - (NSArray<NSString *> *)generateParenthesis:(NSInteger)count;
 
-// 32. Longest Valid Parentheses
-// Difficulty: Hard
-// Contributors: Admin
-// Given a string containing just the characters '(' and ')', find the length of the longest valid (well-formed) parentheses substring.
-// For "(()", the longest valid parentheses substring is "()", which has length = 2.
-// Another example is ")()())", where the longest valid parentheses substring is "()()", which has length = 4.
-
-- (NSInteger)longestValidParentheses:(NSString *)str;
-
 //DP 161 One Edit Distance
+
 - (BOOL)isOneEditDistance:(NSString *)str withStr:(NSString *)str2;
-
-//198. House Robber
-// TAG: DP
-//Difficulty: Easy
-//Contributors: Admin
-//You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security system connected and it will automatically contact the police if two adjacent houses were broken into on the same night.
-//
-//Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight without alerting the police.
-
-- (NSInteger)rob:(NSArray<NSNumber *> *)nums;
-
-// 213. House Robber II   QuestionEditorial Solution  My Submissions
-// Difficulty: Medium
-// Contributors: Admin
-// Note: This is an extension of House Robber.
-
-// After robbing those houses on that street, the thief has found himself a new place for his thievery so that he will not get too much attention. This time, all houses at this place are arranged in a circle. That means the first house is the neighbor of the last one. Meanwhile, the security system for these houses remain the same as for those in the previous street.
-
-// Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight without alerting the police.
-
-- (NSInteger)rob_2:(NSArray<NSNumber *> *)nums;
 
 //282. Expression Add Operators
 
@@ -384,6 +334,10 @@
 - (NSString *)addOperators:(NSString *)num target:(NSInteger)target;
 
 //218. The Skyline Problem
+
+//LZ用的是max heap扫一遍的做法，小哥表示没有见过~不过time complexity跟devide and conquer一样嘛，都是O(nlog(n))~
+//在用PriorityQueue加入和移除height上跟小哥讨论了很久
+//最后他让我用个Binary search tree做~
 
 - (NSArray<NSNumber *> *)getSkyline:(NSArray<NSArray<NSNumber *> *> *)nums;
 
@@ -441,7 +395,7 @@
 // TODO: 面筋新题
 // http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=218509&extra=page%3D1%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3046%5D%5Bvalue%5D%3D2%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
 //一个m x n 的 array 只有 0 和 1  给一个 int k
-//需要把 小于 k 数量 连续的 1 变成 0.1point3acres缃�
+//需要把 小于 k 数量 连续的 1 变成 0
 //连续： 上下左右和四个斜线方向
 //面试官是个中国女孩
 
@@ -469,9 +423,7 @@
 //You may assume that all words are consist of lowercase letters a-z.
 
 @interface WordDictionary : NSObject
-
 - (void)addWord:(NSString *)word;
-
 - (BOOL)search:(NSString *)word;
 
 @end

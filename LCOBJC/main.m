@@ -32,24 +32,41 @@ void testTwoPointer();
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        
-        NSInteger i = 0;
-        NSMutableArray *s = [NSMutableArray array];
-        @autoreleasepool {
-            while (i < 10) {
-                NSUUID *uuid = [NSUUID UUID];
-                [s addObject:uuid];
-                i++;
-            }
+        NSString *ch = @"acbd";
+        const char *cs = [ch cStringUsingEncoding:NSASCIIStringEncoding];
+        while (*cs) {
+            printf("%c", *cs);
+            cs++;
         }
-        testTree();
-        testString();
-//        testArray();
+        if ([[NSUUID UUID] isEqual:[NSUUID UUID]]) {
+            NSLog(@"YES");
+        }
+        NSInteger a = NSNotFound;
+        NSUInteger aa = NSUIntegerMax;
+        a = aa;
+        
+//        NSInteger abc = [@"a" hash] ^ [@"b" hash] ^ [@"c" hash];
+//        NSInteger ba = [@"c" hash] ^ [@"b" hash] ^ [@"a" hash];
+//        
+//        NSString *sb = @"中国hhh";
+//        NSString *ab = [@"adfd" substringToIndex:4];
+//        
+//        for (NSInteger i = 0 ; i < sb.length; i++) {
+//            NSLog(@"%@", [sb substringWithRange:NSMakeRange(i, 1)]);
+//            NSLog(@"%hu", [sb characterAtIndex:i]);
+//        }
+//        testTree();
+//        testString();
+        testArray();
         testBackTracking();
 //        testList();
 //        testMath();
 //        testSumRange();
 //        testGraph();
+        
+        NSMutableSet *set = [NSMutableSet setWithObject:@[@1, @2]];
+        [set addObject:@[@1, @2]];
+
         testTwoPointer();
     }
     return 0;
@@ -63,12 +80,18 @@ void testTwoPointer()
 //    NSInteger s1 = [sl removeDuplicates: [@[@1,@1,@1,@2,@2,@2,@3,@3,@4] mutableCopy]];
 //
 //    NSInteger s = [sl removeDuplicates2: [@[@1,@1,@1,@2,@2,@2,@3,@3,@4] mutableCopy]];
+    
+    NSInteger s = [sl longestSubstring:@"eceba" k:2];
+    BOOL ss =  [sl containsDuplicate:@[@"A", @"B", @"c",@"B",@"B"] windowSize:2];
+    
 }
 
 void testGraph()
 {
     Graph *g = [Graph new];
     BOOL canfinish = [g canFinish:@[@[@1, @0]] count:2];
+    
+    NSString *str = [g alienDictionary:@[@"wrt", @"wrf", @"er", @"ett", @"rftt"]];
     
 }
 
@@ -90,6 +113,12 @@ void testMath()
     double ress = [m divideMethod2:25 divisor:-5];
     
     NSString *s = [m convertToTitle:26];
+    
+    NSString *ns = [m multiplyStr:@"98009" andStr:@"19809"];
+    NSString *ns2 = [m multiplyStr3:@"98009" andStr:@"19809"];
+    
+    NSInteger ab = [m calculate:@"(1+(4+5+2)-3)+(6+8)"];
+    
 }
 
 void testList()
@@ -124,7 +153,7 @@ void testList()
 ////    [list reorderList:f0];
 //    
 //    ListNode *head = [list mergeList:f0 withList:f2];
-    BOOL isPalindrome = [list isPalindrome:f0];
+//    BOOL isPalindrome = [list isPalindrome:f0];
 }
 
 void testTree() {
@@ -157,18 +186,18 @@ void testTree() {
     Solution *s = [Solution new];
     
 //    NSString *str = [s minWindow:@"ADOBECODEBANC" t:@"AB"];
-    NSArray *words =  @[@"hot", @"dot", @"dog", @"lot", @"log"];
-    for (NSInteger i = 0; i < 5; i++) {
-       NSString *item = [[words objectEnumerator] nextObject];
-        NSLog(@"%@", item);
-    }
-    NSSet *wordList = [NSMutableSet setWithArray: @[@"hot", @"dot", @"dog", @"lot", @"log"]];
+//    NSArray *words =  @[@"hot", @"dot", @"dog", @"lot", @"log"];
+//    for (NSInteger i = 0; i < 5; i++) {
+//       NSString *item = [[words objectEnumerator] nextObject];
+//        NSLog(@"%@", item);
+//    }
+//    NSSet *wordList = [NSMutableSet setWithArray: @[@"hot", @"dot", @"dog", @"lot", @"log"]];
 //    NSInteger steps = [s ladderLength:@"hit" endWord:@"cog" set:wordList];
-    __unused NSArray *path = [s ladderLength2:@"hit" endWord:@"cog" set:wordList];
-
-    __unused NSInteger steps = [s ladderLength:@"hit" endWord:@"cog" set:wordList];
-    
-    __unused NSInteger hidx = [s hIndex:@[@3, @0, @6, @1, @5]];
+//    __unused NSArray *path = [s ladderLength2:@"hit" endWord:@"cog" set:wordList];
+//
+//    __unused NSInteger steps = [s ladderLength:@"hit" endWord:@"cog" set:wordList];
+//    
+//    __unused NSInteger hidx = [s hIndex:@[@3, @0, @6, @1, @5]];
     
 //    TreeNode *dll = [s convertBT:node];
 //    NSString *abc = [s longestPalindrome:@"abcdku0839abvvba"];
@@ -176,7 +205,14 @@ void testTree() {
     // NSArray *q = [s binaryTreePaths_LJSolution:node];
     // NSArray *m = [s zigzagLevelOrder:node];
     
-    // [s flattenBSTWithNode:node];
+//     [s flattenBTWithNode:node];
+    [s flattenBTWithNodeMethod2:node];
+    TreeNode *track = node;
+    
+    while (track) {
+        NSLog(@"%ld", (long)track.val);
+        track = track.right;
+    }
     
 //    NSArray *temp = [s binaryTreeVerticalOrderTraversal_BFS:node];
 //    NSArray *b = [s binaryTreeVerticalOrderTraversal:node];
@@ -189,24 +225,31 @@ void testTree() {
 //    BOOL r = [s isValidBST:node];
 //    BOOL rr = [s isValidBST_r:node];
     
+//  
+//    NestedListNode *list1 = [NestedListNode new];
+//    NestedListNode *list2 = [NestedListNode new];
+//    list2.data = @(2);
+//    list1.data = @(1);
+//    list1.next = list2;
+//    
+//    NestedListNode *list = [NestedListNode new];
+//    list.data = list1;
+//    
+//    NestedListNode *list3 = [NestedListNode new];
+//    list3.data = @(3);
+//    list.next = list3;
+//    
+//    NestedIterator *iter = [[NestedIterator alloc] initWithListNode:list];
+//    
+//    while ([iter hasNext]) {
+//        NSInteger ab = [iter next];
+//        NSLog(@"%@", @(ab));
+//    }
     
-    NestedListNode *list1 = [NestedListNode new];
-    NestedListNode *list2 = [NestedListNode new];
-    list2.data = @(2);
-    list1.data = @(1);
-    list1.next = list2;
-    
-    NestedListNode *list = [NestedListNode new];
-    list.data = list1;
-    
-    NestedListNode *list3 = [NestedListNode new];
-    list3.data = @(3);
-    list.next = list3;
-    
-    NestedIterator *iter = [[NestedIterator alloc] initWithListNode:list];
-    
-    while ([iter hasNext]) {
-        NSInteger ab = [iter next];
+    FlattenArrayIterator *t = [[FlattenArrayIterator alloc] initWithListNode:@[@0, @[@1,@2], @[@3,@4]]];
+    while ([t hasNext]) {
+        NSNumber *ab = [t next];
+        NSLog(@"%@", ab);
     }
 }
 
@@ -270,7 +313,7 @@ void testArray()
 //    NSInteger r = [s threeSumCloset:@[@(-2),@(4),@(-2),@(0),@(1)] target:3];
 //    
 //    NSArray *re = [s productExceptSelf:@[@(2), @(3), @(9), @(1)]];
-//    NSNumber *kth = [s findKthLargest:2 inArray:@[@(2),@(3),@(5),@(0),@(6)]];
+    NSNumber *kth = [s findKthLargest:1 inArray:@[@(1),@(3),@(5),@(0),@(6)]];
     
 //    NSMutableArray *arr = [@[@2, @0, @1, @2, @0] mutableCopy];
 //    [s sortedColors_bs:arr k:3];
@@ -310,12 +353,19 @@ void testArray()
     
 //    __unused BOOL is = [s increasingTriplet:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4]];
 //    __unused BOOL iss = [s increasing:@[@-2,@1,@-3,@4,@-1,@2,@1,@-5,@4] k:3];
+    
+    NSArray *tasks = [s cooldown:3 withTask:@[@"A",@"A",@"B",@"C",@"B"]];
+    NSString *taskss = [[s cooldownOptimizeSpace:4 withTask:@[@"A",@"A",@"B",@"C",@"B"]] componentsJoinedByString:@","];
+    NSString *tas = [s cooldownOptimizeSpace_3shua:1 withTask:@[@"A",@"A",@"B",@"C",@"B"]];
+    
+    NSArray *a = [s mergeKSortedArray_divideConquer:@[@[@1, @8, @9], @[@1, @3, @8, @99], @[@0, @3, @19]]];
+    
 }
 
 void testBackTracking()
 {
     BackTracking *b = [BackTracking new];
-    NSMutableArray *sequence = [@[@1, @2, @3] mutableCopy];
+    NSMutableArray *sequence = [@[@4, @5, @6, @3, @2, @1] mutableCopy];
     [b nextPermutation: sequence];
     [b previousPermutation: sequence];
 //    NSArray *tem =  [b combinationSum_3:16 count:3];
@@ -331,7 +381,7 @@ void testBackTracking()
     
 //    NSArray *tem = [b partition:@"aaab"];
     
-//    NSArray *re = [b letterCombinations:@"12345"];
+    NSArray *re = [b letterCombinations:@"12345"];
 //    NSArray *re_r = [b letterCombinations_recursive:@"12345"];
 //    NSArray *r = [b combinationSum:@[@2,@3,@6,@7,@4] target:7];
 //    NSArray *r2 = [b combinationSum_2:@[@10, @1, @2, @7, @6, @1, @5] target:8];

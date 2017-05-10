@@ -73,11 +73,10 @@
 
 - (NSInteger)longestConsecutive:(NSArray<NSNumber *> *)nums;
 
-
 // 414. Third Maximum Number
 
 // Difficulty: Easy
-// Contributors: ZengRed , 1337c0d3r
+
 // Given a non-empty array of integers, return the third maximum number in this array. If it does not exist, return the maximum number. The time complexity must be in O(n).
 
 // Example 1:
@@ -162,6 +161,7 @@
 //57. Insert Interval
 //Difficulty: Hard
 //Contributors: Admin
+
 //Given a set of non-overlapping intervals, insert a new interval into the intervals (merge if necessary).
 //You may assume that the intervals were initially sorted according to their start times.
 //Example 1:
@@ -220,17 +220,6 @@
 // 允许重复，会对time complexity 有什么影响
 - (NSNumber *)findMin2:(NSArray<NSNumber *> *)nums;
 
-// 53. Maximum Subarray
-#pragma mark - 高频
-// Difficulty: Medium
-// Find the contiguous subarray within an array (containing at least one number) which has the largest sum.
-
-// For example, given the array [-2,1,-3,4,-1,2,1,-5,4],
-// the contiguous subarray [4,-1,2,1] has the largest sum = 6.
-
-- (NSInteger)maxSubArray:(NSArray<NSNumber *>*)nums;
-- (NSInteger)maxSubArrayM2:(NSArray<NSNumber *>*)nums;
-
 // 48. Rotate Image   Add to List QuestionEditorial Solution  My Submissions
 // Difficulty: Medium
 // You are given an n x n 2D matrix representing an image.
@@ -274,7 +263,9 @@
 
 - (NSArray *)mergeKSortedArray:(NSArray *)array;
 
-//283. Move Zeroes   Add to List QuestionEditorial Solution  My Submissions
+- (NSArray *)mergeKSortedArray_divideConquer:(NSArray<NSArray *> *)array;
+
+//283. Move Zeroes
 
 //Difficulty: Easy
 //Contributors: Admin
@@ -289,7 +280,27 @@
 - (void)moveZeros:(NSMutableArray<NSNumber *> *)nums;
 - (void)moveZeros_no_order:(NSMutableArray<NSNumber *> *)nums;
 
-- (NSArray *)cooldown:(NSArray *)tasks;
+// Task schedule with cool down time
+// 第二轮，老外面试官，给一个String, 如AABACCDCD, 插入'_'使同一个字母间隔为k: 如果k=3: A___AB__AC___CD__CD, 一开始理解有误，认为是要先shuffle字母顺序然后插入'_'，花了不少时间，然后面试官提示字母顺序不变，写出来，然后直接run出来有bug，在coderpad上调了一会才通过。。。.
+
+- (NSArray *)cooldown:(NSInteger)cooldown withTask:(NSArray *)tasks;
+
+- (NSArray *)cooldownOptimizeSpace:(NSInteger)cooldown withTask:(NSArray<NSString *> *)tasks;
+
+- (NSString *)cooldownOptimizeSpace_3shua:(NSInteger)cooldown withTask:(NSArray<NSString *> *)tasks;
+
+//一开始我的思路是用hashmap， key存index，value存non-zero vector element。乘积的时候，遍历size小的那hashmap的每一个key, 然后查找他的key是否在另一个中能找到，如果找到就做乘积。小哥问了时间复杂度，然后说hashmap在这里会有什么问题，这块儿我没很清楚的回答出来，我的回答大概就是hashing会有overhead。他的意思是hashmap空间上还有多余的overhead。
+
+//然后问我还有没有别的data structure，然后说可以不考虑乘积的时间复杂度，然后我的solution就是用一个vector<pair<int,int>> pair.first 是index，pair.second是value，做的dot product的时候，因为pair.first是sorted，所以查找可以用二分查找，而且运算的时候，要iterate size小的那个vector<pair<int,int>>，时间复杂度是 O(sizeA*log(sizeB)),(sizeA < sizeB). 同时迅速敲好了binary search的代码以及压缩vector的代码，接着又被问，可不可以再优化时间复杂度，因为时间不多了，面试官说，可以用while loop，然后同时遍历两个vector<pair<int,int>>，如果是交集，就做乘积，否则就continue，这样时间复杂度是O(max(sizeA,sizeB)).因为时间不够，所以没有当场写代码，面试官也说不用写了。现在把代码写一下，代码大概就是:
+
+//int i = 0,j = 0;
+//int sum = 0;
+//while(i < sizeA && j  < sizeB)
+//{
+//    if(A[i].first == B[j].first)  sum +=  A[i].second * B[j].second //do product
+//        else if(A[i].first < B[j].first) i++;   //因为都是排好序的，所以如果A[i].first小，i往前移动
+//        else j++;  //同理
+//}
 
 - (NSInteger)sparseVector:(NSArray<NSArray<NSNumber *> *> *)vector dotVector:(NSArray<NSArray<NSNumber *> *> *)vector2;
 
@@ -331,7 +342,6 @@
 // Your function should return true if any value appears at least twice in the array, and it should return false if every element is distinct.
 - (BOOL)containsDuplicate:(NSArray<NSNumber *> *)nums;
 
-
 // Given an array of integers and an integer k, find out whether there are two distinct indices i and j in the array such that 
 // nums[i] = nums[j] and the difference between i and j is at most k.
 - (BOOL)containsDuplicate2:(NSArray<NSNumber *> *)nums;
@@ -357,6 +367,10 @@
 //You are given a helper function bool knows(a, b) which tells you whether A knows B. Implement a function int findCelebrity(n), your function should minimize the number of calls to knows.
 //
 //Note: There will be exactly one celebrity if he/she is in the party. Return the celebrity's label if there is a celebrity in the party. If there is no celebrity, return -1.
+
+// 1. dont know any one
+// 2. all the other people know him
+// overall
 
 - (NSInteger)findCelebrity:(NSArray *)nums;
 
@@ -444,7 +458,6 @@
 
 - (BOOL)increasing:(NSArray<NSNumber *> *)nums k:(NSInteger)k;
 
-// todo : implement circular buffer
 // 457. Circular Array Loop [M]  这题和circular buffer 不一样
 
 //You are given an array of positive and negative integers. If a number n at an index is positive, then move forward n steps. Conversely, if it's negative (-n), move backward n steps. Assume the first element of the array is forward next to the last element, and the last element is backward next to the first element. Determine if there is a loop in this array. A loop starts and ends at a particular index with more than 1 element along the loop. The loop must be "forward" or "backward'.
@@ -465,7 +478,7 @@
 //Contributors: Admin
 //Given a m x n matrix, if an element is 0, set its entire row and column to 0. Do it in place.
 //
-//click to show follow up.
+
 //
 //Follow up:
 //Did you use extra space?
@@ -475,14 +488,14 @@
 
 - (void)setMatrixZero:(NSMutableArray<NSMutableArray<NSNumber *> *> *)matrix;
 
-// TODO:
-// Task schedule with cool down time
-// 第二轮，老外面试官，给一个String, 如AABACCDCD, 插入'_'使同一个字母间隔为k: 如果k=3: A___AB__AC___CD__CD, 一开始理解有误，认为是要先shuffle字母顺序然后插入'_'，花了不少时间，然后面试官提示字母顺序不变，写出来，然后直接run出来有bug，在coderpad上调了一会才通过。。。. Fr
 // 给一个数组，每个元素有一个概率，写一个函数按照每个元素的概率每次返回一个元素。比如1：0.2，2：0.3，3：0.5    返回1的概率是0.2，返回3的概率是0.5
+- (NSInteger)randomPick:(NSArray<NSArray<NSNumber *> *> *)nums;
+
+
 @end
 
 // 303. Range Sum Query - Immutable
-// Difficulty: Easy
+// Difficulty: Easyx
 // Contributors: Admin
 // Given an integer array nums, find the sum of the elements between indices i and j (i ≤ j), inclusive.
 

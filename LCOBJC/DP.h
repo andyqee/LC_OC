@@ -41,7 +41,6 @@
 
 //https://leetcode.com/articles/longest-palindromic-substring/
 
-
 // Boom Enemy 炸弹人
 
 // Given a 2D grid, each cell is either a wall 'W', an enemy 'E' or empty '0' (the number zero), return the maximum enemies you can kill using one bomb.
@@ -58,7 +57,7 @@
 
 - (NSInteger)maxKilledEnemies:(NSArray<NSArray<NSNumber *> *> *)matrix;
 
-//85. Maximal Rectangle   Add to List QuestionEditorial Solution
+//85. Maximal Rectangle
 
 //Difficulty: Hard
 //Contributors: Admin
@@ -90,9 +89,8 @@
 
 // Paint House 2
 
-//There are a row of n houses, each house can be painted with one of the k colors. The cost of painting each house with a certain color is different. You have to paint all the houses such that no two adjacent houses have the same color.
-//
-//The cost of painting each house with a certain color is represented by a n x k cost matrix. For example, costs[0][0] is the cost of painting house 0 with color 0; costs[1][2]is the cost of painting house 1 with color 2, and so on... Find the minimum cost to paint all houses.
+// There are a row of n houses, each house can be painted with one of the k colors. The cost of painting each house with a certain color is different. You have to paint all the houses such that no two adjacent houses have the same color.
+// The cost of painting each house with a certain color is represented by a n x k cost matrix. For example, costs[0][0] is the cost of painting house 0 with color 0; costs[1][2]is the cost of painting house 1 with color 2, and so on... Find the minimum cost to paint all houses.
 //
 //Note:
 //All costs are positive integers.
@@ -245,4 +243,84 @@
 
 - (NSInteger)longestLIS:(NSArray<NSNumber *> *)prices;
 
+// 32. Longest Valid Parentheses
+// Difficulty: Hard
+// Contributors: Admin
+// Given a string containing just the characters '(' and ')', find the length of the longest valid (well-formed) parentheses substring.
+// For "(()", the longest valid parentheses substring is "()", which has length = 2.
+// Another example is ")()())", where the longest valid parentheses substring is "()()", which has length = 4.
+
+- (NSInteger)longestValidParentheses:(NSString *)str;
+
+// 44. Wildcard Matching
+// Difficulty: Hard
+// Implement wildcard pattern matching with support for '?' and '*'.
+
+// '?' Matches any single character.
+// '*' Matches any sequence of characters (including the empty sequence).
+
+// The matching should cover the entire input string (not partial).
+
+// The function prototype should be:
+// bool isMatch(const char *s, const char *p)
+
+// Some examples:
+// isMatch("aa","a") → false
+// isMatch("aa","aa") → true
+// isMatch("aaa","aa") → false
+// isMatch("aa", "*") → true
+// isMatch("aa", "a*") → true
+// isMatch("ab", "?*") → true
+// isMatch("aab", "c*a*b") → false
+
+- (BOOL)isMatchWildcard:(NSString *)str withPatten:(NSString *)p;
+
+// 198. House Robber
+// TAG: DP
+
+//Contributors: Admin
+//You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security system connected and it will automatically contact the police if two adjacent houses were broken into on the same night.
+//
+//Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight without alerting the police.
+
+- (NSInteger)rob:(NSArray<NSNumber *> *)nums;
+
+// 213. House Robber II
+// Difficulty: Medium
+// Contributors: Admin
+// Note: This is an extension of House Robber.
+
+// After robbing those houses on that street, the thief has found himself a new place for his thievery so that he will not get too much attention. This time, all houses at this place are arranged in a circle. That means the first house is the neighbor of the last one. Meanwhile, the security system for these houses remain the same as for those in the previous street.
+
+// Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight without alerting the police.
+
+- (NSInteger)rob_2:(NSArray<NSNumber *> *)nums;
+
+
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

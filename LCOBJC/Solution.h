@@ -18,15 +18,6 @@
 - (void)testFuntionRef:(TreeNode *)tree;
 - (void)testFuntionReff:(TreeNode **)tree;
 
-//13. Roman to Integer
-//Difficulty: Easy
-//Contributors: Admin
-//Given a roman numeral, convert it to an integer.
-//
-//Input is guaranteed to be within the range from 1 to 3999.
-
-- (NSInteger)romanToInt:(NSString *)str;
-
 //165. Compare Version Numbers
 
 //Difficulty: Easy
@@ -55,9 +46,9 @@
 //Note:
 //The read function will only be called once for each test case
 
-//- (NSInteger)read
+- (NSInteger)readFromString:(NSMutableString *)buffer count:(NSInteger)count;
 
-//71. Simplify Path
+//71. Simplify Path 【低】
 //Difficulty: Medium
 //Given an absolute path for a file (Unix-style), simplify it.
 
@@ -123,56 +114,6 @@
 - (NSInteger)numDecodingsMethod2:(NSString *)s;
 - (NSInteger)numDecodingsMethod3:(NSString *)s;
 
-// 43. Multiply Strings   
-// Difficulty: Medium
-// Given two numbers represented as strings, return multiplication of the numbers as a string.
-
-// Note:
-// The numbers can be arbitrarily large and are non-negative.
-// Converting the input string to integer is NOT allowed.
-// You should NOT use internal library such as BigInteger.
-
-- (NSString *)multiplyStr:(NSString *)str1 andStr:(NSString *)str2;
-
-// Given two binary strings, return their sum (also a binary string).
-// For example,
-// a = "11"
-// b = "1"
-// Return "100".
-
-- (NSString *)addBinary:(NSString *)str1 andStr:(NSString *)str2;
-
-// 336. Palindrome Pairs   
-// Contributors: Admin
-// Given a list of unique words, find all pairs of distinct indices (i, j) in the given list, so that the concatenation of the two words, i.e. words[i] + words[j] is a palindrome.
-
-// Example 1:
-// Given words = ["bat", "tab", "cat"]
-// Return [[0, 1], [1, 0]]
-// The palindromes are ["battab", "tabbat"]
-// Example 2:
-// Given words = ["abcd", "dcba", "lls", "s", "sssll"]
-// Return [[0, 1], [1, 0], [3, 2], [2, 4]]
-// The palindromes are ["dcbaabcd", "abcddcba", "slls", "llssssll"]
-
-- (NSArray<NSNumber *> *)palindromePairs:(NSArray<NSString *> *)strs;
-
-// 125. Valid Palindrome   
-// Difficulty: Easy
-// Contributors: Admin
-// Given a string, determine if it is a palindrome, considering only alphanumeric characters and ignoring cases.
-
-// For example,
-// "A man, a plan, a canal: Panama" is a palindrome.
-// "race a car" is not a palindrome.
-
-// Note:
-// Have you consider that the string might be empty? This is a good question to ask during an interview.
-
-// For the purpose of this problem, we define empty string as valid palindrome.
-
-- (BOOL)isPalindrome:(NSString *)str;
-
 // The count-and-say sequence is the sequence of integers beginning as follows:
 // 1, 11, 21, 1211, 111221, ...
 
@@ -183,10 +124,12 @@
 
 // Note: The sequence of integers will be represented as a string.
 // 递归 iterate 两种方式
+
 - (NSString *)countAndSay_recursive:(NSInteger)n;
+
 - (NSString *)countAndSay_iterative:(NSInteger)n;
 
-// 49. Group Anagrams 
+// 49. Group Anagrams [高频]
 // Difficulty: Medium
 // Given an array of strings, group anagrams together.
 
@@ -202,23 +145,7 @@
 
 - (NSArray<NSString *> *)groupAnagrams:(NSArray<NSString *> *)strs;
 
-//5. Longest Palindromic Substring
-
-//Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.
-//Example:
-//Input: "babad"
-//Output: "bab"
-//
-//Note: "aba" is also a valid answer.
-//Example:
-//
-//Input: "cbbd"
-//
-//Output: "bb"
-
-- (NSString *)longestPalindrome:(NSString *)str;
-
-// 273. Integer to English Words   Add to List QuestionEditorial Solution  My Submissions
+// 273. Integer to English Words
 // Difficulty: Hard
 // Convert a non-negative integer to its english words representation. Given input is guaranteed to be less than 231 - 1.
 
@@ -257,20 +184,13 @@
 
 - (NSArray<NSArray<NSString *> *> *)ladderLength2:(NSString *)beginWord endWord:(NSString *)endWord set:(NSSet<NSString *> *)wordList;
 
-// 340 Longest Substring with At Most K Distinct Characters
-//Given a string, find the length of the longest substring T that contains at most k distinct characters.
-//
-//For example, Given s = “eceba” and k = 2,
-//
-//T is "ece" which its length is 3
+//MJ Remove Comments
 
-- (NSInteger)longestSubstring:(NSString *)str k:(NSInteger)k;
+- (NSString *)removeComments:(NSString *)token;
 
 @end
 
 @interface Solution (Array)
-
-//274. H-Index QuestionEditorial Solution  My Submissions
 
 //Difficulty: Medium
 //Given an array of citations (each citation is a non-negative integer) of a researcher, write a function to compute the researcher's h-index.

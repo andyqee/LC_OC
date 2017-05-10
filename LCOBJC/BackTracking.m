@@ -54,49 +54,158 @@
     return rest;
 }
 
-//T = O(n) 多少种情况
-// backtracking;
-
-- (void)binaryTreePathOld:(TreeNode *)node prefixStr:(NSMutableString *)prefixStr array:(NSMutableArray *)array
-{
-    if(!node.left && !node.right) { // 1: backtracking 枚举的终止条件
-        [prefixStr appendString:[NSString stringWithFormat:@"%ld", (long)node.val]];
-        [array addObject:prefixStr];
-    }
-    if(node.left) {
-        NSMutableString *temp = [prefixStr mutableCopy]; //option 1: 这里可以优化成
-        [temp appendString:[NSString stringWithFormat:@"%ld->", (long)node.val]];
-        [self binaryTreePathOld:node.left prefixStr:temp array:array];
-    }
-    if(node.right) {
-        NSMutableString *temp = [prefixStr mutableCopy]; //option 2:
-        [temp appendString:[NSString stringWithFormat:@"%ld->", (long)node.val]];
-        [self binaryTreePathOld:node.right prefixStr:temp array:array];
-    }
-}
+// 可以先暂时用 array 来存储中间结果，最后加入到结果集合里面的时候 在做一次 array ---> string 的转换
+// 注释部分的代码是二次优化的时候写的
 
 - (void)binaryTreePath:(TreeNode *)node prefixStr:(NSMutableArray *)prefixStr array:(NSMutableArray *)array
 {
+    if(!node){
+        return;
+    }
+    [prefixStr addObject:@(node.val)];
     if(!node.left && !node.right) { // 1: backtracking 枚举的终止条件
         // [prefixStr appendString:[NSString stringWithFormat:@"%ld", (long)node.val]];
-        [prefixStr addObject: @(node.val)];
+//        [prefixStr addObject: @(node.val)];
         [array addObject: [prefixStr componentsJoinedByString:@"->"]];
         [prefixStr removeLastObject];
         return;
     }
-    if(node.left) {
-        [prefixStr addObject:@(node.val)];
+    // if(node.left) {
+        // [prefixStr addObject:@(node.val)];
         [self binaryTreePath:node.left prefixStr:prefixStr array:array];
-        [prefixStr removeLastObject];
-    }
-    if(node.right) {
-        [prefixStr addObject:@(node.val)];
+        // [prefixStr removeLastObject];
+    // }
+    // if(node.right) {
+        // [prefixStr addObject:@(node.val)];
         [self binaryTreePath:node.right prefixStr:prefixStr array:array];
-        [prefixStr removeLastObject];
-    }
+        // [prefixStr removeLastObject];
+    // }
+            [prefixStr removeLastObject];
 }
 
-- (BOOL)existWithBorad:(NSArray<NSArray *> *)board word:(NSString *)word
+// 用DFS 迭代如何实现呢？ preorder
+// 迭代解法 3: Stack + 自定义 StackFrame
+
+// 这种做法最有意思，我也最喜欢，觉得只要有合适的 field 属性，很容易 generalize 到各种其他递归解法中。
+// 首先对于二叉树，我们可以这样定义 StackFrame 的三个状态：
+// 0 : 刚入栈，未访问子树；
+// 1 : 正在访问左子树，返回代表左子树访问完毕；
+// 2 : 正在访问右子树，返回代表右子树访问完毕；
+// 这样代码如下，每次 stack 里存的，都是当前路径 (配合一个 List 做高效 print path 操作)，
+// 而每次栈顶的 StackFrame 都记录了当前 node 的访问状态和下一步的动向。
+// 这种 0/1/2 的状态表示方式看着有点像 Graph 里面做 DFS / BFS 的标注，其实不完全一样，只是在这题我们的树一定是二叉而已。
+// 对于多叉树的情况，改动也不会很难；这次 index 代表着 “下一个要访问的 child index”，
+// 当 index == children.size() 的时候，我们就可以知道当前 node 的所有子节点都访问完了。
+
+// 关键:在Preorder traverse t同时 记录 path
+
+- (NSArray<NSString *> *)binaryTreePath_dfs_iterative:(TreeNode *)node
+{
+    if(!node){
+        return nil;
+    }
+    NSMutableArray *stack = [NSMutableArray array];
+    [stack addObject:node];
+    NSMutableArray *pathStack = [NSMutableArray array];
+
+    NSMutableArray *path = [NSMutableArray array];
+    NSMutableString *str = [NSMutableString string];
+    [pathStack addObject:str];
+
+    while([stack count]){   
+        TreeNode *node = stack.firstObject;
+        [stack removeLastObject];
+
+        str = pathStack.firstObject;
+        [pathStack removeLastObject];
+        
+        [str appendString:[NSString stringWithFormat:@"%@->", @(node.val)]];
+
+        if(!node.left && !node.right){
+            [str deleteCharactersInRange:NSMakeRange(str.length - 2, 2)];//remove the "->"
+            [path addObject:[str copy]];
+        }
+        if(node.right){
+            [stack addObject:node.right];
+            [pathStack addObject:[str mutableCopy]];
+        }
+        if(node.left){
+            [stack addObject:node.left];
+            [pathStack addObject:[str mutableCopy]];
+        }
+    }
+    return path;
+}
+
+// BFS Binary tree Paths 速度不够快, 并且不是最优方案
+// optimize the solution
+//    2
+//  1   3
+// 4 5
+// T : O(n)  S: O(n) * log(n)
+
+- (NSArray<NSString *> *)binaryTreePath_bfs_iterative:(TreeNode *)node
+{
+    if(!node){
+        return nil;
+    }
+    
+    NSMutableArray<NSArray *> *paths = [NSMutableArray array];// store the node root to the current node while doing bfs search
+    NSMutableArray<NSString *> *res = [NSMutableArray array];
+    [paths addObject:@[node]];
+
+    while([paths count]){
+        NSArray<TreeNode *> *path = paths.firstObject; //
+        [paths removeObjectAtIndex:0];
+        
+        TreeNode *curr = path.lastObject;
+        if(!curr.left && !curr.right){
+            [res addObject:[path componentsJoinedByString:@"->"]];
+        }
+        
+        if(curr.left){
+            NSMutableArray *newPath = [NSMutableArray arrayWithArray:path];
+            [newPath addObject:curr.left];
+        }
+        if(curr.right){
+            NSMutableArray *newPath = [NSMutableArray arrayWithArray:path];
+            [newPath addObject:curr.right];
+        }
+    }
+    return res;
+}
+
+#pragma mark - Binary tree path based on linkedlist
+
+//based on List, 链表可以被覆盖掉，所以不需要backtracking
+
+- (void)binaryTreePath_baseList:(TreeNode *)node prefixStr:(ListNode *)head prevNode:(ListNode *)prev array:(NSMutableArray *)array
+{
+    if(!node){
+        return;
+    }
+
+    ListNode *currNode = [ListNode new];
+    currNode.val = node.val;
+    if(prev){
+        prev.next = currNode;
+    }
+    if(!head.next){        
+        head.next = currNode;
+    }
+
+    if(!node.left && !node.right){
+//        [array addObject:[head clone]];// clone the list
+        return;
+    }
+
+    [self binaryTreePath_baseList:node.left prefixStr:head prevNode:prev.next array:array];
+    [self binaryTreePath_baseList:node.right prefixStr:head prevNode:prev.next array:array];
+}
+
+#pragma mark - 79. Word Search
+
+- (BOOL)existWithBoard:(NSArray<NSArray<NSString *> *> *)board word:(NSString *)word
 {
     NSInteger m = [board count];
     NSInteger n = [[board firstObject] count];
@@ -122,15 +231,17 @@
 
 //helper method
 //http://www.jiuzhang.com/solutions/word-search/
+// Time complexity: 这里要注意时间复杂度：虽然有四个方向,但是有一个方向是回去的, 那么就会prune 掉 所以是三个真正有效的是三个方向，所以base 是3
+// T: m * n * 3 ^ l  m =  width  n = length  3 is base or the direction it can try  . l is the length of the string
 
 - (BOOL)_findBoard:(NSArray<NSArray *> *)board x:(NSInteger)x y:(NSInteger)y word:(NSString *)word index:(NSInteger)idx visited:(NSMutableArray<NSMutableArray *> *)visited
 {
     if(idx == [word length]) {
         return YES;
     }
-    //break 
+    //break, 棋盘的break 规则和 find path in matrix , island 有overlap 的地方
     NSString *cha = [word substringWithRange:NSMakeRange(idx, 1)];
-    if(x < 0 || y < 0 || x >= [board count] || y >= [[board firstObject] count] || [visited[x][y] boolValue] || ![visited[x][y] isEqualToString:cha]) {
+    if(x < 0 || y < 0 || x >= [board count] || y >= [[board firstObject] count] || [visited[x][y] boolValue] || ![board[x][y] isEqualToString:cha]) {
         return NO;
     }
     visited[x][y] = @(YES); 
@@ -143,8 +254,22 @@
 }
 
 //先来个递归版本，再来个迭代 DFS的思路
+
+//FIXME: Fellow up
+
+//What is time and space complexity of iterative BFS solutions, why?
+//What is time and space complexity of iterative DFS solutions, why?
+//What is time and space complexity of recursive BFS solutions, why?
+//What is time and space complexity of recursive DFS solutions, why?Which approach has better time and space, why
+//What if 数字对应的字母可以任意改变 e.g. 1: "abcde", 2: "", 3: "f", ... then
+//What is time and space complexity of ... ?
+//Which approach has better time and space, why?
+
 #pragma mark  letter Combinations
 //Follow up http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=160432&extra=page%3D12%26filter%3Dsortid%26sortid%3D311%26searchoption%5B3046%5D%5Bvalue%5D%3D2%26searchoption%5B3046%5D%5Btype%5D%3Dradio%26sortid%3D311
+
+// T: O(length) * O(length of str in map) *
+// T: O(n) * O(k) * O(k^n)
 
 - (NSArray<NSString *> *)letterCombinations:(NSString *)digits
 {
@@ -175,9 +300,7 @@
             for(NSInteger j = 0; j < mStr.length; j++){ // 
                 NSString *ch = [mStr substringWithRange:NSMakeRange(j, 1)];
                 for(NSInteger k = 0; k < count; k++) {
-                    NSMutableString *str = [NSMutableString stringWithString:result[k]];
-                    [str appendString:ch];
-                    [temp addObject:str];
+                    [temp addObject:[result[k] stringByAppendingString:ch]];
                 }
             }
             result = temp;
@@ -186,7 +309,7 @@
     return result;
 }
 
-- (NSArray<NSString *> *)letterCombinations_recursive:(NSString *)digits
+- (NSArray<NSString *> *)letterCombinations_dfs:(NSString *)digits
 {
     if(digits.length == 0) {
         return nil;
@@ -220,12 +343,13 @@
     }
     for(NSInteger i = 0; i < alphaValue.length; i++){
         NSString *ch = [alphaValue substringWithRange:NSMakeRange(i, 1)];
-        //NSMutableString *str = [NSMutableString stringWithString:prefix]; //这里可以优化成下面combinationSum的方式，避免无用对象的copy
         [prefix appendString:ch];//[str appendString:ch];
         [self doLetterCombinations:digits start:start + 1 prefix:prefix result:result dic:map];
         [prefix deleteCharactersInRange:NSMakeRange(prefix.length - 1, 1)];
     }
 }
+
+// BFS 就靠 Queue，以 queue 首长度 == i 来判断层数，反复做 join. 另外维护一个 String[] 用作字典查询
 
 // BFS
 // public List<String> letterCombinations(String digits) {
@@ -282,6 +406,7 @@
 //}
 
 // 上面这种方法是在最终搜索到解的情况下进行去重判断，这样就相当于在搜索的过程中，有很多无效的搜索。
+
 - (NSArray<NSArray *> *)combinationSum:(NSArray *)array target:(NSInteger)target
 {
     if(target <= 0 || [array count] == 0){
@@ -373,7 +498,7 @@
     }
 }
 
-#pragma mark Permutations
+#pragma mark - Permutations
 
 - (NSArray<NSArray *> *)permut:(NSArray<NSNumber *> *)nums
 {
@@ -382,7 +507,7 @@
     return array;
 }
 
-// 第一种解法：swap index 和后面所有的元素
+// 第一种解法：标准解法 swap index 和后面所有的元素.
 
 - (void)_permut:(NSMutableArray<NSNumber *> *)nums index:(NSInteger)index result:(NSMutableArray *)result
 {
@@ -397,7 +522,7 @@
     }
 }
 
-// 第二种解法，利用visited 排除重复
+// 第二种解法，利用visited 排除重复, 高中数学就是这个思路
 
 - (void)_permut:(NSMutableArray<NSNumber *> *)nums temp:(NSMutableArray *)temp result:(NSMutableArray *)result visited:(NSMutableArray<NSNumber *> *)visited
 {
@@ -419,6 +544,7 @@
 
 // 第三种迭代枚举写法，我比较擅长的解法
 // T(o) = n!
+
 - (NSArray<NSArray *> *)permut_i:(NSArray<NSNumber *> *)nums// handle empty string
 {
     NSMutableArray<NSArray *> *result = [NSMutableArray arrayWithObject:@[nums[0]]];
@@ -485,8 +611,6 @@
 // 112
 // 112 121 
 // 211 112
-
-// 大脑浮现调用stack
 
 - (void)_permut2:(NSMutableArray<NSNumber *> *)nums index:(NSInteger)index result:(NSMutableSet *)result
 {
@@ -606,12 +730,21 @@
 //找到数学规律
 // http://bangbingsyb.blogspot.hk/2014/11/leetcode-permutation-sequence.html
 // 有空写一下
+//"123"
+//"132"
+//"213"
+//"231"
+//"312"
+//"321"
+
 //- (NSString *)getPermutation:(NSInteger)n kth:(NSInteger)k
 //{
 //    
 //}
 
 #pragma mark - Palindrome
+
+//TODO: 132. Palindrome Partitioning II
 
 - (NSArray<NSArray<NSString *> *> *)partition:(NSString *)str;
 {
@@ -690,7 +823,7 @@
     for(NSInteger i = start; i <= n ;i++){
         [temp addObject:@(i)];
         [self _doCombinNumber:n start:i+1 k:k - 1 temp:temp result:result];//注意这里需要把 i+1 传递下去
-        [temp removeObject:@(i)];
+        [temp removeLastObject];
     }
 }
 
@@ -741,8 +874,8 @@
         
         for (NSInteger j = 1; j <= n; j++) {
             for (NSMutableSet *set in result) {
-                if(![set containsObject:@(1)]){
-                    [set addObject:@(1)];
+                if(![set containsObject:@(j)]){
+                    [set addObject:@(j)];
                     if(![temp containsObject:set]){
                         [temp addObject:set];
                     }
@@ -789,13 +922,13 @@
         if ([self _isMatch_recursive:str strIndex:i withPatten:p pattenIndex:j + 2]) { //"bcd" vs "a*bcd" 这种不管当前有没有相等，如果直接跳过。
             return YES;
         }
-        while ([strCh isEqualToString:pCh] || [strCh isEqualToString:@"."]) { // "abcd" vs "a*bcd"
+        while ([[str substringWithRange:NSMakeRange(i, 1)] isEqualToString:pCh] || [pCh isEqualToString:@"."]) { // "abcd" vs "a*bcd"
             if ([self _isMatch_recursive:str strIndex:++i withPatten:p pattenIndex:j + 2]) { // bcd vs "bcd"
                 return YES;
             }
         }
     } else {
-        return ([strCh isEqualToString:pCh] || [strCh isEqualToString:@"."]) && // case 2: 下一个不是“*”，所以当前ch 得匹配上 “abc” -- "abd"
+        return ([strCh isEqualToString:pCh] || [pCh isEqualToString:@"."]) && // case 2: 下一个不是“*”，所以当前ch 得匹配上 “abc” -- "abd"
                 [self _isMatch_recursive:str strIndex:i + 1 withPatten:p pattenIndex:j + 1]; // 匹配下一个
     }
     return NO;
@@ -804,6 +937,18 @@
 // 如果是两个string，每个字符串相互关联,就用二维数组
 // 各种case 应该考虑全面
 // https://discuss.leetcode.com/topic/17901/accepted-c-dp-solution-with-a-trick/2
+
+/**
+* f[i][j]: if s[0..i-1] matches p[0..j-1]
+* if p[j - 1] != '*'
+*      f[i][j] = f[i - 1][j - 1] && s[i - 1] == p[j - 1]
+* if p[j - 1] == '*', denote p[j - 2] with x
+*      f[i][j] is true iff any of the following is true
+*      1) "x*" repeats 0 time and matches empty: f[i][j - 2]
+*      2) "x*" repeats >= 1 times and matches "x*x": s[i - 1] == x && f[i - 1][j]
+* '.' matches any single character
+*/
+
 - (BOOL)isMatch_dp:(NSString *)str withPatten:(NSString *)p
 {
     NSInteger m = str.length;
@@ -816,23 +961,15 @@
             [sub addObject:@(NO)];
         }
         [map addObject:sub];
-    }    /**
-     * f[i][j]: if s[0..i-1] matches p[0..j-1]
-     * if p[j - 1] != '*'
-     *      f[i][j] = f[i - 1][j - 1] && s[i - 1] == p[j - 1]
-     * if p[j - 1] == '*', denote p[j - 2] with x
-     *      f[i][j] is true iff any of the following is true
-     *      1) "x*" repeats 0 time and matches empty: f[i][j - 2]
-     *      2) "x*" repeats >= 1 times and matches "x*x": s[i - 1] == x && f[i - 1][j]
-     * '.' matches any single character
-     */
+    }
+
     
     map[0][0] = @(YES);
     map[0][1] = @(NO);// 特殊处理下 str 是空，p 是一个字符此时是NO
     
-    for(NSInteger i = 1; i <= m; i++){ // p is emtpy
-        map[i][0] = @(NO);
-    }
+//    for(NSInteger i = 1; i <= m; i++){ // p is emtpy
+//        map[i][0] = @(NO);
+//    }
     for(NSInteger j = 2; j <= n; j++){ // str is emtpy. start from 2
         map[0][j] = @(map[0][j - 2].boolValue && [[p substringWithRange:NSMakeRange(j - 1, 1)] isEqualToString:@"*"]);
     }
@@ -852,131 +989,8 @@
     return map[m][n].boolValue;
 }
 
-#pragma mark - 44. Wildcard Matching
 
-//p[j-1] == s[i-1] || p[j-1] == '?'：dp[i][j] = dp[i-1][j-1]
-//p[j-1] == '*'：
-//1. 匹配0个字符：dp[i][j] = dp[i][j-1]
-//2. 匹配1个字符：dp[i][j] = dp[i-1][j-1]
-//3. 匹配多个字符：dp[i][j] = dp[i-1][j]
-
-- (BOOL)isMatchWildcard_dp2Array:(NSString *)str withPatten:(NSString *)p
-{
-    NSInteger m = str.length + 1;
-    NSInteger n = p.length + 1;
-    
-    NSMutableArray<NSMutableArray<NSNumber *> *> *dp = [NSMutableArray array];
-    for (NSInteger i = 0 ; i < m; i++) {
-        NSMutableArray *sub = [NSMutableArray array];
-        for(NSInteger j = 0; j < n; j++){
-            [sub addObject:@NO];
-        }
-        [dp addObject:sub];
-    }
-    
-    dp[0][0] = @(YES); // base case
-    for(NSInteger j = 1; j < n; j++){
-        dp[0][j] = @(dp[0][j - 1].boolValue && ([[p substringWithRange:NSMakeRange(j - 1, 1)] isEqualToString:@"*"])); //str = "" p ="********"
-    }
-    
-    for (NSInteger i = 1 ; i < m; i++) {
-        for(NSInteger j = 1; j < n; j++){
-            NSString *strCh = [str substringWithRange:NSMakeRange(i - 1, 1)];
-            NSString *pCh = [p substringWithRange:NSMakeRange(j - 1, 1)];
-            if([pCh isEqualToString:@"?"] || [pCh isEqualToString:strCh]) {
-                dp[i][j] = dp[i-1][j-1];
-            } else if([pCh isEqualToString:@"*"]){
-                dp[i][j] = @(dp[i-1][j-1].boolValue || dp[i][j-1].boolValue || dp[i-1][j].boolValue);// 中间那个是匹配0个
-            } else {
-                dp[i][j] = @(NO);
-            }
-        }
-    }
-    
-    return dp[m][n].boolValue;
-}
-
-//1. 转成一维，size 和inloop 相同
-//2. 需要两个变量
-//3.
-
-- (BOOL)isMatchWildcard_dp1Array:(NSString *)str withPatten:(NSString *)p
-{
-    NSMutableArray<NSNumber *> *dp = [NSMutableArray array];
-    
-    NSInteger m = str.length + 1;
-    NSInteger n = p.length + 1;
-    dp[0] = @(YES);
-    
-    for (NSInteger i = 0 ; i < m; i++) {
-        NSNumber *prev = dp[0]; //这里是0
-        dp[0] = (i== 0) ? @YES : @NO;// 这里有些问题
-        for(NSInteger j = 1; j < n; j++){
-            NSNumber *temp = dp[j]; // 相当于 dp[i-1][j]
-            
-            NSString *strCh = [str substringWithRange:NSMakeRange(i - 1, 1)];
-            NSString *pCh = [p substringWithRange:NSMakeRange(j - 1, 1)];
-            
-            if([pCh isEqualToString:@"?"] || [pCh isEqualToString:strCh]) {
-                dp[j] = prev;
-            } else if([pCh isEqualToString:@"*"]){
-                dp[j] = @(prev.boolValue || dp[j].boolValue || dp[j-1].boolValue); // 中间那个是匹配灵个
-            }
-            prev = temp; // dp[i][j-1] 保留上一次内部循环的作用
-        }
-    }
-    return dp[m].boolValue;
-}
-
-//class Solution {
-//public:
-//    bool isMatch(string s, string p) {
-//        int m = s.length(), n = p.length();
-//        vector<bool> cur(m + 1, false);
-//        cur[0] = true;
-//        for (int j = 1; j <= n; j++) {
-//            bool pre = cur[0]; // use the value before update
-//            cur[0] = cur[0] && p[j - 1] == '*';
-//            for (int i = 1; i <= m; i++) {
-//                bool temp = cur[i]; // record the value before update
-//                if (p[j - 1] != '*')
-//                    cur[i] = pre && (s[i - 1] == p[j - 1] || p[j - 1] == '?');
-//                else cur[i] = cur[i - 1] || cur[i];
-//                pre = temp;
-//            }
-//        }
-//        return cur[m];
-//    }
-//};
-
-//二维数组转成 1纬
-
-- (BOOL)isMatchWildcard:(NSString *)str withPatten:(NSString *)p
-{
-    return [self _isMatchWildcard:str i:0 withPatten:p j:0];
-}
-
-- (BOOL)_isMatchWildcard:(NSString *)str i:(NSInteger)i withPatten:(NSString *)p j:(NSInteger)j
-{
-    if(i > str.length || j > str.length){
-        return NO;
-    }
-    if(i == str.length && j == str.length){
-        return YES;
-    }
-    NSString *strCh = [str substringWithRange:NSMakeRange(i, 1)];
-    NSString *pCh = [p substringWithRange:NSMakeRange(j, 1)];
-    
-    if([pCh isEqualToString:@"?"] || [pCh isEqualToString:strCh]){
-        return [self _isMatchWildcard:str i:i+1 withPatten:p j:j+1]; //匹配一个字符
-    } else if([pCh isEqualToString:@"*"]){ //
-        return [self _isMatchWildcard:str i:i+1 withPatten:p j:j] || [self _isMatchWildcard:str i:i+1 withPatten:p j:j+1];
-    } else {
-        return NO;
-    }
-}
-
-//301
+// 301 Remove Invalid Parentheses
 // clarify: 1如果str 是合法的返回什么？ 2 result中包含的是否是unique 
 // 关键点：如何确保结果unique
 
@@ -1076,6 +1090,29 @@
 
 // stack size O(n) heap size O(2^n)
 
+// 基于数学的递归法
+
+- (NSSet<NSSet *> *)subSets2Shuai:(NSArray *)nums
+{
+    return [self subSets:nums index:0];
+}
+
+- (NSSet<NSSet *> *)subSets:(NSArray *)nums index:(NSInteger)index
+{
+    if(index == nums.count){
+        return [NSSet setWithArray:@[@[]]];
+    }
+    NSSet<NSSet *> *temp = [self subSets:nums index:index + 1];
+    NSMutableSet *cTemp = [temp mutableCopy];
+
+    for(NSSet *e in temp){
+        NSMutableSet *new = [NSMutableSet setWithSet:e];
+        [new addObject:nums[index]];
+        [cTemp addObject:new];
+    }
+    return [cTemp copy];
+}
+
 - (NSArray<NSArray *> *)subSets:(NSArray *)nums
 {
     if([nums count] == 0){
@@ -1121,7 +1158,7 @@
 
 - (void)_subSet:(NSArray *)nums start:(NSInteger)start subRes:(NSMutableArray *)subRes res:(NSMutableArray<NSMutableArray *>*)result
 {
-    [result addObject:[subRes copy]];
+    [result addObject:[subRes copy]]; //add result here cuz we need [],and we don't need a return statement cuz it's in loop
      for(NSInteger i = start; i < nums.count; i++){
          [subRes addObject:nums[i]];
          [self _subSet:nums start:i + 1 subRes:subRes res:result];
@@ -1129,12 +1166,13 @@
     }
 }
 
-// subset 2
+// subset 2, 需要排序
+
 - (void)_subSet_dup:(NSArray *)nums start:(NSInteger)start subRes:(NSMutableArray *)subRes res:(NSMutableArray<NSMutableArray *>*)result
 {
     [result addObject:[subRes copy]];
     for(NSInteger i = start; i < nums.count; i++){
-        if(i == start || [nums[i] compare:nums[i-1]] == NSOrderedSame) { // 数组中过滤掉相同的
+        if(i == start || [nums[i] compare:nums[i-1]] != NSOrderedSame) { // 数组中过滤掉相同的
             [subRes addObject:nums[i]];
             [self _subSet_dup:nums start:i + 1 subRes:subRes res:result];
             [subRes removeLastObject];
@@ -1145,9 +1183,8 @@
 
 - (NSArray<NSArray *> *)subSets_iterate:(NSArray *)nums
 {
-    NSUInteger capacity = 1 << nums.count;
-    NSMutableArray *result = [NSMutableArray arrayWithCapacity:capacity];
-    [result addObject:@[]];
+    NSMutableArray *result = [NSMutableArray array];
+    [result addObject:@[]]; //add emtpy array
     
     for(NSInteger i = 0; i < nums.count; i++){
         NSInteger count = result.count;
@@ -1162,6 +1199,23 @@
 }
 
 // Bit Manipulation。还有解法是用位运算
+// space : O(1)
+
+- (NSArray<NSArray *> *)subSets_iterate_bits:(NSArray *)nums
+{
+    NSMutableArray<NSMutableArray *> *result = [NSMutableArray array];
+    
+    for(NSInteger i = 0; i < (1 << nums.count); i++){
+        NSMutableArray *tem = [NSMutableArray array];
+        for (NSInteger j = 0; j < nums.count; j++) {
+            if((i & (1 << j)) != 0){
+                [tem addObject:nums[j]];
+            }
+        }
+        [result addObject:tem];
+    }
+    return [result copy];
+}
 
 // 有重复的
 - (NSArray<NSArray *> *)subSetsWithDup:(NSArray *)nums
@@ -1198,8 +1252,12 @@
     [self _subSetsWithDup:nums start:start + 1 set:set];
 }
 
+#pragma mark - island
+
 // O (m *n)
 // TODO: Fellow up： 最大的island 的面积
+//
+
 - (NSInteger)numIslands:(NSMutableArray<NSMutableArray<NSNumber *> *> *)grid
 {
     NSInteger num = 0;
@@ -1226,6 +1284,84 @@
     [self _dfsSearch:grid i:i j:j + 1];
 }
 
+- (NSInteger)maxSizeIslands:(NSMutableArray<NSMutableArray<NSNumber *> *> *)grid
+{
+    NSInteger max = 0;
+    for(NSInteger i = 0; i < grid.count; i++){
+        for(NSInteger j = 0; j < [grid firstObject].count; j++) {
+            if(grid[i][j].integerValue == 1){
+                NSInteger count = 0;
+                [self _dfsSearch:grid i:i j:j count:&count];
+                max = MAX(max, count);
+            }
+        }
+    }
+    return max;
+}
+
+- (void)_dfsSearch:(NSMutableArray<NSMutableArray<NSNumber *> *> *)grid i:(NSInteger)i j:(NSInteger)j count:(NSInteger *)count
+{
+    if(i < 0 || j < 0 || i >= grid.count || j >= [grid firstObject].count || grid[i][j].integerValue == 0){
+        return;
+    }
+    grid[i][j] = @(0); //关键是这里设成0
+    *count += 1;
+    [self _dfsSearch:grid i:i - 1 j:j];
+    [self _dfsSearch:grid i:i + i j:j];
+    [self _dfsSearch:grid i:i j:j - 1];
+    [self _dfsSearch:grid i:i j:j + 1];
+}
+
+#pragma mark - Fellow Up remove island when size small than k
+
+// actually we can store the cordinates of island, and we the count meets the constrain , we set remove the island according to the index we store
+// so by the way we need a
+// 这种方式需要额外的 set 存储 index, 此外网上还有一种解法是 用两个matrix 其一种一个copy，并且通过全局变量来count 这个size
+// https://github.com/coder0813/FaceBook-Intern-Leetcode/blob/master/remove%20island%20of%20area%20k/remove.java
+
+- (void)removeIslands:(NSMutableArray<NSMutableArray<NSNumber *> *> *)grid k:(NSInteger)k
+{
+    NSMutableSet *set = [NSMutableSet set];
+    for(NSInteger i = 0; i < grid.count; i++){
+        for(NSInteger j = 0; j < grid.firstObject.count; j++){
+            NSMutableSet<NSArray<NSNumber *> *> *rest = [NSMutableSet set];
+            [self _dfsSearch:grid i:i j:j indexSet:set k:k removedIndexSet:rest];
+            
+            if([rest count] <= k){
+                [rest enumerateObjectsUsingBlock:^(NSArray<NSNumber *> * _Nonnull obj, BOOL * _Nonnull stop) {
+                    NSInteger i = obj.firstObject.integerValue;
+                    NSInteger j = obj.lastObject.integerValue;
+                    grid[i][j] = @(0);
+                }];
+            }
+        }
+    }
+}
+
+// TODO: 这里写反了，对于是移除size < k 的island, 学会掌握这种path路径的技巧。
+
+- (void)_dfsSearch:(NSMutableArray<NSMutableArray<NSNumber *> *> *)grid i:(NSInteger)i j:(NSInteger)j
+          indexSet:(NSMutableSet *)set k:(NSInteger)k removedIndexSet:(NSMutableSet *)res
+{
+    if(i < 0 || j < 0 || i >= grid.count || j >= [grid firstObject].count || grid[i][j].integerValue == 0 || [set containsObject:@[@(i), @(j)]]){
+        return;
+    }
+    
+    // 这里会自动REMOVE duplicate
+    [res setByAddingObjectsFromSet:set];//
+    
+    [set addObject:@[@(i), @(j)]];
+    
+    [self _dfsSearch:grid i:i - 1 j:j indexSet:set k:k removedIndexSet:res];
+    [self _dfsSearch:grid i:i + i j:j indexSet:set k:k removedIndexSet:res];
+    [self _dfsSearch:grid i:i j:j - 1 indexSet:set k:k removedIndexSet:res];
+    [self _dfsSearch:grid i:i j:j + 1 indexSet:set k:k removedIndexSet:res];
+    
+    [set removeObject:@[@(i), @(j)]];
+}
+
+#pragma mark - 22. Generate Parentheses
+
 - (NSArray<NSString *> *)generateParenthesis:(NSInteger)count
 {
     NSMutableArray *result = [NSMutableArray array];
@@ -1250,39 +1386,11 @@
 
     if(l > r){
         [sub appendString:@")"];
-        [self _generateParenthesis:count withLeft:l right:r+1 sub:sub result:result];
+        [self _generateParenthesis:count withLeft:l right:r + 1 sub:sub result:result];
         [sub deleteCharactersInRange:NSMakeRange(sub.length - 1 , 1)];
     }
 }
 
-//method DP, //还有一种方法是用stack 来实现
-
-- (NSInteger)longestValidParentheses:(NSString *)str
-{
-    NSUInteger n = str.length + 1;
-    NSInteger max = 0; //DP[i]：以s[i-1]为结尾的longest valid parentheses substring的长度。
-    NSMutableArray<NSNumber *> *dp = [NSMutableArray arrayWithCapacity:n];
-    for(NSInteger i = 0; i < n; i++){
-        [dp addObject:@(0)];
-    }
-    //关键是找到（）序列直接的关系
-//    X()(())X
-//    j......i-1 
-
-    for(NSInteger i = 1; i <= str.length; i++){
-        NSInteger j = i - 2 - dp[i-1].integerValue; //
-        NSString *ch = [str substringWithRange:NSMakeRange(i-1, 1)];
-        NSString *p = [str substringWithRange:NSMakeRange(j, 1)];
-// 这个状态转移方程不太好整
-        if([ch isEqualToString:@"("] || j < 0 || [p isEqualToString:@")"]){
-            dp[i] = @(0);
-        } else {
-            dp[i] = @(dp[i-1].integerValue + 2 + dp[j].integerValue);
-            max = MAX(max, dp[i].integerValue);
-        }
-    }
-    return max;
-}
 
 // 字符串问题，可以问下哪些接口可以用
 // 设计case: 正确的几种,错误的,边界的,极端的
@@ -1330,51 +1438,42 @@
     return count <= 1;
 }
 
-
-
-//198. House Robber
-//这里也可以将空间O(n) 优化到O（1）
-- (NSInteger)rob:(NSArray<NSNumber *> *)nums
-{
-    NSInteger n = nums.count + 1;
-    NSMutableArray<NSNumber *> *dp = [NSMutableArray arrayWithCapacity:n];
-    for(NSInteger i = 0; i < n; i++){
-        [dp addObject:@(0)];
+- (BOOL)isOneEditDistance2Shuai:(NSString *)str withStr:(NSString *)str2
+{   //corner case
+    if(str.length == 0 && str2.length == 0){
+        return YES;
     }
-    dp[1] = nums[0];
-    
-    for(NSInteger i = 2; i <= n; i++){
-        //temp = MAX(prev + nums[i-1].integerValue, curr)
-        // prev = curr
-        // curr = temp
-        dp[i] = @(MAX(dp[i-2].integerValue + nums[i-1].integerValue, dp[i-1].integerValue));
+    if(ABS((NSInteger)str.length - (NSInteger)str2.length) > 1) { //这里length 的属性NSUInteger，所以如果小的数减去大的数，会非常大
+        return NO;
     }
-    return dp[n].integerValue;
-}
 
-- (NSInteger)rob:(NSArray<NSNumber *> *)nums l:(NSInteger)l r:(NSInteger)r
-{
-    return 0;
-}
-
-//methos 1 : 首先想到的是用两个数组
-//其实可以用第一问的方法来写
-- (NSInteger)rob_2:(NSArray<NSNumber *> *)nums
-{
-    NSInteger n = nums.count;
-    if(n < 2) return (n > 0 ? nums[0].integerValue : 0);
-    return MAX([self rob:nums l:0 r:n-2], [self rob:nums l:1 r:n-1]); //递归调用
+    if (str.length < str2.length) {
+        return [self isOneEditDistance2Shuai:str2 withStr:str];
+    }
+    if(str.length != str2.length){
+        if([[str substringWithRange:NSMakeRange(0, 1)] isEqualToString:[str2 substringWithRange:NSMakeRange(0, 1)]]){
+            return [[str substringWithRange:NSMakeRange(0, str2.length)] isEqualToString:str2];
+        } else {
+            return [[str substringWithRange:NSMakeRange(1, str2.length)] isEqualToString:str2];
+        }
+    } else {
+        for (NSInteger i = 0; i < str.length; i++) {
+            if(![[str substringWithRange:NSMakeRange(i, 1)] isEqualToString:[str2 substringWithRange:NSMakeRange(i, 1)]]){
+                return [[str substringFromIndex:i + 1] isEqualToString:[str2 substringFromIndex:i + 1]];// 这里最边界的case是str.length，此时返回的是空字符串，如果超过则throw
+            }
+        }
+    }
+    return YES;
 }
 
 #pragma mak - Expression Add Operators
 
-- (NSMutableArray *)addOperators:(NSString *)num target:(NSInteger)target
+//思路:
+- (NSArray *)addOperators:(NSString *)num target:(NSInteger)target
 {
     NSMutableArray *res = [NSMutableArray array];
-    NSString *ch = [num substringWithRange:NSMakeRange(1, 1)];
-    
-    [self addOperators:num start:1 target:target temp:[ch mutableCopy] result:res eval:ch.integerValue expr:ch.integerValue];
-    return res;
+    [self addOperators:num start:0 target:target temp:[@"" mutableCopy] result:res eval:0 expr:0];
+    return [res copy];
 }
 
 //overflow: we use a long type once it is larger than Integer.MAX_VALUE or minimum, we get over it.
@@ -1389,26 +1488,33 @@
     }
     for (NSInteger i = start; i < nums.length; i++) {
         //
-        if(i != start && [[nums substringWithRange:NSMakeRange(start, 1)] isEqualToString:@"0"]) {
-            return;
+        if(i != start && [[nums substringWithRange:NSMakeRange(start, 1)] isEqualToString:@"0"]) {//这一行有点不太明白！！！ 是因为不能出现 01 * 22，不能以 0开头
+            break;
         }
-        NSString *ch = [nums substringWithRange:NSMakeRange(start, 1 + i)];
+        NSString *ch = [nums substringWithRange:NSMakeRange(start, 1 + i - start)];
         
-        [temp appendString:[NSString stringWithFormat:@"+%@",ch]];
-        [self addOperators:nums start:start+1 target:i temp:temp result:resutArray eval:(eval + ch.integerValue) expr:ch.integerValue];
-        [temp deleteCharactersInRange:NSMakeRange(temp.length - 2, 2)];
-        
-        [temp appendString:[NSString stringWithFormat:@"-%@",ch]];
-        [self addOperators:nums start:start+1 target:i temp:temp result:resutArray eval:(eval - ch.integerValue) expr:(0 - ch.integerValue)];
-        [temp deleteCharactersInRange:NSMakeRange(temp.length - 2, 2)];
-        
-        [temp appendString:[NSString stringWithFormat:@"*%@",ch]]; //关键是 * 的处理
-        [self addOperators:nums start:start+1 target:i temp:temp result:resutArray eval:(eval - expr + expr * ch.integerValue) expr:(expr * ch.integerValue)];
-        [temp deleteCharactersInRange:NSMakeRange(temp.length - 2, 2)];
+        if(start == 0){
+            [temp appendString:ch];
+            [self addOperators:nums start:i + 1 target:target temp:temp result:resutArray eval:(eval + ch.integerValue) expr:ch.integerValue];
+            [temp deleteCharactersInRange:NSMakeRange(temp.length - 1, 1)];
+        } else {
+            [temp appendString:[NSString stringWithFormat:@"+%@",ch]];
+            [self addOperators:nums start:i + 1 target:target temp:temp result:resutArray eval:(eval + ch.integerValue) expr:ch.integerValue];
+            [temp deleteCharactersInRange:NSMakeRange(temp.length - 2, 2)];
+            
+            [temp appendString:[NSString stringWithFormat:@"-%@",ch]];
+            [self addOperators:nums start:i + 1 target:target temp:temp result:resutArray eval:(eval - ch.integerValue) expr:(0 - ch.integerValue)];
+            [temp deleteCharactersInRange:NSMakeRange(temp.length - 2, 2)];
+            
+            [temp appendString:[NSString stringWithFormat:@"*%@",ch]]; //关键是 * 的处理
+            [self addOperators:nums start:i + 1 target:target temp:temp result:resutArray eval:(eval - expr + expr * ch.integerValue) expr:(expr * ch.integerValue)];
+            [temp deleteCharactersInRange:NSMakeRange(temp.length - 2, 2)];
+        }
     }
 }
 
-#pragma mark - 211. The skyline Problem
+#pragma mark - 218. The skyline Problem
+
  // https://leetcode.com/problems/the-skyline-problem/
 // https://discuss.leetcode.com/topic/19978/java-570ms-heap-bst-and-430ms-divide-and-conquer-solution-with-explanation
 
@@ -1571,26 +1677,26 @@
         NSInteger i = p.firstObject.integerValue;
         NSInteger j = p.lastObject.integerValue;
         // 针对这个地方可以优化下
-        if(i > 0 && rooms[i - 1][j].integerValue == NSIntegerMax) { //这里直接和
+        if(i > 0 && rooms[i - 1][j].integerValue > rooms[i][j].integerValue) { //这里直接和
             rooms[i - 1][j] = @(rooms[i][j].integerValue + 1);
             [queue addObject: @[@(i - 1), @(j)]];
         }
-        if(i < rooms.count - 1 && rooms[i + 1][j].integerValue == NSIntegerMax) {
+        if(i < rooms.count - 1 && rooms[i + 1][j].integerValue > rooms[i][j].integerValue) {
             rooms[i + 1][j] = @(rooms[i][j].integerValue + 1);
             [queue addObject: @[@(i + 1), @(j)]];
         }
-        if(j > 0 && rooms[i][j - 1].integerValue == NSIntegerMax) {
+        if(j > 0 && rooms[i][j - 1].integerValue > rooms[i][j].integerValue) {
             rooms[i][j - 1] = @(rooms[i][j].integerValue + 1);
             [queue addObject: @[@(i), @(j - 1)]];
         }
-        if(j < rooms[i].count - 1 && rooms[i][j + 1].integerValue == NSIntegerMax) {
+        if(j < rooms[i].count - 1 && rooms[i][j + 1].integerValue > rooms[i][j].integerValue) {
             rooms[i][j + 1] = @(rooms[i][j].integerValue + 1);
             [queue addObject: @[@(i), @(j + 1)]];
         }
     }
 }
 
-// 为什么BFS是最近的呢？
+// 为什么BFS是最近的呢？棋盘问题的算法复杂度，很多都是 O(m *n)
 - (void)wallsAndGatesBFSOptimize:(NSMutableArray<NSMutableArray<NSNumber *> *> *)rooms
 {
     if(rooms.count == 0 || rooms.firstObject.count == 0){
@@ -1617,7 +1723,7 @@
         for(NSInteger k = 0; k < p.count; i++){
             NSInteger row = i - x[k].integerValue;
             NSInteger col = j - y[k].integerValue;
-            if(row < 0 || row == rooms.count || col < 0 || col == rooms.lastObject.count || rooms[i][j].integerValue == NSIntegerMax){ // 肯定是最近的,比较难想
+            if(row < 0 || row == rooms.count || col < 0 || col == rooms.lastObject.count || rooms[row][col].integerValue <= rooms[i][j].integerValue){ //BFS 算法是最短路径，这是性质
                 continue;
             }
             rooms[row][col] = @(rooms[i][j].integerValue + 1);

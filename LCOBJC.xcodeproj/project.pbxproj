@@ -15,12 +15,17 @@
 		A1F2B7E81DC5EEE70023278E /* TreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F2B7E71DC5EEE70023278E /* TreeNode.m */; };
 		D7043DE11E099015002D294D /* SlideWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = D7043DE01E099015002D294D /* SlideWindow.m */; };
 		D7165C1C1DE0B48A00F12A47 /* math.m in Sources */ = {isa = PBXBuildFile; fileRef = D7165C1B1DE0B48A00F12A47 /* math.m */; };
+		D71B5D1D1E2A1F9400AB1AFE /* CircularBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = D71B5D1C1E2A1F9400AB1AFE /* CircularBuffer.m */; };
 		D71E29931DE5C5CF006C2500 /* DP.m in Sources */ = {isa = PBXBuildFile; fileRef = D71E29921DE5C5CF006C2500 /* DP.m */; };
 		D72164AB1DEB12B200B96C69 /* Graph.m in Sources */ = {isa = PBXBuildFile; fileRef = D72164AA1DEB12B200B96C69 /* Graph.m */; };
+		D72243AA1E3898DB00D66389 /* ConcurrentLRU.m in Sources */ = {isa = PBXBuildFile; fileRef = D72243A91E3898DB00D66389 /* ConcurrentLRU.m */; };
+		D72243AD1E389B3B00D66389 /* MinStack.m in Sources */ = {isa = PBXBuildFile; fileRef = D72243AC1E389B3B00D66389 /* MinStack.m */; };
 		D757AAD11DD95F6900F5ED1A /* BackTracking.m in Sources */ = {isa = PBXBuildFile; fileRef = D757AAD01DD95F6900F5ED1A /* BackTracking.m */; };
+		D764974F1E36239B00B5E41C /* MianjingNotLC.m in Sources */ = {isa = PBXBuildFile; fileRef = D764974E1E36239B00B5E41C /* MianjingNotLC.m */; };
 		D7A502411E20879900E8A84B /* Palindrome.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A502401E20879900E8A84B /* Palindrome.m */; };
 		D7C008C61E1757CB003F9161 /* TwoPointers.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C008C51E1757CB003F9161 /* TwoPointers.m */; };
 		D7CBAFBB1DE8958F00612214 /* Array.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CBAFBA1DE8958E00612214 /* Array.m */; };
+		D7CC7AF21E8E5DA5005CF6E6 /* Google.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CC7AF11E8E5DA5005CF6E6 /* Google.swift */; };
 		D7DB081B1DE3EB3E001888B3 /* Tree.m in Sources */ = {isa = PBXBuildFile; fileRef = D7DB081A1DE3EB3E001888B3 /* Tree.m */; };
 /* End PBXBuildFile section */
 
@@ -50,22 +55,33 @@
 		A1F2B7E41DC5ED4F0023278E /* Solution.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Solution.m; sourceTree = "<group>"; };
 		A1F2B7E61DC5EEE70023278E /* TreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TreeNode.h; sourceTree = "<group>"; };
 		A1F2B7E71DC5EEE70023278E /* TreeNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TreeNode.m; sourceTree = "<group>"; };
+		D703D5A01E8FA59C0064FAAA /* Array.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Array.playground; sourceTree = "<group>"; };
 		D7043DDF1E099015002D294D /* SlideWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideWindow.h; sourceTree = "<group>"; };
 		D7043DE01E099015002D294D /* SlideWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideWindow.m; sourceTree = "<group>"; };
 		D7165C1A1DE0B48A00F12A47 /* math.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = math.h; sourceTree = "<group>"; };
 		D7165C1B1DE0B48A00F12A47 /* math.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = math.m; sourceTree = "<group>"; };
+		D71B5D1B1E2A1F9400AB1AFE /* CircularBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircularBuffer.h; sourceTree = "<group>"; };
+		D71B5D1C1E2A1F9400AB1AFE /* CircularBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircularBuffer.m; sourceTree = "<group>"; };
 		D71E29911DE5C5CF006C2500 /* DP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DP.h; sourceTree = "<group>"; };
 		D71E29921DE5C5CF006C2500 /* DP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DP.m; sourceTree = "<group>"; };
 		D72164A91DEB12B200B96C69 /* Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Graph.h; sourceTree = "<group>"; };
 		D72164AA1DEB12B200B96C69 /* Graph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Graph.m; sourceTree = "<group>"; };
+		D72243A81E3898DB00D66389 /* ConcurrentLRU.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConcurrentLRU.h; sourceTree = "<group>"; };
+		D72243A91E3898DB00D66389 /* ConcurrentLRU.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConcurrentLRU.m; sourceTree = "<group>"; };
+		D72243AB1E389B3B00D66389 /* MinStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MinStack.h; sourceTree = "<group>"; };
+		D72243AC1E389B3B00D66389 /* MinStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MinStack.m; sourceTree = "<group>"; };
 		D757AACF1DD95F6900F5ED1A /* BackTracking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackTracking.h; sourceTree = "<group>"; };
 		D757AAD01DD95F6900F5ED1A /* BackTracking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackTracking.m; sourceTree = "<group>"; };
+		D764974D1E36239B00B5E41C /* MianjingNotLC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MianjingNotLC.h; sourceTree = "<group>"; };
+		D764974E1E36239B00B5E41C /* MianjingNotLC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MianjingNotLC.m; sourceTree = "<group>"; };
 		D7A5023F1E20879900E8A84B /* Palindrome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Palindrome.h; sourceTree = "<group>"; };
 		D7A502401E20879900E8A84B /* Palindrome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Palindrome.m; sourceTree = "<group>"; };
 		D7C008C41E1757CB003F9161 /* TwoPointers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwoPointers.h; sourceTree = "<group>"; };
 		D7C008C51E1757CB003F9161 /* TwoPointers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwoPointers.m; sourceTree = "<group>"; };
 		D7CBAFB91DE8958E00612214 /* Array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Array.h; sourceTree = "<group>"; };
 		D7CBAFBA1DE8958E00612214 /* Array.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Array.m; sourceTree = "<group>"; };
+		D7CC7AF01E8E5DA5005CF6E6 /* LCOBJC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LCOBJC-Bridging-Header.h"; sourceTree = "<group>"; };
+		D7CC7AF11E8E5DA5005CF6E6 /* Google.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Google.swift; sourceTree = "<group>"; };
 		D7DB08191DE3EB3E001888B3 /* Tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tree.h; sourceTree = "<group>"; };
 		D7DB081A1DE3EB3E001888B3 /* Tree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tree.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,6 +100,8 @@
 		A1198B6B1EAC3ECB0080DEF4 /* fb */ = {
 			isa = PBXGroup;
 			children = (
+				D7CC7AF31E8E5E17005CF6E6 /* 2017 */,
+				A1F2B7DC1DC5ED090023278E /* main.m */,
 				A1F2B7E31DC5ED4F0023278E /* Solution.h */,
 				A1F2B7E41DC5ED4F0023278E /* Solution.m */,
 				A1F2B7E61DC5EEE70023278E /* TreeNode.h */,
@@ -110,6 +128,15 @@
 				D7C008C51E1757CB003F9161 /* TwoPointers.m */,
 				D7A5023F1E20879900E8A84B /* Palindrome.h */,
 				D7A502401E20879900E8A84B /* Palindrome.m */,
+				D71B5D1B1E2A1F9400AB1AFE /* CircularBuffer.h */,
+				D71B5D1C1E2A1F9400AB1AFE /* CircularBuffer.m */,
+				D764974D1E36239B00B5E41C /* MianjingNotLC.h */,
+				D764974E1E36239B00B5E41C /* MianjingNotLC.m */,
+				D72243A81E3898DB00D66389 /* ConcurrentLRU.h */,
+				D72243A91E3898DB00D66389 /* ConcurrentLRU.m */,
+				D72243AB1E389B3B00D66389 /* MinStack.h */,
+				D72243AC1E389B3B00D66389 /* MinStack.m */,
+				D7CC7AF01E8E5DA5005CF6E6 /* LCOBJC-Bridging-Header.h */,
 			);
 			name = fb;
 			sourceTree = "<group>";
@@ -150,6 +177,15 @@
 			path = LCOBJC;
 			sourceTree = "<group>";
 		};
+		D7CC7AF31E8E5E17005CF6E6 /* 2017 */ = {
+			isa = PBXGroup;
+			children = (
+				D7CC7AF11E8E5DA5005CF6E6 /* Google.swift */,
+				D703D5A01E8FA59C0064FAAA /* Array.playground */,
+			);
+			name = 2017;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -181,7 +217,11 @@
 				TargetAttributes = {
 					A1F2B7D81DC5ED090023278E = {
 						CreatedOnToolsVersion = 8.1;
+<<<<<<< 0a008763ad3803c94062773b8d728416bb303fec
 						LastSwiftMigration = 0830;
+=======
+						LastSwiftMigration = 0820;
+>>>>>>> a
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -208,21 +248,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D71B5D1D1E2A1F9400AB1AFE /* CircularBuffer.m in Sources */,
 				D7043DE11E099015002D294D /* SlideWindow.m in Sources */,
 				A1BFBF651DD9F40E0022C1DC /* List.m in Sources */,
 				A1F2B7E51DC5ED4F0023278E /* Solution.m in Sources */,
 				A1549CB71E0D0EC9006FCF8D /* LRU.m in Sources */,
 				D7A502411E20879900E8A84B /* Palindrome.m in Sources */,
+				D72243AA1E3898DB00D66389 /* ConcurrentLRU.m in Sources */,
 				D757AAD11DD95F6900F5ED1A /* BackTracking.m in Sources */,
+				D764974F1E36239B00B5E41C /* MianjingNotLC.m in Sources */,
 				D71E29931DE5C5CF006C2500 /* DP.m in Sources */,
 				D7165C1C1DE0B48A00F12A47 /* math.m in Sources */,
 				A1198B701EAC3FC60080DEF4 /* 388_Longest_Absolute_File_Path.swift in Sources */,
+				D7CC7AF21E8E5DA5005CF6E6 /* Google.swift in Sources */,
 				D7C008C61E1757CB003F9161 /* TwoPointers.m in Sources */,
 				A1F2B7DD1DC5ED090023278E /* main.m in Sources */,
 				D7CBAFBB1DE8958F00612214 /* Array.m in Sources */,
 				A1F2B7E81DC5EEE70023278E /* TreeNode.m in Sources */,
 				D72164AB1DEB12B200B96C69 /* Graph.m in Sources */,
 				D7DB081B1DE3EB3E001888B3 /* Tree.m in Sources */,
+				D72243AD1E389B3B00D66389 /* MinStack.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,9 +8,30 @@
 
 #import "Tree.h"
 
+@interface Wrapper : NSObject
+@property (nonatomic, assign) NSInteger index;
+@property (nonatomic, strong) NSNumber *c;
+
+- (instancetype)initWithIndex:(NSInteger)index c:(NSNumber *)c;
+
+@end
+
+@implementation Wrapper
+
+- (instancetype)initWithIndex:(NSInteger)index c:(NSNumber *)c
+{
+    if(self = [super init]){
+        _index = index;
+        _c = c;
+    }
+    return self;
+}
+
+@end
+
 @implementation Solution (Tree)
 
-//103. Binary Tree Zigzag Level Order Traversal   QuestionEditorial Solution  My Submissions
+//103. Binary Tree Zigzag Level Order Traversal
 //Difficulty: Medium
 //Given a binary tree, return the zigzag level order traversal of its nodes' values. (ie, from left to right, then right to left for the next level and alternate between).
 //
@@ -73,8 +94,11 @@
 //Difficulty: Hard
 
 // inorder traversal
-// FIXME: 这题的关键是: 1. double pointer 2. 在更新firstNode 的时候需要添加firstNode 为空的检查，如果忘记添加，那么secondNode 那个case 也会跑到这里
+// FIXME: 这题的关键是:
+// 1. double pointer
+// 2. 在更新firstNode 的时候需要添加firstNode 为空的检查，如果忘记添加，那么secondNode 那个case 也会跑到这里
 // 3. second case 的时候添加对first的检查, 只有firstObejct 找到了，才能找second
+
 //Two elements of a binary search tree (BST) are swapped by mistake.
 //Recover the tree without changing its structure.
 //A solution using O(n) space is pretty straight forward. Could you devise a constant space solution?
@@ -106,63 +130,40 @@
     [self traversal:treeNode.right firstNode:firstNode secondNode:secondNode previousNode:previous];
 }
 
-// pre order traversal
+#pragma mark - Flatten Binary Tree to Linked List
 
-- (void)flattenBSTWithNode:(TreeNode *)node
-{
-    if (node == nil) {
-        return;
-    }
-    [self doFlattenBSTWithNode:node];
-}
+// preorder traversal
+// If you notice carefully in the flattened tree, each node's right child points to the next node of a pre-order traversal
 //swift 版跑过
 
-- (TreeNode *)doFlattenBSTWithNode:(TreeNode *)node
-{
-    //4 cases
-    if(node.left == nil && node.right == nil) {
-        return node;
-    }
-    if (node.left && node.right) {
-        TreeNode *leftSubTreeEndeNode = [self doFlattenBSTWithNode:node.left];
-        TreeNode *rightSubTreeEndeNode = [self doFlattenBSTWithNode:node.right];
-        leftSubTreeEndeNode.right = node.right;
-        node.right = node.left;
-        node.left = nil;
-        
-        return rightSubTreeEndeNode;
-    }
-    
-    if (node.left) {
-        node.right = node.left;
-        node.left = nil;
-    }
-    return [self doFlattenBSTWithNode:node.right];
-}
-
+// divde && conquer
 // 这种写法算法的复杂度比较高 nlogn
-//var flatten = function(root) {
-//    while (root) {
-//        if (root.left && root.right) {
-//            var t = root.left;
-//            while (t.right) {
-//                t = t.right;
-//            }
-//            t.right = root.right;
-//        }
-//        
-//        if (root.left) {
-//            root.right = root.left;
-//            root.left = null;
-//        }
-//        root = root.right;
+
+//- (TreeNode *)doFlattenBTWithNodeDeprecated:(TreeNode *)node
+//{   //4 cases
+//    if(node.left == nil && node.right == nil) {
+//        return node;
 //    }
-//};
+//    if (node.left && node.right) {
+//        TreeNode *leftSubTreeEndeNode = [self doFlattenBTWithNodeDeprecated:node.left];
+//        TreeNode *rightSubTreeEndeNode = [self doFlattenBTWithNodeDeprecated:node.right];
+//        leftSubTreeEndeNode.right = node.right;
+//        node.right = node.left;
+//        node.left = nil;
+//        
+//        return rightSubTreeEndeNode;
+//    }
+//    
+//    if (node.left) {
+//        node.right = node.left;
+//        node.left = nil;
+//    }
+//    return [self doFlattenBTWithNodeDeprecated:node.right];
+//}
 
 // 这也是一种实现 https://discuss.leetcode.com/topic/5783/accepted-simple-java-solution-iterative
 
-// inorder traversal
-
+//preorder traversal
 //public void flatten(TreeNode root) {
 //    if (root == null) return;
 //    Stack<TreeNode> stk = new Stack<TreeNode>();
@@ -179,18 +180,105 @@
 //    }
 //}
 
+// 思路: use prev to track to prevous node in preorder, when we traversal , we set the previous node.right with curr node
+// 上面的办发更好
+
+- (void)flattenBTWithNodeMethod2:(TreeNode *)node
+{
+    if (!node) {
+        return;
+    }
+    NSMutableArray<TreeNode *> *stack = [NSMutableArray array];
+    [stack addObject:node];
+    TreeNode *prev = nil;
+    while ([stack count]) {
+        TreeNode *curr = [stack lastObject];
+        [stack removeLastObject];
+        
+        if(curr.right){
+            [stack addObject:curr.right];
+        }
+        if(curr.left){
+            [stack addObject:curr.left];
+        }
+        if(prev){
+            prev.right = curr;
+            prev.left = nil;
+        }
+        prev = curr;
+    }
+}
+
+//FIXME: 方法2递归
+// 关键:1. 递归，将preorder 序列中的prev 用二级指针track, 从而起到改变他的目的
+// 2. 需要将node.right 保存在一个变量里, 要不然就覆盖掉了
+
+- (void)flattenBTWithNode:(TreeNode *)node
+{
+    TreeNode *prev = nil;
+    [self doflattenBTWithNode:node prev:&prev];
+}
+
+- (void)doflattenBTWithNode:(TreeNode *)node prev:(TreeNode **)prev
+{
+    if(!node){
+        return;
+    }
+    if(*prev){
+        (*prev).right = node;
+        (*prev).left = nil;
+    }
+    *prev = node;
+    TreeNode *right = node.right; //需要把right 存起来, 要不然在下一个递归的时候，此时的node.right 下次递归stack上的prev, 在设置prev的时候，就覆盖掉了
+    if(node.left){
+        [self doflattenBTWithNode:node.left prev:prev];
+    }
+    if(right){
+        [self doflattenBTWithNode:right prev:prev];
+    }
+}
+
+//public void flatten(TreeNode root) {
+//    flatten(root,null);
+//}
+//private TreeNode flatten(TreeNode root, TreeNode pre) {
+//    if(root==null) return pre;
+//    pre=flatten(root.right,pre);
+//    pre=flatten(root.left,pre);
+//    root.right=pre;
+//    root.left=null;
+//    pre=root;
+//    return pre;
+//}
+
+//var flatten = function(root) {
+//    while (root) {
+//        if (root.left && root.right) {
+//            var t = root.left;
+//            while (t.right) {
+//                t = t.right;
+//            }
+//            t.right = root.right;
+//        }
+//
+//        if (root.left) {
+//            root.right = root.left;
+//            root.left = null;
+//        }
+//        root = root.right;
+//    }
+//};
+
+#pragma mark - convert binary Search Tree to doubly linked list
+
+#pragma mark - 117 Convert Sorted List to Binary Search Tree
+
 // 关键： tailNode 刚开始传 nil
 - (TreeNode *)sortedListToBST:(ListNode *)listNode
 {
-    // if(listNode == nil) {  // 这个corner case 可以忽略
-    //     return nil;
-    // }
     return [self doSortedListToBST:listNode andTailNode:nil]; 
 }
-
 // S: log(n) T : nlong(n)
-// dived and conquer, 快慢指针
-
 - (TreeNode *)doSortedListToBST:(ListNode *)prev andTailNode:(ListNode *)tailNode
 {
     if(prev == tailNode) {
@@ -200,19 +288,63 @@
     ListNode *slow = prev;
     ListNode *fast = prev.next;
     
-    while (fast && fast.next) {
+//    while (fast && fast.next) { //FIXME:这里忽视了一个严重的问题，就是获取midle node 的时候，没有考虑到终点的问题。
+//        slow = slow.next;
+//        fast = fast.next.next;
+//    }
+    while (fast != tailNode && fast.next != tailNode) {
         slow = slow.next;
         fast = fast.next.next;
     }
-    
     TreeNode *left = [self doSortedListToBST:prev andTailNode:slow];
     TreeNode *right = [self doSortedListToBST:slow.next andTailNode:tailNode];
     
     TreeNode *root = [TreeNode new];
     root.left = left;
     root.right = right;
+    root.val = slow.val;
     
     return root;
+}
+
+#pragma mark - 117 Convert Sorted List to Binary Search Tree - bottom up
+
+// 很难想！太巧妙了。
+- (TreeNode *)sortedListToBST_bottomUP:(ListNode *)listNode
+{
+    NSInteger count = [self lengthOfList:listNode];
+    ListNode *iterator = listNode;
+    return [self sortedListToBST_bottomUP:&iterator count:count];
+}
+
+// 按照left root right的顺序,
+
+- (TreeNode *)sortedListToBST_bottomUP:(ListNode **)currNode count:(NSInteger)count
+{
+    //什么时候终止？
+    if(count <= 0){
+        return nil;
+    }
+    
+    TreeNode *left = [self sortedListToBST_bottomUP:currNode count:count / 2];
+    
+    TreeNode *node = [TreeNode new];
+    node.val = (*currNode).val;
+    *currNode = (*currNode).next; // when the left recursive call finish, the curr is in the center of list
+    
+    TreeNode *right = [self sortedListToBST_bottomUP:currNode count:count - count / 2 - 1];
+    node.left = left;
+    node.right = right;
+    
+    return node;
+}
+
+- (NSInteger)lengthOfList:(ListNode *)node
+{
+    if(!node){
+        return 0;
+    }
+    return 1 + [self lengthOfList:node.next];
 }
 
 #pragma mark - sortedArrayToBST
@@ -276,7 +408,7 @@
         NSInteger mid = (right - left) / 2 + left;
         node.val = nodes[mid].integerValue;
 
-        if(left <= mid - 1){
+        if(left <= mid - 1){ // 这里的判断条件是关键
             node.left = [TreeNode new];
             [stack addObject:node.left];
             [leftIndexStack addObject:@(left)];
@@ -316,7 +448,6 @@
 }
 
 //DFS
-
 - (void)doDFSOrderTraversal:(TreeNode *)rootNode degree:(NSInteger)degree withDic:(NSMutableDictionary<NSNumber *, NSMutableArray *> *)dic andMin:(NSInteger *)minV;
 {
     if (!dic[@(degree)]) {
@@ -394,6 +525,7 @@
 }
 
 #pragma mark - inorder successor [R]
+
 //method 1: inorder traversal
 //method 2: 利用BST 的性质
 
@@ -406,6 +538,8 @@
 // 如果是要求 predecessor 如何处理,
 // root.val >= targetNode.val [self inorderSuccessor.root.left]
 // else  [self inorderSuccessor:root.right ...] 此时如果返回空，说明此时的node 为predecessort
+
+// Fellow up : 如果是predecessor ， 那么就是往右走的时候记录下。
 
 - (TreeNode *)inorderSuccessor:(TreeNode *)root withTargetNode:(TreeNode *)targetNode
 {
@@ -421,7 +555,9 @@
     }
 }
 
-//TODO: 迭代版本！
+// TODO: 迭代版本！
+// 因此在 BST 里面，确定起来就很简单了，从 root 往下走，每次往左拐的时候，存一下，记录着最近一个看到的比 p.val 大的 node 就行了。
+
 - (TreeNode *)inorderSuccessor_I:(TreeNode *)root withTargetNode:(TreeNode *)targetNode
 {
     TreeNode *succ;
@@ -435,6 +571,8 @@
     }
     return succ;
 }
+
+#pragma mark - 297. Serialize and Deserialize Binary Tree
 
 // 我用的这种解决方法是 BFS iterate 的方法
 // TODO: 如果不用占位符怎么弄？ 可以利用preorder 和 inorder 序列进行恢复
@@ -639,6 +777,7 @@
     }
 }
 
+#pragma mark - Deserialize / Serialize Recursive
 
 - (TreeNode *)deserialize_I:(NSString *)string
 {
@@ -648,13 +787,13 @@
     }
 
     NSArray *treeArray = [string componentsSeparatedByString:@","];
-    
     NSUInteger idx = 0;
     return [self doDeSerialize:treeArray idx:&idx];
 }
 
 // FIXME: 递归实现第一遍不是自己写的。还需要看下。需要注意 node.right 那个 idx 的在函数内部改动的，不是在传递参数的时候改的
 // 关键是传递引用，需要记录访问到第几个元素，这样才可以在 array 中对应的值
+// Bottom up + preorder
 
 - (TreeNode *)doDeSerialize:(NSArray *)strArray idx:(NSUInteger *)idx
 {
@@ -672,66 +811,80 @@
     return node;
 }
 
-// 也可以基于preorder来实现, 但是在反序列化的时候遇到了问题
+#pragma mark - Deserialize / Serialize iterative
 
-//- (NSString *)serialize_preorder:(TreeNode *)treeNode
-//{
-//    NSMutableString *serialize = [NSMutableString string];
-//    if(!treeNode){
-//        return serialize;
-//    }
-//    NSMutableArray *stack = [NSMutableArray array];
-//    [stack addObject:treeNode];
-//    
-//    while ([stack count]) {
-//        TreeNode *node = [stack lastObject];
-//        [stack removeLastObject];
-//        
-//        if([node isKindOfClass:[NSNull class]]){
-//            [serialize appendString: @"*,"];
-//            continue;
-//        }
-//        [serialize appendString: [@(node.val) description]];
-//        [serialize appendString: @","];
-//        
-//        [stack addObject: node.right ?: [NSNull null]];
-//        [stack addObject: node.left ?: [NSNull null]];
-//        //we can get prev node by call [stack lastObject]
-//    }
-//    [serialize deleteCharactersInRange:NSMakeRange(serialize.length - 1, 1)];
-//    return [serialize copy];
-//}
+- (NSString *)serialize_preorder:(TreeNode *)treeNode
+{
+    NSMutableString *serialize = [NSMutableString string];
+    if(!treeNode){
+        return serialize;
+    }
+    NSMutableArray *stack = [NSMutableArray array];
+    [stack addObject:treeNode];
+    
+    while ([stack count]) {
+        TreeNode *node = [stack lastObject];
+        [stack removeLastObject];
+        
+        if([node isKindOfClass:[NSNull class]]){
+            [serialize appendString: @"*,"];
+            continue;
+        }
+        [serialize appendString: [@(node.val) description]];
+        [serialize appendString: @","];
+        
+        [stack addObject: node.right ?: [NSNull null]];
+        [stack addObject: node.left ?: [NSNull null]];
+        //we can get prev node by call [stack lastObject]
+    }
+    [serialize deleteCharactersInRange:NSMakeRange(serialize.length - 1, 1)];
+    return [serialize copy];
+}
 
-// FIXEME: 没有实现
-//- (TreeNode *)deserialize_preorder:(NSString *)treeString
-//{
-//    if(!treeString){
-//        return nil;
-//    }
-//    NSArray<NSString *> *deserialize = [treeString componentsSeparatedByString:@","];
-//    NSInteger idx = 0;
-//    NSMutableArray *stack = [NSMutableArray array];
-//    TreeNode *root = [TreeNode new];
-//    root.val = deserialize[idx].integerValue;
-//    [stack addObject:root];
-//    
-//    while ([stack count] ) {
-//        TreeNode *node = [stack lastObject];
-//        [stack removeLastObject];
-//        
-//        idx++;
-//        // 我不知道树的结构如何
-//        TreeNode *right = [TreeNode new];
-//        [stack addObject:right];
-//        
-//        TreeNode *left = [TreeNode new];
-//        [stack addObject:left];
-//        //we can get prev node by call [stack lastObject]
-//    }
-//    
-//    return root;
-//}
+// FIXME: 难点: preorder 反序列化有坑 没有实现
 
+//关键点1：要存一个 boolean 记录下当前要填的点是不是左节点；
+//关键点2：这个 boolean 的变化要看当前 boolean 值以及新填上的点是不是叶节点；
+//关键点3：对于填充右节点的情况，链接完了就直接 pop()，有别于填充左子树时候用的 peek(). 因为 preorder 右子树结束之后 stack frame 就出栈了
+
+- (TreeNode *)deserialize_preorder:(NSString *)treeString
+{
+    if(!treeString){
+        return nil;
+    }
+    NSArray<NSString *> *deserialize = [treeString componentsSeparatedByString:@","];
+    NSInteger idx = 0;
+    NSMutableArray<TreeNode *> *stack = [NSMutableArray array];
+    TreeNode *root = [TreeNode new];
+    root.val = deserialize[idx].integerValue;
+    [stack addObject:root];
+    idx = 1;
+    BOOL doLeft = YES;  //需要一个bool 去标记是否是left
+    
+    while (idx < [deserialize count]) {
+        TreeNode *node = nil;
+        if(![deserialize[idx] isEqualToString:@"*"]){
+            node = [TreeNode new];
+            node.val = deserialize[idx].integerValue;
+        }
+        idx++;
+        if(doLeft){
+            stack.lastObject.left = node;
+            if(node == nil) //如果当前的node 为空 就不需要在下次访问left
+                doLeft = NO;
+        } else {
+            stack.lastObject.right = node;
+            [stack removeLastObject];
+            if(node != nil)
+                doLeft = YES;
+        }
+        if(!node){
+            [stack addObject:node];
+        }
+    }
+    
+    return root;
+}
 
 // TODO: // 106. Construct Binary Tree from Inorder and Postorder Traversal
 //     2
@@ -1302,7 +1455,6 @@ static TreeNode *prev = nil;
     return node;
 }
 
-
 // iterative
 // 这道题也可以bfs ，也可以dfs
 // 这里使用使用 fbs ，正好就可以 level 来计算权值，安层遍历的套路也可以用在这个地方
@@ -1489,10 +1641,112 @@ static TreeNode *prev = nil;
 //    /
 //   1
 
-# pragma mark -
+// 给出两棵树的前序遍历，寻找第一个值不同的叶节点
+// 问题:如何判断叶子结点？
+//public Wrapper findNext(int[] preorder, Stack<Integer> stack, int index) {
+//    while(index < preorder.length) {
+//        if (stack.isEmpty() || preorder[stack.peek()] > preorder[index]) {
+//            stack.push(index);  //push the index
+//            index++;
+//        } else {
+//            return new Wrapper(index ,stack.pop());
+//        }
+//    }
+//    if(stack.isEmpty()) return new Wrapper(index, null);
+//    return new Wrapper(index, stack.pop());
+//}
+//
+//class Wrapper {
+//    int index;  //index of currently traversed node in the array (as in pre-order)
+//    Integer c;  //index of the next leave (as in in-order)
+//    
+//    Wrapper(int index, Integer c) {
+//        this.index = index;
+//        this.c = c;
+//    }
+//}
+//
+////compare the if the two leaves are equal
+//public void firstNonMathcingLeaves(int[] o1, int[] o2) {
+//    Stack<Integer> s1 = new Stack<>(), s2 = new Stack<>();
+//    
+//    Wrapper w1 = new Wrapper(0, 0), w2 = new Wrapper(0, 0);
+//    while(w1.c != null && w2.c != null && o1[w1.c] == o2[w2.c]) {
+//        w1 = findNext(o1, s1, w1.index);
+//        w2 = findNext(o2, s2, w2.index);
+//    }
+//    
+//    if(w1.c == null && w2.c == null) {
+//        System.out.println("same"); return;
+//    }
+//    if(w1.c == null) {
+//        System.out.println(w1.c + " " + o2[w2.c]); return;
+//    }
+//    if(w2.c == null) {
+//        System.out.println(o1[w1.c] + " " + w2.c); return;
+//    } else {
+//        System.out.println(o1[w1.c] + " " + o2[w2.c]);
+//    }
+//}
 
-// FIXME: 不是很好理解, 有些抽象
+//FIXME: 想了好久没有思路
 
+//TODO: 思路 关键:通过preorder 单调递减 然后 递增找到leaf
+
+- (Wrapper *)findNext:(NSArray<NSNumber *> *)nums stack:(NSMutableArray *)stack index:(NSInteger)index
+{
+    //如果是单调递减说明此时还没有到tree的叶子
+    while (index < nums.count) {
+        if(stack.count == 0 || [stack.lastObject compare:nums[index]] == NSOrderedDescending) {
+            [stack addObject:nums[index]];
+            index++;
+        } else {
+            //如果是单调递减说明此时还没有到tree的叶子
+            NSNumber *leafIndex = stack.lastObject;
+            [stack removeLastObject];
+            return [[Wrapper alloc] initWithIndex:index c:leafIndex];
+        }
+    }
+    if(stack.count){
+        NSNumber *leafIndex = stack.lastObject;
+        [stack removeLastObject];
+        return [[Wrapper alloc] initWithIndex:index c:leafIndex];
+    } else {
+        return [[Wrapper alloc] initWithIndex:index c:nil];
+    }
+}
+
+- (NSArray *)firstMissPairLeafBetweenTreeSequence:(NSArray<NSNumber *> *)nums1 nums2:(NSArray<NSNumber *> *)nums2
+{
+    NSMutableArray *s1 = [NSMutableArray array];
+    NSMutableArray *s2 = [NSMutableArray array];
+    
+    Wrapper *w1 = [[Wrapper alloc] initWithIndex:0 c:0]; //index 的作用的为了下次调用的时候，可以接着上次traverse 的位置继续
+    Wrapper *w2 = [[Wrapper alloc] initWithIndex:0 c:0];
+    
+    while (w1.c != nil &&
+           w2.c != nil &&
+           [nums1[w1.c.integerValue] isEqualToNumber: nums2[w2.c.integerValue]]) {
+        w1 = [self findNext:nums1 stack:s1 index:w1.index];
+        w2 = [self findNext:nums2 stack:s2 index:w2.index];
+    }
+    
+    //如果是nil了,说明没有找到不等的
+    if(!w1.c && !w2.c){ //
+        //same
+        return @[];
+    } if(w1.c && w2.c){
+        return @[w1.c, w2.c];
+    } if(!w1.c) {
+        return @[@(NSNotFound), w2.c];
+    } else {
+        return @[w1.c, @(NSNotFound)];
+    }
+}
+
+# pragma mark - 298 Binary Tree Longest Consecutive Sequence
+// http://www.jiuzhang.com/solutions/binary-tree-longest-consecutive-sequence/
+// FIXME: 不是很好理解, 有些抽象 divide an conquer
 - (NSInteger)longestConsecutive:(TreeNode *)treeNode
 {
     return [self longestConsecutive:treeNode parentNode:nil res:0];
@@ -1512,6 +1766,146 @@ static TreeNode *prev = nil;
     NSInteger temp = MAX([self longestConsecutive:treeNode.left parentNode:treeNode res:res], [self longestConsecutive:treeNode.right parentNode:treeNode res:res]);
     return MAX(res, temp);
 }
+
+#pragma mark - 124 Binary Tree Maximum Path Sum 【H】
+
+//FIXME: 还需要review, 不太好理解
+
+// 我想到用分治的办法，但是在构建分治之后的关系的时候 没有想出来
+// case 1: path left subtree 或者 right subtree ，进行递归调用, case
+// case 2: 包含这个root 此时的结构是什么样子的呢？下面的方法通过pass refer解答出来了
+
+//A path from start to end, goes up on the tree for 0 or more steps, then goes down for 0 or more steps. Once it goes down, it can't go up. Each path has a highest node, which is also the lowest common ancestor of all other nodes on the path.
+//A recursive method maxPathDown(TreeNode node) (1) computes the maximum path sum with highest node is the input node, update maximum if necessary (2) returns the maximum sum of the path that can be extended to input node's parent.
+
+// 方法: Bottom up
+- (NSInteger)maxPathSum:(TreeNode *)treeNode
+{
+    NSInteger max = NSIntegerMin;
+    [self maxPathSum:treeNode max:&max];
+    return max;
+}
+
+// 比较难以理解
+
+// The second maxValue contains the bigger between the left sub-tree and right sub-tree.
+// if (left + right + node.val < maxValue ) then the result will not include the parent node which means the maximum path is in the left branch or right branch.
+// 这特么太牛比了
+
+- (NSInteger)maxPathSum:(TreeNode *)treeNode max:(NSInteger *)max
+{
+    if(!treeNode)
+        return 0;
+    
+    NSInteger left = MAX([self maxPathSum:treeNode.left max:max], 0);
+    NSInteger right = MAX([self maxPathSum:treeNode.right max:max], 0);// 获取到left 和 right 的max Value
+    *max = MAX(*max, left + right + treeNode.val); //
+    return MAX(left, right) + treeNode.val; //case 1: 取左右最大值 + 包含当前值
+}
+
+#pragma mark - Diameter of a Binary Tree [MJ]
+
+//思路
+
+//* the diameter of T’s left subtree
+//* the diameter of T’s right subtree
+//* the longest path between leaves that goes through the root of T (this can be computed from the heights of the subtrees of T)
+
+// T(n) = T(n/2) + T(n/2) + n = nlogn. 但是geeksforgeeks 上写的 n^2
+// 存在height 重复计算，如何optimzie 呢？
+
+- (NSInteger)diameterOfBinaryTree:(TreeNode *)treeNode
+{
+    if(!treeNode){
+        return 0;
+    }
+    NSInteger left = [self diameterOfBinaryTree:treeNode.left]; // case 1: diameter 在左边或者右边
+    NSInteger right = [self diameterOfBinaryTree:treeNode.right];
+    // case 2: accros left subtree and right subtree
+    NSInteger pathIncludeRoot = [self heightOfBinaryTree:treeNode.left] + [self heightOfBinaryTree:treeNode.right] + 1;
+    return MAX(MAX(left, right), pathIncludeRoot);
+}
+
+// the time complexity is O(n), beacuse it traverse the each node of tree only once
+// T(n) = T(n/2) + T(n/2)
+
+- (NSInteger)heightOfBinaryTree:(TreeNode *)treeNode
+{
+    if(!treeNode)
+        return 0;
+    
+    return 1 + MAX([self heightOfBinaryTree:treeNode.left], [self heightOfBinaryTree:treeNode.right]);
+}
+
+// The implementation can be optimized by calculating the height in the same recursion
+// T(n) = 2 * T(n/2) = O(n) 算法复杂度
+
+- (NSInteger)diameterOfBinaryTree:(TreeNode *)treeNode height:(NSInteger *)height
+{
+    if(!treeNode){
+        *height = 0;
+        return 0;
+    }
+    
+    NSInteger lHeight = 0;
+    NSInteger rHeight = 0;
+
+    NSInteger left = [self diameterOfBinaryTree:treeNode.left height:&lHeight]; // case 1: diameter 在左边或者右边
+    NSInteger right = [self diameterOfBinaryTree:treeNode.right height:&rHeight];
+    // case 2: accros left subtree and right subtree
+    NSInteger pathIncludeRoot = lHeight+ rHeight + 1;
+    *height = MAX(lHeight , rHeight) + 1; //update the height;
+    
+    return MAX(MAX(left, right), pathIncludeRoot);
+}
+
+#pragma mark -  110. Balanced Binary Tree 
+
+// 思路1: 这道题目，反映了我对balance BT 的概念记忆错误
+// 另外一种是利用递归的思路
+
+// average case : T(n) =  2 * T(n/2) + O(n) = nlogn
+// worset case : T(n) = T(n-1) + O(n)= n^2
+
+// 方法1: Top down
+
+- (BOOL)isBalanced:(TreeNode *)root
+{
+    if(!root)
+        return YES;
+    
+    NSInteger lH = [self maxDepth:root.left];
+    NSInteger rH = [self maxDepth:root.right];
+    
+    return ABS(lH - rH) <= 1 && [self isBalanced:root.left] && [self isBalanced:root.right];
+}
+
+// 方法2: bottom up
+// if the tree is balance return the height of the tree , or return negative one
+// 在递归的过程中把值传递上去, each node in tree visited only once ,
+// T: O(n)
+
+- (BOOL)isBalanced_bottomUp:(TreeNode *)root
+{
+    if(!root)
+        return YES;
+    return [self isBalanced_bottomUp_helper:root] != -1;
+}
+
+- (NSInteger)isBalanced_bottomUp_helper:(TreeNode *)root
+{
+    if(!root)
+        return 0;
+    NSInteger left = [self isBalanced_bottomUp_helper:root.left];
+    NSInteger right = [self isBalanced_bottomUp_helper:root.left];
+    
+    if(left != -1 && right != -1 && ABS(left - right) <= 1){
+        return 1 + MAX(left, right);
+    } else {
+        return -1;
+    }
+}
+
 
 @end
 
@@ -1552,7 +1946,6 @@ static TreeNode *prev = nil;
     [self pushNode:node.right];
     return val;
 }
-
 
 - (void)pushNode:(TreeNode *)node
 {
@@ -1610,6 +2003,40 @@ static TreeNode *prev = nil;
 }
 
 // FIXME: 一开始写错了 Nested iterator
+// LC 定义的输入是个 List<NestedListNode> 是这种结构
+// 这里定义
+// 如果这里是个数组的话，那预处理的方式略有不同，因为其没有next 指针。
+
+// 这个实现是 input 是List 的版本
+
+//public class NestedIterator implements Iterator<Integer> {
+//    Stack<NestedInteger> stack = new Stack<>();
+//    public NestedIterator(List<NestedInteger> nestedList) {
+//        for(int i = nestedList.size() - 1; i >= 0; i--) {
+//            stack.push(nestedList.get(i));
+//        }
+//    }
+//    
+//    @Override
+//    public Integer next() {
+//        return stack.pop().getInteger();
+//    }
+//    
+//    @Override
+//    public boolean hasNext() {
+//        while(!stack.isEmpty()) {
+//            NestedInteger curr = stack.peek();
+//            if(curr.isInteger()) {
+//                return true;
+//            }
+//            stack.pop();
+//            for(int i = curr.getList().size() - 1; i >= 0; i--) {
+//                stack.push(curr.getList().get(i));
+//            }
+//        }
+//        return false;
+//    }
+//}
 
 - (instancetype)initWithListNode:(NestedListNode *)listNode
 {
@@ -1634,18 +2061,76 @@ static TreeNode *prev = nil;
 
 - (BOOL)hasNext
 {
-    return [_stack count] != 0;
+    while ([_stack count]) { //这里处理hasNext 稍微有点复杂！不能直接判断stack 是否为空，因为需要判断stack 里面的元素是data 是否有number 字段
+        NestedListNode *node = [_stack lastObject];
+        if([node.data isKindOfClass:[NSNumber class]]){
+            return YES;
+        }
+        [_stack removeLastObject];
+        [self pushNode:node.next];// FIXME: pay attention
+    }
+    return NO;
 }
-
-//inorder
 
 - (NSInteger)next
 {
     NSAssert([self hasNext], @"");
     NestedListNode * node = [_stack lastObject];
     [_stack removeLastObject];
-    [self pushNode:node.next];
+    [self pushNode:node.next]; // 把next add 到stack 中
     return ((NSNumber *)node.data).integerValue;
+}
+
+@end
+
+//TODO: 注意如果是 2D Array 这种特殊情况，可以直接在initWithListNode 的时候，放到一维度的里面, 这种实现很简单粗暴
+
+//FIXME: 这里非常容易出错的地方在于 hasNext 里面 在pushStack 之前，忘记掉用[_stack removeLastObject], 因为这里需要把二位降低成一维之后，要记得把stack 上的一维数组 remove 掉，要不然会有无限循环。
+
+@implementation FlattenArrayIterator
+{
+    NSMutableArray *_stack;
+}
+
+- (instancetype)initWithListNode:(NSArray *)nums
+{
+    if(self = [super init]){
+        _stack = [NSMutableArray array];
+        [self pushStack:nums];//为了保证出站的时候 是正的顺序，这里用反的顺序
+    }
+    return self;
+}
+
+- (BOOL)hasNext
+{
+    while ([_stack count]) {
+        id num = [_stack lastObject];
+        if([num isKindOfClass:[NSNumber class]]){
+            return YES;
+        }
+        [_stack removeLastObject];
+        [self pushStack:num];
+    }
+    return NO;
+}
+
+- (void)pushStack:(NSArray *)nums
+{
+    if([nums count] == 0){
+        return;
+    }
+    for(NSInteger i = nums.count - 1; i >= 0; i--){
+        [_stack addObject:nums[i]];
+    }
+}
+
+- (NSNumber *)next
+{
+    NSAssert([self hasNext], @"");
+    NSNumber *num = [_stack lastObject];
+    [_stack removeLastObject];
+    
+    return num;
 }
 
 @end

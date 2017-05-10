@@ -1,14 +1,14 @@
 //
-//  LRU.h
+//  ConcurrentLRU.h
 //  LCOBJC
 //
-//  Created by andy on 23/12/2016.
-//  Copyright © 2016 andy. All rights reserved.
+//  Created by ethon_qi on 25/1/2017.
+//  Copyright © 2017 andy. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-@interface LRU : NSObject
+@interface ConcurrentLRU : NSObject
 
 - (instancetype)initWithCapacity:(NSInteger)capacity;
 
@@ -19,4 +19,3 @@
 - (void)clearAllObjects;
 
 @end
-

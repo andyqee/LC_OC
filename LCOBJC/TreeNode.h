@@ -84,6 +84,7 @@
 
 @protocol QYCompareable <NSObject>
 
+- (NSComparisonResult)compare:(id<QYCompareable>)object;
 
 @end
 

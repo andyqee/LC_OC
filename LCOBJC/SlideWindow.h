@@ -12,6 +12,19 @@
 
 @interface SlideWindow : NSObject
 
+// 53. Maximum Subarray
+#pragma mark - 高频
+
+// Difficulty: Medium
+// Find the contiguous subarray within an array (containing at least one number) which has the largest sum.
+
+// For example, given the array [-2,1,-3,4,-1,2,1,-5,4],
+// the contiguous subarray [4,-1,2,1] has the largest sum = 6.
+
+- (NSInteger)maxSubArray:(NSArray<NSNumber *>*)nums;
+
+- (NSInteger)maxSubArrayM2:(NSArray<NSNumber *>*)nums;
+
 // 209. Minimum Size Subarray Sum
 // Difficulty: Medium
 // Contributors: Admin
@@ -83,5 +96,67 @@
 //Your function should return length = 5, with the first five elements of nums being 1, 1, 2, 2 and 3. It doesn't matter what you leave beyond the new length.
 
 - (NSInteger)removeDuplicates2:(NSMutableArray *)nums;
+
+//From careercup
+//Given an array, remove the duplicates and return a unique array keeping the first occurrence of the duplicates and the order.
+//
+//[@2, @1, @3, @1, @2] --> [@2, @1, @3]
+
+- (NSArray *)removeDuplicates3:(NSMutableArray *)nums;
+
+// Longest Substring with At Most Two Distinct Characters
+
+// 340 Longest Substring with At Most K Distinct Characters
+//Given a string, find the length of the longest substring T that contains at most k distinct characters.
+//
+//For example, Given s = “eceba” and k = 2,
+//
+//T is "ece" which its length is 3
+
+- (NSInteger)longestSubstring:(NSString *)str k:(NSInteger)k;
+
+// 给一个array, 然后给一个k, 让你check 连续的k个integer是否含有dulplicate, 很简单的，用窗口为K的hashset一直扫一遍就行了，很简单
+// 举个例子 abcsba 如果k = 3 就没有 duplicate
+- (BOOL)containsDuplicate:(NSArray *)nums windowSize:(NSInteger)k;
+
+//395. Longest Substring with At Least K Repeating Characters
+
+//Difficulty: Medium
+//Contributors: Admin
+//Find the length of the longest substring T of a given string (consists of lowercase letters only) such that every character in T appears no less than k times.
+//
+//Example 1:
+//
+//Input:
+//s = "aaabb", k = 3
+//
+//Output:
+//3
+//
+//The longest substring is "aaa", as 'a' is repeated 3 times.
+//Example 2:
+//
+//Input:
+//s = "ababbc", k = 2
+//
+//Output:
+//5
+//
+//The longest substring is "ababb", as 'a' is repeated 2 times and 'b' is repeated 3 times.
+
+- (NSInteger)longestSubstring:(NSString *)str repeatingCount:(NSInteger)k;
+
+//From career cup
+
+//Given an array of positive integers and a target total of X, find if there exists a contiguous subarray with sum = X
+//
+//[1, 3, 5, 18] X = 8 Output: True
+//X = 9 Output: True
+//X = 10 Output: False
+//X = 40 Output :False
+
+- (BOOL)exitContigousSubarray:(NSArray *)array sum:(NSInteger)sum;
+
+// Maximum Size Subarray Sum Equals k
 
 @end

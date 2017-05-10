@@ -17,6 +17,7 @@
 //Flatten Binary Tree to Linked List
 //Difficulty: Medium
 //Contributors: Admin
+
 //Given a binary tree, flatten it to a linked list in-place.
 //If you notice carefully in the flattened tree, each node's right child points to the next node of a pre-order traversal
 //For example,
@@ -40,7 +41,9 @@
 //         \
 //          6
 
-- (void)flattenBSTWithNode:(TreeNode *)node;
+- (void)flattenBTWithNode:(TreeNode *)node;
+- (void)flattenBTWithNodeMethod2:(TreeNode *)node;
+
 
 //109. Convert Sorted List to Binary Search Tree
 //Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
@@ -306,9 +309,9 @@
 
 - (NSInteger)largestBST:(TreeNode *)node;
 
-//Given a binary tree, find the length of the longest consecutive sequence path.
-//
-//
+// 298 Binary Tree Longest Consecutive Sequence
+
+// Given a binary tree, find the length of the longest consecutive sequence path.
 //
 // The path refers to any sequence of nodes from some starting node to any node in the tree along the parent-child connections.
 // The longest consecutive path need to be from parent to child (cannot be the reverse).
@@ -337,6 +340,65 @@
 
 // TODO: MJ
 // 给出两棵树的前序遍历，寻找第一个值不同的叶节点
+
+//Print first pair of mis-matching leaves (first pair as in in-order) given two pre-order traversal arrays of BSTs.
+//
+//e.g.
+//
+//
+//For
+//     5
+//    4   8
+//2  4    6  9
+//Pre-order Sequence as [5,4,2,4,8,6,9]
+//&
+//5
+//3     8
+//2  4   7  9
+//Pre-order Sequence2 as [5,3,2,4,8,7,9]
+//Print “4, 3”. 如果是叶子结点这里就不是 4，3
+
+// Are the trees of the same size?
+// Are the trees is perfectly balanced?
+
+- (NSArray *)firstMissPairLeafBetweenTreeSequence:(NSArray *)nums1 nums2:(NSArray *)nums2;
+
+// behavior + convert string to double   -12.35e2 -> double
+
+// 2 find root to leaf path sum to target, follow up, what if all node's value are positive
+
+//还有一个相关题目：
+//Given two (binary) trees, return the first pair of non-matching leaves
+//Tree 1: A, B, C, D, E, null, null
+//Tree 2: A, D, B
+//Output: (E,B)
+
+//Given two pre-order traversal arrays of two binary search tree respectively, find first pair of non-matching leaves.
+//Follow Up: If they are general binary trees instead of BSTs, could you solve it? give out your reason.
+
+//124 Binary Tree Maximum Path Sum
+
+//Given a binary tree, find the maximum path sum.
+//
+//For this problem, a path is defined as any sequence of nodes from some starting node to any node in the tree along the parent-child connections. The path must contain at least one node and does not need to go through the root.
+//
+//For example:
+//Given the below binary tree,
+//
+//   1
+//  / \
+// 2   3
+//Return 6.
+
+- (NSInteger)maxPathSum:(TreeNode *)treeNode;
+
+// 给一个二叉树， 找出从一个叶节点到另一个叶节点最长的路径，返回路径的长度
+
+- (NSInteger)diameterOfBinaryTree:(TreeNode *)treeNode;
+
+//binary tree to double linked list, follow up, 刚刚产生的double linked list 转化成balanced binary search tree。我之前看面经看到过这道题，当时扫了一眼觉得好麻烦就没有看，结果当小哥说出这道题就傻眼了，好后悔之前没仔细看一眼。事后想好像写出来个bug，但是当时小哥也没看出来，说good enough。可是他拍照了呀。。。回去再看肯定就看出来了。估计要挂就挂在这里了。
+
+- (BOOL)isBalanced:(TreeNode *)root;
 
 @end
 
@@ -381,5 +443,15 @@
 - (BOOL)hasNext;
 
 - (NSInteger)next;
+
+@end
+
+@interface FlattenArrayIterator : NSObject
+
+- (instancetype)initWithListNode:(NSArray *)nums;
+
+- (BOOL)hasNext;
+
+- (NSNumber *)next;
 
 @end
